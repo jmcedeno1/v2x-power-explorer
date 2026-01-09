@@ -6,6 +6,8 @@ import { QuestionCard } from '@/components/questions/QuestionCard';
 import { expertQuestions } from '@/data/v2xData';
 import { patentAreasData } from '@/data/patentAreasData';
 import { InnovationAreaPopup } from '@/components/patents/InnovationAreaPopup';
+import { PatentEvolutionChart } from '@/components/patents/PatentEvolutionChart';
+import { PatentBreakthroughTimeline } from '@/components/patents/PatentBreakthroughTimeline';
 import { cn } from '@/lib/utils';
 
 const ipMetrics = [
@@ -84,6 +86,15 @@ export default function PatentsPage() {
                 </p>
               </li>
             </ul>
+          </div>
+        </section>
+
+        {/* Patent evolution chart and breakthrough timeline */}
+        <section className="mb-10">
+          <h3 className="text-lg font-semibold text-foreground mb-4">Patent Maturity</h3>
+          <div className="grid lg:grid-cols-2 gap-6">
+            <PatentEvolutionChart />
+            <PatentBreakthroughTimeline />
           </div>
         </section>
 
