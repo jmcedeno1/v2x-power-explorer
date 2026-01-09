@@ -1,6 +1,7 @@
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { Badge } from '@/components/ui/badge';
-import { TrendingUp, TrendingDown, Minus, Sparkles, Building2, Lightbulb, Target, X } from 'lucide-react';
+import { TrendingUp, TrendingDown, Minus, Sparkles, Building2, Lightbulb, Target, Cpu, FileText } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { PatentAreaDetails } from '@/data/patentAreasData';
 import { cn } from '@/lib/utils';
@@ -59,7 +60,7 @@ export function InnovationAreaPopup({ area, children }: InnovationAreaPopupProps
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
-      <DialogContent className="max-w-lg p-0 overflow-hidden">
+      <DialogContent className="max-w-lg p-0 overflow-hidden max-h-[90vh] overflow-y-auto">
         <div className={cn(
           'p-4 border-b',
           area.status === 'saturated' ? 'bg-muted/50' :
@@ -134,33 +135,63 @@ export function InnovationAreaPopup({ area, children }: InnovationAreaPopupProps
           <h5 className="text-sm font-medium text-foreground mb-3 flex items-center gap-2">
             <Target className="w-4 h-4 text-primary" />
             Technology Status Overview
+            <span className="text-xs text-muted-foreground font-normal ml-1">(hover for details)</span>
           </h5>
           <div className="grid grid-cols-2 gap-2">
             {area.technologies.map((tech, idx) => (
-              <motion.div
-                key={tech.name}
-                initial={{ opacity: 0, y: 5 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: idx * 0.05 }}
-                className="flex items-center justify-between p-2 rounded-lg bg-muted/50"
-              >
-                <div className="flex items-center gap-2 min-w-0">
-                  <div 
-                    className="w-2 h-2 rounded-full shrink-0"
-                    style={{ backgroundColor: chartColors[idx % chartColors.length] }}
-                  />
-                  <span className="text-xs text-foreground truncate">{tech.name}</span>
-                </div>
-                <Badge 
-                  variant="outline" 
-                  className={cn(
-                    'text-[10px] px-1.5 py-0 shrink-0 ml-1',
+              <HoverCard key={tech.name} openDelay={100} closeDelay={50}>
+                <HoverCardTrigger asChild>
+                  <motion.div
+                    initial={{ opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.05 }}
+                    className="flex items-center justify-between p-2 rounded-lg bg-muted/50 cursor-pointer hover:bg-muted/80 transition-colors"
+                  >
+                    <div className="flex items-center gap-2 min-w-0">
+                      <div 
+                        className="w-2 h-2 rounded-full shrink-0"
+                        style={{ backgroundColor: chartColors[idx % chartColors.length] }}
+                      />
+                      <span className="text-xs text-foreground truncate">{tech.name}</span>
+                    </div>
+                    <Badge 
+                      variant="outline" 
+                      className={cn(
+                        'text-[10px] px-1.5 py-0 shrink-0 ml-1',
+                        statusConfig[tech.status].color
+                      )}
+                    >
+                      {statusConfig[tech.status].label}
+                    </Badge>
+                  </motion.div>
+                </HoverCardTrigger>
+                <HoverCardContent className="w-72 p-0 overflow-hidden" side="top" align="center">
+                  <div className={cn(
+                    'px-3 py-2 border-b flex items-center gap-2',
                     statusConfig[tech.status].color
-                  )}
-                >
-                  {statusConfig[tech.status].label}
-                </Badge>
-              </motion.div>
+                  )}>
+                    <Cpu className="w-4 h-4" />
+                    <span className="font-medium text-sm">{tech.name}</span>
+                  </div>
+                  <div className="p-3 space-y-2">
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      {tech.description}
+                    </p>
+                    <div className="flex items-center justify-between pt-1 border-t">
+                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                        <FileText className="w-3 h-3" />
+                        <span>{tech.patents.toLocaleString()} patents</span>
+                      </div>
+                      <Badge 
+                        variant="outline" 
+                        className={cn('text-[10px]', statusConfig[tech.status].color)}
+                      >
+                        {statusConfig[tech.status].description}
+                      </Badge>
+                    </div>
+                  </div>
+                </HoverCardContent>
+              </HoverCard>
             ))}
           </div>
         </div>
@@ -170,12 +201,45 @@ export function InnovationAreaPopup({ area, children }: InnovationAreaPopupProps
           <h5 className="text-sm font-medium text-foreground mb-2 flex items-center gap-2">
             <Building2 className="w-4 h-4 text-primary" />
             Key Players
+            <span className="text-xs text-muted-foreground font-normal ml-1">(hover for details)</span>
           </h5>
           <div className="flex flex-wrap gap-1.5">
             {area.keyPlayers.map((player) => (
-              <Badge key={player} variant="secondary" className="text-xs">
-                {player}
-              </Badge>
+              <HoverCard key={player.name} openDelay={100} closeDelay={50}>
+                <HoverCardTrigger asChild>
+                  <Badge 
+                    variant="secondary" 
+                    className="text-xs cursor-pointer hover:bg-secondary/80 transition-colors"
+                  >
+                    {player.name}
+                  </Badge>
+                </HoverCardTrigger>
+                <HoverCardContent className="w-72 p-0 overflow-hidden" side="top" align="center">
+                  <div className="px-3 py-2 border-b bg-secondary/50 flex items-center gap-2">
+                    <Building2 className="w-4 h-4 text-primary" />
+                    <span className="font-medium text-sm">{player.name}</span>
+                  </div>
+                  <div className="p-3 space-y-3">
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      {player.description}
+                    </p>
+                    <div className="space-y-1.5">
+                      <div className="flex items-center gap-1 text-xs font-medium text-foreground">
+                        <Target className="w-3 h-3 text-primary" />
+                        <span>IP Focus Areas</span>
+                      </div>
+                      <ul className="space-y-1">
+                        {player.ipFocus.map((focus, idx) => (
+                          <li key={idx} className="flex items-start gap-2 text-xs text-muted-foreground">
+                            <div className="w-1 h-1 rounded-full bg-primary mt-1.5 shrink-0" />
+                            {focus}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </HoverCardContent>
+              </HoverCard>
             ))}
           </div>
         </div>
