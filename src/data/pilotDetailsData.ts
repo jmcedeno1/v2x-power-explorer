@@ -1,23 +1,26 @@
 import { Pilot } from '@/types/v2x';
 
 export interface PilotDetails extends Pilot {
+  description: string;
   businessModel: {
     type: string;
     description: string;
   };
-  performance: {
+  metrics: {
+    powerLevel: string;
+    vehicles: number;
     efficiency: string;
-    keyMetric: string;
-    additionalMetrics?: string[];
+    demandChargeReduction?: string;
+    annualRevenue?: string;
+    annualSavings?: string;
+    investment?: string;
+    peakReduction?: string;
+    backupCapability?: string;
+    solarConsumption?: string;
   };
   standardization: {
     standard: string;
     status: string;
-  };
-  patents: {
-    count: number;
-    focus: string;
-    recent: string;
   };
   technology: {
     overview: string;
@@ -57,23 +60,22 @@ export const pilotDetailsMap: Record<string, PilotDetails> = {
     bottlenecks: ['Warranty constraints', 'Coordination complexity'],
     maturity: 'depot',
     status: 'active',
+    description: 'A flagship V2G demonstration at the Movia public transit depot in Copenhagen, integrating 12 electric buses with Denmark\'s national grid operator Energinet. Established through a 2022 partnership agreement, this pilot showcases how municipal transit fleets can provide critical grid services during off-peak hours while maintaining full operational readiness for daily routes.',
     businessModel: {
       type: 'Fleet-as-a-Service',
       description: 'Commercial & Municipal. Revenue through grid services and demand charge avoidance.'
     },
-    performance: {
+    metrics: {
+      powerLevel: '600 kW',
+      vehicles: 12,
       efficiency: '89%',
-      keyMetric: 'Up to 600 kW bidirectional power with 12 buses',
-      additionalMetrics: ['45% demand charge reduction', '€120K annual grid revenue']
+      demandChargeReduction: '45%',
+      annualRevenue: '€120K',
+      investment: '€2.4M'
     },
     standardization: {
       standard: 'ISO 15118-20',
       status: 'Full compliance. Aligned with Danish grid codes for V2G.'
-    },
-    patents: {
-      count: 8,
-      focus: 'Fleet aggregation and dispatch algorithms',
-      recent: 'Multi-vehicle coordination and thermal management'
     },
     technology: {
       overview: 'Centralized DC Bus Depot Architecture',
@@ -112,23 +114,22 @@ export const pilotDetailsMap: Record<string, PilotDetails> = {
     bottlenecks: ['Interconnection delays', 'Utility approval'],
     maturity: 'depot',
     status: 'active',
+    description: 'Europe\'s first megawatt-scale V2G deployment in an active port environment, located at the Port of Rotterdam in partnership with grid operator Stedin. This pilot integrates 24 heavy-duty electric terminal tractors and reach stackers, demonstrating how industrial logistics hubs can optimize energy costs while supporting grid stability through coordinated vehicle-to-grid operations.',
     businessModel: {
       type: 'Industrial Energy Hub',
       description: 'Port logistics optimization. Combines charging with grid services for terminal operators.'
     },
-    performance: {
+    metrics: {
+      powerLevel: '1.2 MW',
+      vehicles: 24,
       efficiency: '91%',
-      keyMetric: '1.2 MW aggregate power from 24 heavy-duty vehicles',
-      additionalMetrics: ['60% peak demand reduction', '€280K annual savings']
+      peakReduction: '60%',
+      annualSavings: '€280K',
+      investment: '€4.8M'
     },
     standardization: {
       standard: 'MCS Preliminary',
       status: 'Testing megawatt charging protocols. Aligned with EU grid codes.'
-    },
-    patents: {
-      count: 12,
-      focus: 'Port logistics energy optimization',
-      recent: 'Container terminal load balancing systems'
     },
     technology: {
       overview: 'Megawatt-Scale Port Infrastructure',
@@ -167,23 +168,22 @@ export const pilotDetailsMap: Record<string, PilotDetails> = {
     bottlenecks: ['Double taxation', 'Battery warranty'],
     maturity: 'pilot',
     status: 'completed',
+    description: 'A pioneering school bus V2G pilot funded by the California Energy Commission, deploying 8 Type C electric school buses in partnership with Blue Bird and Nuvve. This demonstration proved that school buses—with their predictable schedules and long idle periods—are ideal candidates for grid services, earning revenue during 10am-2pm windows and summer breaks while providing emergency backup power to schools.',
     businessModel: {
       type: 'Public Fleet Services',
       description: 'School district fleet monetization. Grid services during idle hours (10am-2pm, summer).'
     },
-    performance: {
+    metrics: {
+      powerLevel: '300 kW',
+      vehicles: 8,
       efficiency: '88%',
-      keyMetric: 'Up to 300 kW from 8 Type C electric school buses',
-      additionalMetrics: ['$45K annual grid revenue', '100% backup power capability']
+      annualRevenue: '$45K',
+      backupCapability: '100%',
+      investment: '$1.2M'
     },
     standardization: {
       standard: 'SAE J3072',
       status: 'Compliant with California Rule 21 for V2G interconnection.'
-    },
-    patents: {
-      count: 5,
-      focus: 'School bus fleet aggregation',
-      recent: 'Idle-time optimization algorithms'
     },
     technology: {
       overview: 'School Fleet Bidirectional System',
@@ -222,23 +222,22 @@ export const pilotDetailsMap: Record<string, PilotDetails> = {
     bottlenecks: ['Building code integration', 'User acceptance'],
     maturity: 'depot',
     status: 'active',
+    description: 'A landmark vehicle-to-building (V2B) integration project in Tokyo\'s commercial district, developed by Nissan and Mitsubishi Electric. This pilot connects 15 company fleet EVs to an office complex\'s energy management system, providing daily peak shaving during business hours and critical earthquake emergency backup power—a key priority in Japan\'s disaster-resilient building strategies.',
     businessModel: {
       type: 'Building Energy Management',
       description: 'Commercial building V2B. Peak shaving and emergency backup for office complexes.'
     },
-    performance: {
+    metrics: {
+      powerLevel: '200 kW',
+      vehicles: 15,
       efficiency: '90%',
-      keyMetric: '200 kW aggregate from 15 company fleet vehicles',
-      additionalMetrics: ['30% peak demand reduction', '72-hour backup capability']
+      peakReduction: '30%',
+      backupCapability: '72 hrs',
+      investment: '¥350M'
     },
     standardization: {
       standard: 'CHAdeMO V2H/V2B',
       status: 'Full compliance with Japanese V2X standards and building codes.'
-    },
-    patents: {
-      count: 15,
-      focus: 'Building-vehicle integration systems',
-      recent: 'Disaster resilience and backup power switching'
     },
     technology: {
       overview: 'Integrated Building-Vehicle Energy System',
@@ -277,23 +276,22 @@ export const pilotDetailsMap: Record<string, PilotDetails> = {
     bottlenecks: ['Grid code compliance', 'Fleet coordination'],
     maturity: 'depot',
     status: 'active',
+    description: 'A solar-integrated logistics hub operated by BMW Group in partnership with E.ON, located at a last-mile delivery center near Munich. This pilot combines 500 kWp rooftop solar, a 200 kWh stationary battery, and 18 electric delivery vehicles to maximize renewable self-consumption while providing grid support services—demonstrating a replicable model for sustainable logistics operations.',
     businessModel: {
       type: 'Logistics Hub Optimization',
       description: 'Last-mile delivery fleet. Combining solar self-consumption with grid services.'
     },
-    performance: {
+    metrics: {
+      powerLevel: '800 kW',
+      vehicles: 18,
       efficiency: '92%',
-      keyMetric: '800 kW from 18 electric delivery vans and trucks',
-      additionalMetrics: ['85% solar self-consumption', '€180K annual savings']
+      solarConsumption: '85%',
+      annualSavings: '€180K',
+      investment: '€3.2M'
     },
     standardization: {
       standard: 'ISO 15118-20',
       status: 'VDE-AR-N 4110 compliant for German grid connection.'
-    },
-    patents: {
-      count: 10,
-      focus: 'Logistics energy optimization',
-      recent: 'Route-aware charging and V2G scheduling'
     },
     technology: {
       overview: 'Solar-Integrated Logistics Hub',
@@ -332,23 +330,21 @@ export const pilotDetailsMap: Record<string, PilotDetails> = {
     bottlenecks: ['MCS infrastructure', 'Scale coordination'],
     maturity: 'grid_critical',
     status: 'planned',
+    description: 'Europe\'s most ambitious grid-critical V2G project, planned for Hamburg Port in collaboration with transmission operator 50Hertz. This MW-scale trial will deploy 35 heavy-duty electric vehicles with megawatt charging system (MCS) infrastructure, targeting grid-forming capabilities and black-start support—establishing ports as critical energy infrastructure for Germany\'s renewable energy transition.',
     businessModel: {
       type: 'Grid-Critical Infrastructure',
       description: 'Megawatt-scale port energy hub. Combining MCS charging with grid-critical services.'
     },
-    performance: {
+    metrics: {
+      powerLevel: '2.5 MW',
+      vehicles: 35,
       efficiency: '93%',
-      keyMetric: '2.5 MW aggregate from 35 heavy-duty port vehicles',
-      additionalMetrics: ['Target: €500K annual grid revenue', 'Grid-forming capability']
+      annualRevenue: '€500K',
+      investment: '€12M'
     },
     standardization: {
       standard: 'MCS (Megawatt Charging)',
       status: 'Developing MCS integration with German grid codes for MW-scale V2G.'
-    },
-    patents: {
-      count: 22,
-      focus: 'Megawatt-scale bidirectional systems',
-      recent: 'Grid-forming control and black-start capability'
     },
     technology: {
       overview: 'Megawatt Charging + V2G Hub',
