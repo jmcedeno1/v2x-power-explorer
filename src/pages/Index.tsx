@@ -5,8 +5,9 @@ import { ModuleHeader } from '@/components/ui/module-header';
 import { SystemMapDiagram } from '@/components/dashboard/SystemMapDiagram';
 import { MetricCard } from '@/components/dashboard/MetricCard';
 import { HighlightCard } from '@/components/dashboard/HighlightCard';
-import { MaturityTimeline } from '@/components/dashboard/MaturityTimeline';
-import { PilotTypeChart } from '@/components/dashboard/PilotTypeChart';
+import { MaturityDiffusionChart } from '@/components/dashboard/MaturityDiffusionChart';
+import { MarketSizeChart } from '@/components/dashboard/MarketSizeChart';
+import { KeyFindings } from '@/components/dashboard/KeyFindings';
 import { keyMetrics, reportHighlights } from '@/data/v2xData';
 import { useNavigate } from 'react-router-dom';
 
@@ -59,6 +60,17 @@ const Index = () => {
           </p>
         </motion.div>
 
+        {/* Charts Section - Maturity & Market Size */}
+        <div className="grid lg:grid-cols-2 gap-6 mb-10">
+          <MaturityDiffusionChart />
+          <MarketSizeChart />
+        </div>
+
+        {/* Key Findings */}
+        <div className="mb-10">
+          <KeyFindings />
+        </div>
+
         {/* Key metrics */}
         <section className="mb-10">
           <h3 className="text-lg font-semibold text-foreground mb-4">Key Indicators</h3>
@@ -74,12 +86,6 @@ const Index = () => {
           <h3 className="text-lg font-semibold text-foreground mb-4">V2X Energy Ecosystem</h3>
           <SystemMapDiagram onNodeClick={handleNodeClick} />
         </section>
-
-        {/* Two column layout */}
-        <div className="grid lg:grid-cols-2 gap-6 mb-10">
-          <MaturityTimeline />
-          <PilotTypeChart />
-        </div>
 
         {/* Report highlights */}
         <section>
