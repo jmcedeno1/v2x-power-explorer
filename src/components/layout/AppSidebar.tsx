@@ -31,8 +31,8 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { id: 'overview', label: 'Overview Dashboard', icon: LayoutDashboard, path: '/' },
-  { id: 'engineering', label: 'Engineering & Research', icon: Cpu, path: '/engineering' },
   { id: 'patents', label: 'Patents & IP', icon: FileText, path: '/patents' },
+  { id: 'engineering', label: 'Engineering & Research', icon: Cpu, path: '/engineering' },
   { id: 'markets', label: 'Markets & Business', icon: TrendingUp, path: '/markets' },
   { id: 'pilots', label: 'Pilots & Demonstrators', icon: FlaskConical, path: '/pilots' },
   { id: 'standards', label: 'Standards & Regulation', icon: Scale, path: '/standards' },
