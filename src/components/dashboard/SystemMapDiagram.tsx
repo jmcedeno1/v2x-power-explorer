@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Car, Plug, Building2, Zap, LineChart, ArrowLeftRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { EcosystemPopup } from './EcosystemPopup';
+import { useNavigate } from 'react-router-dom';
 
 interface NodeData {
   id: string;
@@ -24,8 +26,18 @@ interface SystemMapDiagramProps {
 }
 
 export function SystemMapDiagram({ onNodeClick }: SystemMapDiagramProps) {
+  const navigate = useNavigate();
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
   const [activeFlow, setActiveFlow] = useState(true);
+  const [selectedNode, setSelectedNode] = useState<string | null>(null);
+
+  const handleNodeClick = (nodeId: string) => {
+    setSelectedNode(nodeId);
+  };
+
+  const handleNavigate = (path: string) => {
+    navigate(path);
+  };
 
   return (
     <div className="relative w-full p-8 bg-gradient-to-br from-muted/30 to-muted/50 rounded-2xl overflow-hidden">
@@ -55,7 +67,7 @@ export function SystemMapDiagram({ onNodeClick }: SystemMapDiagramProps) {
             <div key={node.id} className="relative flex items-center">
               {/* Node */}
               <motion.button
-                onClick={() => onNodeClick?.(node.id)}
+                onClick={() => handleNodeClick(node.id)}
                 onMouseEnter={() => setHoveredNode(node.id)}
                 onMouseLeave={() => setHoveredNode(null)}
                 whileHover={{ scale: 1.05 }}
@@ -143,6 +155,14 @@ export function SystemMapDiagram({ onNodeClick }: SystemMapDiagramProps) {
           <span>Active</span>
         </div>
       </div>
+
+      {/* Ecosystem Popup */}
+      <EcosystemPopup
+        nodeId={selectedNode}
+        open={selectedNode !== null}
+        onClose={() => setSelectedNode(null)}
+        onNavigate={handleNavigate}
+      />
     </div>
   );
 }
