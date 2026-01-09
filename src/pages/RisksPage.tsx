@@ -53,7 +53,7 @@ const systemThreats = [
   { threat: 'Herd behavior during grid events', likelihood: 'medium', impact: 'critical' },
   { threat: 'Cascading thermal failures', likelihood: 'low', impact: 'critical' },
   { threat: 'Mass vehicle departure during discharge', likelihood: 'high', impact: 'high' },
-  { threat: 'Communication system failures', likelihood: 'medium', impact: 'high' },
+  { threat: 'Control system coordination failures', likelihood: 'medium', impact: 'high' },
   { threat: 'Protection system incompatibility', likelihood: 'medium', impact: 'high' },
 ];
 
