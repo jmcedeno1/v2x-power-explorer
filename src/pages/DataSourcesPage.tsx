@@ -13,14 +13,14 @@ import { DataSource, SourceCategory, sourceCategoryLabels } from '@/types/dataSo
 import { sampleDataSources } from '@/data/dataSources';
 
 const categories: SourceCategory[] = [
-  'patents',
-  'scientific',
-  'technical',
-  'standards',
-  'market_studies',
-  'pilots',
   'commercial',
   'industry_news',
+  'market_studies',
+  'patents',
+  'pilots',
+  'scientific',
+  'standards',
+  'technical',
   'transcripts_notes',
 ];
 
