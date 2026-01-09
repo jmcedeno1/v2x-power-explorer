@@ -70,6 +70,8 @@ export type NavigationModule =
   | 'standards'
   | 'architectures'
   | 'pilots'
+  | 'risks'
+  | 'foresight'
   | 'opportunities'
   | 'notes'
   | 'recommendations';

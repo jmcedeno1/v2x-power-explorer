@@ -16,6 +16,8 @@ import {
   ChevronRight,
   Zap,
   Database,
+  ShieldAlert,
+  Telescope,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -32,9 +34,11 @@ const navItems: NavItem[] = [
   { id: 'engineering', label: 'Engineering & Research', icon: Cpu, path: '/engineering' },
   { id: 'patents', label: 'Patents & IP', icon: FileText, path: '/patents' },
   { id: 'markets', label: 'Markets & Business', icon: TrendingUp, path: '/markets' },
+  { id: 'pilots', label: 'Pilots & Demonstrators', icon: FlaskConical, path: '/pilots' },
   { id: 'standards', label: 'Standards & Regulation', icon: Scale, path: '/standards' },
   { id: 'architectures', label: 'System Architectures', icon: Network, path: '/architectures' },
-  { id: 'pilots', label: 'Pilots & Demonstrators', icon: FlaskConical, path: '/pilots' },
+  { id: 'risks', label: 'Risks & Stability', icon: ShieldAlert, path: '/risks' },
+  { id: 'foresight', label: 'Foresight & Strategy', icon: Telescope, path: '/foresight' },
   { id: 'opportunities', label: 'Opportunity Map', icon: Map, path: '/opportunities' },
   { id: 'datasources', label: 'Data Sources', icon: Database, path: '/datasources' },
   { id: 'notes', label: 'Notes & Changes', icon: StickyNote, path: '/notes' },
