@@ -1,9 +1,14 @@
 import { motion } from 'framer-motion';
-import { TrendingUp, DollarSign, BarChart3, PieChart, Layers } from 'lucide-react';
+import { TrendingUp, DollarSign, PieChart, Layers, Zap, Activity, ArrowUpDown, Shield, Sun } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { ModuleHeader } from '@/components/ui/module-header';
 import { QuestionCard } from '@/components/questions/QuestionCard';
 import { expertQuestions } from '@/data/v2xData';
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from '@/components/ui/hover-card';
 
 const marketMetrics = [
   {
@@ -37,11 +42,81 @@ const marketMetrics = [
 ];
 
 const revenueStreams = [
-  { name: 'Demand Charge Avoidance (V2B)', share: 35, description: 'Offset site-level power spikes' },
-  { name: 'Frequency Regulation (V2G)', share: 25, description: 'Sub-second grid responses' },
-  { name: 'Energy Arbitrage', share: 20, description: 'Buy low, sell high' },
-  { name: 'Backup Power', share: 15, description: 'Resilience as a service' },
-  { name: 'RES Integration', share: 5, description: 'Renewable energy smoothing' },
+  { 
+    name: 'Demand Charge Avoidance (V2B)', 
+    share: 35, 
+    description: 'Offset site-level power spikes',
+    icon: Zap,
+    color: 'from-energy-green to-energy-teal',
+    tooltip: {
+      title: 'Demand Charge Avoidance',
+      definition: 'Using EV batteries to reduce peak power demand at commercial sites, lowering utility demand charges.',
+      mechanism: 'EVs discharge during peak demand periods to flatten load curves and reduce the highest 15-minute power draw.',
+      value: '$50-150/kW-month savings',
+      bestFor: 'Fleet depots, logistics hubs, commercial buildings with high peak loads',
+      example: 'A bus depot using 10 buses to shave 500kW peaks can save $75,000/year in demand charges.'
+    }
+  },
+  { 
+    name: 'Frequency Regulation (V2G)', 
+    share: 25, 
+    description: 'Sub-second grid responses',
+    icon: Activity,
+    color: 'from-energy-teal to-energy-blue',
+    tooltip: {
+      title: 'Frequency Regulation',
+      definition: 'Providing rapid power injection/absorption to maintain grid frequency at 50/60 Hz.',
+      mechanism: 'EVs respond to AGC signals within seconds, injecting or absorbing power to balance supply and demand.',
+      value: '$15-40/MW-hour',
+      bestFor: 'Aggregated EV fleets with fast-response bidirectional chargers',
+      example: 'A 50-vehicle fleet providing 2MW of regulation can earn $25,000-60,000/year in ancillary service payments.'
+    }
+  },
+  { 
+    name: 'Energy Arbitrage', 
+    share: 20, 
+    description: 'Buy low, sell high',
+    icon: ArrowUpDown,
+    color: 'from-energy-blue to-energy-purple',
+    tooltip: {
+      title: 'Energy Arbitrage',
+      definition: 'Charging EVs during low-price periods and discharging during high-price periods.',
+      mechanism: 'Leverage time-of-use rates or wholesale price differentials to generate revenue from price spreads.',
+      value: '$0.05-0.15/kWh spread',
+      bestFor: 'Markets with high price volatility, sites with dynamic pricing tariffs',
+      example: 'Charging at $0.08/kWh overnight and discharging at $0.25/kWh during peak yields $0.17/kWh gross margin.'
+    }
+  },
+  { 
+    name: 'Backup Power', 
+    share: 15, 
+    description: 'Resilience as a service',
+    icon: Shield,
+    color: 'from-energy-purple to-energy-orange',
+    tooltip: {
+      title: 'Backup Power',
+      definition: 'Using EV batteries to provide emergency power during grid outages.',
+      mechanism: 'EVs island from the grid and power critical loads, providing hours of backup depending on battery size.',
+      value: '$2,000-10,000/year avoided costs',
+      bestFor: 'Critical facilities, healthcare, data centers, residential in outage-prone areas',
+      example: 'A 100kWh EV battery can power a home for 3+ days or keep critical business systems running for 8-12 hours.'
+    }
+  },
+  { 
+    name: 'RES Integration', 
+    share: 5, 
+    description: 'Renewable energy smoothing',
+    icon: Sun,
+    color: 'from-energy-orange to-energy-amber',
+    tooltip: {
+      title: 'Renewable Energy Integration',
+      definition: 'Using EVs to absorb excess renewable generation and smooth intermittent output.',
+      mechanism: 'EVs charge when solar/wind production peaks and discharge when renewables are unavailable.',
+      value: 'Avoided curtailment + green premium',
+      bestFor: 'Sites with on-site solar, renewable-heavy grids, sustainability-focused operators',
+      example: 'Absorbing excess midday solar prevents curtailment and maximizes self-consumption rates up to 90%.'
+    }
+  },
 ];
 
 export default function MarketsPage() {
@@ -88,7 +163,9 @@ export default function MarketsPage() {
           <h3 className="text-lg font-semibold text-foreground mb-4">Revenue Stacking Portfolio</h3>
           <div className="p-6 rounded-xl bg-card border">
             <div className="space-y-4">
-              {revenueStreams.map((stream, index) => (
+            {revenueStreams.map((stream, index) => {
+              const StreamIcon = stream.icon;
+              return (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, x: -20 }}
@@ -96,10 +173,54 @@ export default function MarketsPage() {
                   transition={{ duration: 0.4, delay: index * 0.1 }}
                 >
                   <div className="flex justify-between mb-1">
-                    <div>
-                      <span className="text-sm font-medium text-foreground">{stream.name}</span>
-                      <span className="text-xs text-muted-foreground ml-2">– {stream.description}</span>
-                    </div>
+                    <HoverCard openDelay={100} closeDelay={100}>
+                      <HoverCardTrigger asChild>
+                        <div className="flex items-center gap-2 cursor-pointer group">
+                          <div className={`w-6 h-6 rounded-md bg-gradient-to-br ${stream.color} flex items-center justify-center`}>
+                            <StreamIcon className="w-3.5 h-3.5 text-white" />
+                          </div>
+                          <span className="text-sm font-medium text-foreground group-hover:text-primary transition-colors underline decoration-dotted underline-offset-4">
+                            {stream.name}
+                          </span>
+                          <span className="text-xs text-muted-foreground">– {stream.description}</span>
+                        </div>
+                      </HoverCardTrigger>
+                      <HoverCardContent className="w-80 p-0 overflow-hidden" side="right" align="start">
+                        <div className={`h-2 bg-gradient-to-r ${stream.color}`} />
+                        <div className="p-4 space-y-3">
+                          <div className="flex items-center gap-2">
+                            <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${stream.color} flex items-center justify-center`}>
+                              <StreamIcon className="w-4 h-4 text-white" />
+                            </div>
+                            <h4 className="font-semibold text-foreground">{stream.tooltip.title}</h4>
+                          </div>
+                          
+                          <p className="text-sm text-muted-foreground">{stream.tooltip.definition}</p>
+                          
+                          <div className="space-y-2 text-xs">
+                            <div className="p-2 rounded-md bg-muted/50">
+                              <span className="font-medium text-foreground">How it works: </span>
+                              <span className="text-muted-foreground">{stream.tooltip.mechanism}</span>
+                            </div>
+                            
+                            <div className="flex items-center justify-between p-2 rounded-md bg-primary/10">
+                              <span className="font-medium text-foreground">Value Potential</span>
+                              <span className="font-semibold text-primary">{stream.tooltip.value}</span>
+                            </div>
+                            
+                            <div className="p-2 rounded-md bg-muted/50">
+                              <span className="font-medium text-foreground">Best for: </span>
+                              <span className="text-muted-foreground">{stream.tooltip.bestFor}</span>
+                            </div>
+                            
+                            <div className="p-2 rounded-md border border-primary/20 bg-primary/5">
+                              <span className="font-medium text-primary">💡 Example: </span>
+                              <span className="text-muted-foreground">{stream.tooltip.example}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </HoverCardContent>
+                    </HoverCard>
                     <span className="text-sm font-bold text-primary">{stream.share}%</span>
                   </div>
                   <div className="h-3 bg-muted rounded-full overflow-hidden">
@@ -111,7 +232,8 @@ export default function MarketsPage() {
                     />
                   </div>
                 </motion.div>
-              ))}
+              );
+            })}
             </div>
 
             <div className="mt-6 p-4 rounded-lg bg-muted/50">
