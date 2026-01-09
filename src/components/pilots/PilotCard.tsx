@@ -31,7 +31,7 @@ export function PilotCard({ pilot, index, onClick }: PilotCardProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.1 }}
       whileHover={{ y: -4 }}
-      className="group w-full text-left p-6 rounded-xl bg-card border hover:border-primary/40 hover:shadow-lg transition-all duration-300"
+      className="group relative w-full text-left p-6 rounded-xl bg-card border hover:border-primary/40 hover:shadow-lg transition-all duration-300"
     >
       {/* Header */}
       <div className="flex items-start justify-between mb-4">

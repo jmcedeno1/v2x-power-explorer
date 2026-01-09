@@ -4,6 +4,7 @@ import { FlaskConical, Filter, Grid3X3, List } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { ModuleHeader } from '@/components/ui/module-header';
 import { PilotCard } from '@/components/pilots/PilotCard';
+import { PilotPopup } from '@/components/pilots/PilotPopup';
 import { QuestionCard } from '@/components/questions/QuestionCard';
 import { Button } from '@/components/ui/button';
 import { pilotProjects, expertQuestions } from '@/data/v2xData';
@@ -19,6 +20,7 @@ const pilotStats = [
 export default function PilotsPage() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [filter, setFilter] = useState<string>('all');
+  const [selectedPilot, setSelectedPilot] = useState<string | null>(null);
   const pilotQuestions = expertQuestions.filter(q => q.module === 'pilots');
 
   const filteredPilots = filter === 'all' 
@@ -115,10 +117,22 @@ export default function PilotsPage() {
             viewMode === 'grid' ? 'sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'
           )}>
             {filteredPilots.map((pilot, index) => (
-              <PilotCard key={pilot.id} pilot={pilot} index={index} />
+              <PilotCard 
+                key={pilot.id} 
+                pilot={pilot} 
+                index={index} 
+                onClick={() => setSelectedPilot(pilot.id)}
+              />
             ))}
           </div>
         </section>
+
+        {/* Pilot Popup */}
+        <PilotPopup 
+          pilotId={selectedPilot}
+          open={!!selectedPilot}
+          onClose={() => setSelectedPilot(null)}
+        />
 
         {/* Key observations */}
         <section className="mb-10">
