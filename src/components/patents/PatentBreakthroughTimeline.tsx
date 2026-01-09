@@ -71,23 +71,23 @@ export function PatentBreakthroughTimeline() {
       transition={{ duration: 0.5, delay: 0.1 }}
       className="p-6 rounded-xl bg-card border"
     >
-      <h4 className="text-base font-semibold text-foreground mb-5">
+      <h4 className="text-base font-semibold text-foreground mb-6">
         V2X Breakthrough Patents Timeline
       </h4>
 
-      {/* Horizontal timeline */}
+      {/* Horizontal timeline - full width */}
       <div className="relative">
         {/* Horizontal line */}
         <div className="absolute top-3 left-0 right-0 h-0.5 bg-gradient-to-r from-primary/20 via-primary to-primary/20" />
 
-        <div className="flex overflow-x-auto pb-2 gap-1 scrollbar-thin">
+        <div className="grid grid-cols-4 lg:grid-cols-8 gap-3">
           {breakthroughEvents.map((event, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: index * 0.05 }}
-              className="flex-shrink-0 w-[140px] group"
+              className="group"
             >
               {/* Dot */}
               <div className="flex justify-center mb-2">
@@ -112,7 +112,7 @@ export function PatentBreakthroughTimeline() {
                 <p className="text-xs font-medium text-foreground leading-tight mb-1">
                   {event.title}
                 </p>
-                <p className="text-[10px] text-muted-foreground leading-snug mb-1.5">
+                <p className="text-[10px] text-muted-foreground leading-snug mb-1.5 line-clamp-2">
                   {event.detail}
                 </p>
                 <div className="flex flex-wrap gap-1">
