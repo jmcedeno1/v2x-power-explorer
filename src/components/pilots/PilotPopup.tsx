@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
   Dialog,
   DialogContent,
@@ -7,27 +7,24 @@ import {
 } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Zap,
   Car,
-  Activity,
-  AlertCircle,
   MapPin,
   Building2,
   FileText,
-  Settings,
-  Cpu,
-  Code,
-  Shield,
-  Clock,
-  Users,
-  TrendingUp,
-  CheckCircle2,
   CircleDot,
+  Gauge,
+  TrendingDown,
+  Banknote,
+  PiggyBank,
+  Sun,
+  ShieldCheck,
+  Clock,
+  Info,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { PilotDetails, pilotDetailsMap } from '@/data/pilotDetailsData';
+import { pilotDetailsMap } from '@/data/pilotDetailsData';
 
 interface PilotPopupProps {
   pilotId: string | null;
@@ -54,9 +51,96 @@ export function PilotPopup({ pilotId, open, onClose }: PilotPopupProps) {
   const pilot = pilotDetailsMap[pilotId];
   if (!pilot) return null;
 
+  // Build metrics array based on available data
+  const metricsToShow = [];
+  
+  metricsToShow.push({ 
+    icon: <Zap className="w-5 h-5" />, 
+    label: 'Power Level', 
+    value: pilot.metrics.powerLevel,
+    color: 'text-primary'
+  });
+  
+  metricsToShow.push({ 
+    icon: <Car className="w-5 h-5" />, 
+    label: 'Vehicles', 
+    value: pilot.metrics.vehicles.toString(),
+    color: 'text-accent'
+  });
+  
+  metricsToShow.push({ 
+    icon: <Gauge className="w-5 h-5" />, 
+    label: 'Efficiency', 
+    value: pilot.metrics.efficiency,
+    color: 'text-energy-green'
+  });
+  
+  if (pilot.metrics.demandChargeReduction) {
+    metricsToShow.push({ 
+      icon: <TrendingDown className="w-5 h-5" />, 
+      label: 'Demand Charge Reduction', 
+      value: pilot.metrics.demandChargeReduction,
+      color: 'text-energy-blue'
+    });
+  }
+  
+  if (pilot.metrics.peakReduction) {
+    metricsToShow.push({ 
+      icon: <TrendingDown className="w-5 h-5" />, 
+      label: 'Peak Reduction', 
+      value: pilot.metrics.peakReduction,
+      color: 'text-energy-blue'
+    });
+  }
+  
+  if (pilot.metrics.annualRevenue) {
+    metricsToShow.push({ 
+      icon: <Banknote className="w-5 h-5" />, 
+      label: 'Annual Grid Revenue', 
+      value: pilot.metrics.annualRevenue,
+      color: 'text-energy-amber'
+    });
+  }
+  
+  if (pilot.metrics.annualSavings) {
+    metricsToShow.push({ 
+      icon: <PiggyBank className="w-5 h-5" />, 
+      label: 'Annual Savings', 
+      value: pilot.metrics.annualSavings,
+      color: 'text-energy-amber'
+    });
+  }
+  
+  if (pilot.metrics.solarConsumption) {
+    metricsToShow.push({ 
+      icon: <Sun className="w-5 h-5" />, 
+      label: 'Solar Self-Consumption', 
+      value: pilot.metrics.solarConsumption,
+      color: 'text-energy-amber'
+    });
+  }
+  
+  if (pilot.metrics.backupCapability) {
+    metricsToShow.push({ 
+      icon: <ShieldCheck className="w-5 h-5" />, 
+      label: 'Backup Capability', 
+      value: pilot.metrics.backupCapability,
+      color: 'text-energy-purple'
+    });
+  }
+  
+  if (pilot.metrics.investment) {
+    metricsToShow.push({ 
+      icon: <Banknote className="w-5 h-5" />, 
+      label: 'Pilot Investment', 
+      value: pilot.metrics.investment,
+      color: 'text-muted-foreground'
+    });
+  }
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] p-0 gap-0 overflow-hidden">
+      <DialogContent className="max-w-5xl max-h-[90vh] p-0 gap-0 overflow-hidden">
         <ScrollArea className="max-h-[90vh]">
           <div className="p-6">
             {/* Header */}
@@ -86,10 +170,21 @@ export function PilotPopup({ pilotId, open, onClose }: PilotPopupProps) {
               </div>
             </DialogHeader>
 
-            {/* Main Content Grid */}
-            <div className="grid lg:grid-cols-2 gap-6 mb-6">
-              {/* Left Column - Business Info */}
-              <div className="space-y-4">
+            {/* Main Content Grid - Two Columns */}
+            <div className="grid lg:grid-cols-5 gap-6 mb-6">
+              {/* Left Column - Description, Business Model, Standardization */}
+              <div className="lg:col-span-3 space-y-4">
+                {/* Pilot Description */}
+                <InfoSection 
+                  title="Pilot Description" 
+                  icon={<Info className="w-4 h-4" />}
+                  accentColor="text-foreground"
+                >
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {pilot.description}
+                  </p>
+                </InfoSection>
+
                 {/* Business Model */}
                 <InfoSection 
                   title="Business Model" 
@@ -98,28 +193,6 @@ export function PilotPopup({ pilotId, open, onClose }: PilotPopupProps) {
                 >
                   <p className="font-semibold text-foreground">{pilot.businessModel.type}</p>
                   <p className="text-sm text-muted-foreground">{pilot.businessModel.description}</p>
-                </InfoSection>
-
-                {/* Performance Metrics */}
-                <InfoSection 
-                  title="Performance Metrics" 
-                  icon={<TrendingUp className="w-4 h-4" />}
-                  accentColor="text-energy-green"
-                >
-                  <p className="text-sm text-foreground">
-                    Efficiency: <span className="font-bold">{pilot.performance.efficiency}</span>
-                  </p>
-                  <p className="text-sm text-foreground">{pilot.performance.keyMetric}</p>
-                  {pilot.performance.additionalMetrics && (
-                    <ul className="mt-2 space-y-1">
-                      {pilot.performance.additionalMetrics.map((metric, i) => (
-                        <li key={i} className="text-sm text-muted-foreground flex items-center gap-2">
-                          <CheckCircle2 className="w-3 h-3 text-energy-green" />
-                          {metric}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
                 </InfoSection>
 
                 {/* Standardization */}
@@ -133,163 +206,119 @@ export function PilotPopup({ pilotId, open, onClose }: PilotPopupProps) {
                   </p>
                   <p className="text-sm text-muted-foreground">{pilot.standardization.status}</p>
                 </InfoSection>
-
-                {/* Patents */}
-                <InfoSection 
-                  title="Patent Overview" 
-                  icon={<Shield className="w-4 h-4" />}
-                  accentColor="text-energy-amber"
-                >
-                  <p className="text-sm text-foreground">
-                    <span className="font-bold">{pilot.patents.count} patents</span> - {pilot.patents.focus}
-                  </p>
-                  <p className="text-sm text-muted-foreground italic">Recent: {pilot.patents.recent}</p>
-                </InfoSection>
               </div>
 
-              {/* Right Column - Technology Overview */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-center text-foreground mb-4">
-                  Technology Overview
-                </h3>
-                
-                {/* Technology Diagram */}
-                <div className="relative">
-                  {/* Overview Badge */}
-                  <div className="flex justify-center mb-4">
-                    <Badge className="bg-primary text-primary-foreground px-4 py-2 text-sm font-medium">
-                      {pilot.technology.overview}
-                    </Badge>
-                  </div>
-
-                  {/* Hardware & Software Row */}
-                  <div className="grid grid-cols-2 gap-4 mb-4">
-                    <TechCategory 
-                      title="Hardware" 
-                      items={pilot.technology.hardware}
-                      color="bg-energy-amber"
-                    />
-                    <TechCategory 
-                      title="Software" 
-                      items={pilot.technology.software}
-                      color="bg-energy-green"
-                    />
-                  </div>
-
-                  {/* Control Features */}
-                  <div className="grid grid-cols-2 gap-4">
-                    {pilot.technology.control.map((ctrl, i) => (
-                      <div key={i} className="p-3 rounded-lg bg-muted/50 border">
-                        <h5 className="text-sm font-semibold text-foreground mb-2">{ctrl.name}</h5>
-                        <ul className="space-y-1">
-                          {ctrl.details.map((detail, j) => (
-                            <li key={j} className="text-xs text-muted-foreground flex items-center gap-1.5">
-                              <span className="w-1 h-1 rounded-full bg-primary" />
-                              {detail}
-                            </li>
-                          ))}
-                        </ul>
+              {/* Right Column - Metric Boxes */}
+              <div className="lg:col-span-2">
+                <h4 className="text-sm font-semibold text-muted-foreground mb-3 flex items-center gap-2">
+                  <Gauge className="w-4 h-4" />
+                  Key Metrics
+                </h4>
+                <div className="grid grid-cols-2 gap-3">
+                  {metricsToShow.map((metric, index) => (
+                    <motion.div
+                      key={metric.label}
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: index * 0.05 }}
+                      className="p-4 rounded-lg bg-muted/50 border text-center"
+                    >
+                      <div className={cn('flex justify-center mb-2', metric.color)}>
+                        {metric.icon}
                       </div>
-                    ))}
-                  </div>
+                      <p className="text-xs text-muted-foreground leading-tight mb-1">{metric.label}</p>
+                      <p className="text-xl font-bold text-foreground">{metric.value}</p>
+                    </motion.div>
+                  ))}
                 </div>
               </div>
             </div>
 
-            {/* Metrics Row */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-              <MetricBox 
-                icon={<Zap className="w-5 h-5" />}
-                label="Power Level"
-                value={pilot.powerLevel}
-                color="text-primary"
-              />
-              <MetricBox 
-                icon={<Car className="w-5 h-5" />}
-                label="Vehicles"
-                value={pilot.vehicleCount.toString()}
-                color="text-accent"
-              />
-              <MetricBox 
-                icon={<Activity className="w-5 h-5" />}
-                label="Grid Services"
-                value={pilot.gridServices.length.toString()}
-                color="text-energy-green"
-              />
-              <MetricBox 
-                icon={<AlertCircle className="w-5 h-5" />}
-                label="Bottlenecks"
-                value={pilot.bottlenecks.length.toString()}
-                color="text-energy-amber"
-              />
-            </div>
-
-            {/* Grid Services */}
-            <div className="mb-6">
-              <h4 className="text-sm font-semibold text-muted-foreground mb-3 flex items-center gap-2">
-                <Activity className="w-4 h-4" />
-                Grid Services
-              </h4>
-              <div className="flex flex-wrap gap-2">
-                {pilot.gridServices.map((service, i) => (
-                  <Badge key={i} variant="secondary" className="text-sm">
-                    {service}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-
-            {/* Key Bottlenecks */}
-            <div className="mb-6">
-              <h4 className="text-sm font-semibold text-muted-foreground mb-3 flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 text-energy-amber" />
-                Key Bottlenecks
-              </h4>
-              <div className="flex flex-wrap gap-2">
-                {pilot.bottlenecks.map((bottleneck, i) => (
-                  <Badge key={i} variant="outline" className="text-sm border-energy-amber/30 text-energy-amber">
-                    {bottleneck}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-
-            {/* Project Info & Timeline */}
-            <div className="p-5 rounded-xl bg-gradient-to-br from-primary/5 to-accent/5 border border-primary/20">
-              <h3 className="text-lg font-semibold text-foreground mb-2">
-                Pilot Project - {pilot.projectInfo.partner}
-              </h3>
-              <p className="text-sm text-muted-foreground mb-6">
-                {pilot.projectInfo.description}
-              </p>
-
-              {/* Timeline */}
-              <h4 className="text-center text-primary font-semibold mb-4">Project Timeline</h4>
-              <div className="relative">
-                {/* Timeline Line */}
-                <div className="absolute left-4 top-4 bottom-4 w-0.5 bg-gradient-to-b from-primary/60 to-primary/20" />
+            {/* Bottom Section - Technology Overview & Timeline Side by Side */}
+            <div className="grid lg:grid-cols-2 gap-6">
+              {/* Technology Overview */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                  <Zap className="w-5 h-5 text-primary" />
+                  Technology Overview
+                </h3>
                 
-                <div className="space-y-4">
-                  {pilot.timeline.map((item, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      className="flex items-start gap-4 pl-2"
-                    >
-                      <div className="relative z-10 w-5 h-5 rounded-full bg-primary flex items-center justify-center">
-                        <CircleDot className="w-3 h-3 text-primary-foreground" />
-                      </div>
-                      <div className="flex-1 pb-2">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="text-xs font-medium text-primary italic">{item.phase}</span>
-                          <Badge variant="outline" className="text-xs">{item.year}</Badge>
-                        </div>
-                        <p className="text-sm text-muted-foreground">{item.description}</p>
-                      </div>
-                    </motion.div>
+                {/* Overview Badge */}
+                <div className="flex justify-center">
+                  <Badge className="bg-primary text-primary-foreground px-4 py-2 text-sm font-medium">
+                    {pilot.technology.overview}
+                  </Badge>
+                </div>
+
+                {/* Hardware & Software Row */}
+                <div className="grid grid-cols-2 gap-3">
+                  <TechCategory 
+                    title="Hardware" 
+                    items={pilot.technology.hardware}
+                    color="bg-energy-amber"
+                  />
+                  <TechCategory 
+                    title="Software" 
+                    items={pilot.technology.software}
+                    color="bg-energy-green"
+                  />
+                </div>
+
+                {/* Control Features */}
+                <div className="grid grid-cols-2 gap-3">
+                  {pilot.technology.control.map((ctrl, i) => (
+                    <div key={i} className="p-3 rounded-lg bg-muted/50 border">
+                      <h5 className="text-sm font-semibold text-foreground mb-2">{ctrl.name}</h5>
+                      <ul className="space-y-1">
+                        {ctrl.details.map((detail, j) => (
+                          <li key={j} className="text-xs text-muted-foreground flex items-center gap-1.5">
+                            <span className="w-1 h-1 rounded-full bg-primary" />
+                            {detail}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   ))}
+                </div>
+              </div>
+
+              {/* Project Timeline */}
+              <div className="p-5 rounded-xl bg-gradient-to-br from-primary/5 to-accent/5 border border-primary/20">
+                <h3 className="text-lg font-semibold text-foreground mb-2 flex items-center gap-2">
+                  <Clock className="w-5 h-5 text-primary" />
+                  Project Timeline
+                </h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  {pilot.projectInfo.partner}
+                </p>
+
+                {/* Timeline */}
+                <div className="relative">
+                  {/* Timeline Line */}
+                  <div className="absolute left-4 top-4 bottom-4 w-0.5 bg-gradient-to-b from-primary/60 to-primary/20" />
+                  
+                  <div className="space-y-4">
+                    {pilot.timeline.map((item, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                        className="flex items-start gap-4 pl-2"
+                      >
+                        <div className="relative z-10 w-5 h-5 rounded-full bg-primary flex items-center justify-center">
+                          <CircleDot className="w-3 h-3 text-primary-foreground" />
+                        </div>
+                        <div className="flex-1 pb-2">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-xs font-medium text-primary italic">{item.phase}</span>
+                            <Badge variant="outline" className="text-xs">{item.year}</Badge>
+                          </div>
+                          <p className="text-sm text-muted-foreground">{item.description}</p>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
@@ -354,28 +383,6 @@ function TechCategory({
           </div>
         ))}
       </div>
-    </div>
-  );
-}
-
-function MetricBox({ 
-  icon, 
-  label, 
-  value, 
-  color 
-}: { 
-  icon: React.ReactNode; 
-  label: string; 
-  value: string;
-  color: string;
-}) {
-  return (
-    <div className="p-4 rounded-lg bg-muted/50 border text-center">
-      <div className={cn('flex justify-center mb-2', color)}>
-        {icon}
-      </div>
-      <p className="text-xs text-muted-foreground">{label}</p>
-      <p className="text-lg font-bold text-foreground">{value}</p>
     </div>
   );
 }
