@@ -1,4 +1,9 @@
 import { motion } from 'framer-motion';
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from '@/components/ui/hover-card';
 
 interface BreakthroughEvent {
   year: string;
@@ -71,62 +76,74 @@ export function PatentBreakthroughTimeline() {
       transition={{ duration: 0.5, delay: 0.1 }}
       className="p-6 rounded-xl bg-card border"
     >
-      <h4 className="text-base font-semibold text-foreground mb-6">
+      <h4 className="text-base font-semibold text-foreground mb-8">
         V2X Breakthrough Patents Timeline
       </h4>
 
-      {/* Horizontal timeline - full width */}
-      <div className="relative">
-        {/* Horizontal line */}
-        <div className="absolute top-3 left-0 right-0 h-0.5 bg-gradient-to-r from-primary/20 via-primary to-primary/20" />
+      {/* Horizontal timeline */}
+      <div className="relative px-4">
+        {/* Horizontal line - positioned in the middle */}
+        <div className="absolute top-[42px] left-0 right-0 h-0.5 bg-gradient-to-r from-primary/20 via-primary to-primary/20" />
 
-        <div className="grid grid-cols-4 lg:grid-cols-8 gap-3">
+        <div className="grid grid-cols-4 lg:grid-cols-8 gap-2">
           {breakthroughEvents.map((event, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: index * 0.05 }}
-              className="group"
-            >
-              {/* Dot */}
-              <div className="flex justify-center mb-2">
-                <div
-                  className={`w-2.5 h-2.5 rounded-full border-2 z-10 relative transition-all duration-300 ${
-                    event.highlight
-                      ? 'bg-primary border-primary shadow-sm shadow-primary/40'
-                      : 'bg-card border-primary/50 group-hover:border-primary group-hover:bg-primary/20'
-                  }`}
-                />
-              </div>
+            <HoverCard key={index} openDelay={100} closeDelay={100}>
+              <HoverCardTrigger asChild>
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}
+                  className="group cursor-pointer flex flex-col items-center"
+                >
+                  {/* Year above */}
+                  <p className={`text-xs font-bold mb-2 transition-colors ${
+                    event.highlight ? 'text-primary' : 'text-muted-foreground group-hover:text-primary'
+                  }`}>
+                    {event.year}
+                  </p>
 
-              {/* Content card */}
-              <div
-                className={`rounded-lg p-2.5 transition-all duration-300 h-full ${
-                  event.highlight
-                    ? 'bg-gradient-to-b from-primary/10 to-accent/5 border border-primary/20'
-                    : 'bg-muted/30 hover:bg-muted/50'
-                }`}
+                  {/* Dot */}
+                  <div
+                    className={`w-3 h-3 rounded-full border-2 z-10 relative transition-all duration-300 ${
+                      event.highlight
+                        ? 'bg-primary border-primary shadow-md shadow-primary/40'
+                        : 'bg-card border-primary/50 group-hover:border-primary group-hover:bg-primary/20'
+                    }`}
+                  />
+
+                  {/* Title below */}
+                  <p className="text-[11px] font-medium text-foreground text-center leading-tight mt-3 px-1 min-h-[32px]">
+                    {event.title}
+                  </p>
+                </motion.div>
+              </HoverCardTrigger>
+
+              <HoverCardContent 
+                className="w-64 p-4 bg-card border shadow-lg z-50"
+                side="bottom"
+                align="center"
               >
-                <p className="text-xs font-bold text-primary mb-1">{event.year}</p>
-                <p className="text-xs font-medium text-foreground leading-tight mb-1">
-                  {event.title}
-                </p>
-                <p className="text-[10px] text-muted-foreground leading-snug mb-1.5 line-clamp-2">
-                  {event.detail}
-                </p>
-                <div className="flex flex-wrap gap-1">
-                  {event.companies.slice(0, 2).map((company) => (
-                    <span
-                      key={company}
-                      className="text-[9px] px-1.5 py-0.5 rounded-full bg-primary/10 text-primary font-medium"
-                    >
-                      {company}
-                    </span>
-                  ))}
+                <div>
+                  <p className="text-xs font-bold text-primary mb-1">{event.year}</p>
+                  <p className="text-sm font-semibold text-foreground mb-2">{event.title}</p>
+                  <p className="text-xs text-muted-foreground leading-relaxed mb-3">
+                    {event.detail}
+                  </p>
+                  {event.companies.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5">
+                      {event.companies.map((company) => (
+                        <span
+                          key={company}
+                          className="text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium"
+                        >
+                          {company}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              </div>
-            </motion.div>
+              </HoverCardContent>
+            </HoverCard>
           ))}
         </div>
       </div>
