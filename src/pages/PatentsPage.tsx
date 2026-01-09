@@ -89,60 +89,67 @@ export default function PatentsPage() {
           </div>
         </section>
 
-        {/* Patent evolution chart and breakthrough timeline */}
+        {/* Patent evolution chart and Innovation Area side by side */}
         <section className="mb-10">
           <h3 className="text-lg font-semibold text-foreground mb-4">Patent Maturity</h3>
           <div className="grid lg:grid-cols-2 gap-6">
             <PatentEvolutionChart />
-            <PatentBreakthroughTimeline />
+            
+            {/* Innovation Area Maturity */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="p-6 rounded-xl bg-card border"
+            >
+              <h4 className="text-base font-semibold text-foreground mb-1">Innovation Area Maturity</h4>
+              <p className="text-xs text-muted-foreground mb-4">Click each area for detailed patent trends</p>
+              <div className="space-y-3">
+                {patentAreasData.map((area, index) => (
+                  <InnovationAreaPopup key={area.id} area={area}>
+                    <motion.div
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.4, delay: index * 0.1 }}
+                      className="cursor-pointer hover:bg-muted/50 rounded-lg p-2 -mx-2 transition-colors"
+                    >
+                      <div className="flex justify-between mb-1">
+                        <span className="text-sm font-medium text-foreground">{area.name}</span>
+                        <span className={cn(
+                          'text-xs px-2 py-0.5 rounded-full capitalize',
+                          area.status === 'saturated' ? 'bg-muted text-muted-foreground' :
+                          area.status === 'active' ? 'bg-energy-blue/10 text-energy-blue' :
+                          area.status === 'growing' ? 'bg-energy-amber/10 text-energy-amber' :
+                          'bg-energy-green/10 text-energy-green'
+                        )}>
+                          {area.status.replace('-', ' ')}
+                        </span>
+                      </div>
+                      <div className="h-2 bg-muted rounded-full overflow-hidden">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${area.maturity}%` }}
+                          transition={{ duration: 0.8, delay: index * 0.1 + 0.3 }}
+                          className={cn(
+                            'h-full rounded-full',
+                            area.status === 'saturated' ? 'bg-muted-foreground' :
+                            area.status === 'active' ? 'bg-energy-blue' :
+                            area.status === 'growing' ? 'bg-energy-amber' :
+                            'bg-gradient-to-r from-primary to-accent'
+                          )}
+                        />
+                      </div>
+                    </motion.div>
+                  </InnovationAreaPopup>
+                ))}
+              </div>
+            </motion.div>
           </div>
         </section>
 
-        {/* Patent area maturity */}
+        {/* V2X Breakthrough Timeline - full width */}
         <section className="mb-10">
-          <h3 className="text-lg font-semibold text-foreground mb-4">Innovation Area Maturity</h3>
-          <p className="text-sm text-muted-foreground mb-4">Hover over each area to see detailed patent trends and technology status</p>
-          <div className="p-6 rounded-xl bg-card border">
-            <div className="space-y-4">
-              {patentAreasData.map((area, index) => (
-                <InnovationAreaPopup key={area.id} area={area}>
-                  <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.4, delay: index * 0.1 }}
-                    className="cursor-pointer hover:bg-muted/50 rounded-lg p-2 -mx-2 transition-colors"
-                  >
-                    <div className="flex justify-between mb-1">
-                      <span className="text-sm font-medium text-foreground">{area.name}</span>
-                      <span className={cn(
-                        'text-xs px-2 py-0.5 rounded-full capitalize',
-                        area.status === 'saturated' ? 'bg-muted text-muted-foreground' :
-                        area.status === 'active' ? 'bg-energy-blue/10 text-energy-blue' :
-                        area.status === 'growing' ? 'bg-energy-amber/10 text-energy-amber' :
-                        'bg-energy-green/10 text-energy-green'
-                      )}>
-                        {area.status.replace('-', ' ')}
-                      </span>
-                    </div>
-                    <div className="h-2 bg-muted rounded-full overflow-hidden">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: `${area.maturity}%` }}
-                        transition={{ duration: 0.8, delay: index * 0.1 + 0.3 }}
-                        className={cn(
-                          'h-full rounded-full',
-                          area.status === 'saturated' ? 'bg-muted-foreground' :
-                          area.status === 'active' ? 'bg-energy-blue' :
-                          area.status === 'growing' ? 'bg-energy-amber' :
-                          'bg-gradient-to-r from-primary to-accent'
-                        )}
-                      />
-                    </div>
-                  </motion.div>
-                </InnovationAreaPopup>
-              ))}
-            </div>
-          </div>
+          <PatentBreakthroughTimeline />
         </section>
 
         {/* Strategic gaps */}
