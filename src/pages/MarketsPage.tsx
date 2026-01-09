@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { TrendingUp, DollarSign, PieChart, Layers, Zap, Activity, ArrowUpDown, Shield, Sun } from 'lucide-react';
+import { TrendingUp, DollarSign, PieChart, Layers, Zap, Activity, ArrowUpDown, Shield, Sun, BarChart3, Building2, Globe, Users } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { ModuleHeader } from '@/components/ui/module-header';
 import { QuestionCard } from '@/components/questions/QuestionCard';
@@ -9,6 +9,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from '@/components/ui/hover-card';
+import { PieChart as RechartsPie, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 
 const marketMetrics = [
   {
@@ -26,18 +27,83 @@ const marketMetrics = [
     color: 'from-energy-teal to-energy-blue',
   },
   {
+    icon: BarChart3,
+    title: 'Annual Sales (2024)',
+    value: '$3.2B',
+    subtitle: 'V2X equipment & services',
+    color: 'from-energy-blue to-energy-purple',
+  },
+  {
+    icon: TrendingUp,
+    title: 'Sales Growth',
+    value: '+34%',
+    subtitle: 'YoY growth (2023-2024)',
+    color: 'from-energy-purple to-energy-orange',
+  },
+  {
+    icon: Building2,
+    title: 'Annual Investment',
+    value: '$4.8B',
+    subtitle: 'Global V2X infrastructure',
+    color: 'from-energy-orange to-energy-amber',
+  },
+  {
     icon: PieChart,
     title: 'Commercial Share',
     value: '73%',
     subtitle: 'Fleet/commercial deployments',
-    color: 'from-energy-blue to-energy-purple',
+    color: 'from-energy-amber to-energy-green',
   },
   {
     icon: Layers,
     title: 'Revenue Stacking',
     value: '3-4x',
     subtitle: 'Service multiplier potential',
-    color: 'from-energy-purple to-energy-orange',
+    color: 'from-energy-green to-energy-teal',
+  },
+  {
+    icon: Globe,
+    title: 'Active Markets',
+    value: '28',
+    subtitle: 'Countries with V2X programs',
+    color: 'from-energy-teal to-energy-blue',
+  },
+];
+
+const marketByRegion = [
+  { name: 'Europe', value: 38, color: '#0EA5E9' },
+  { name: 'North America', value: 28, color: '#10B981' },
+  { name: 'Asia Pacific', value: 24, color: '#8B5CF6' },
+  { name: 'Rest of World', value: 10, color: '#F59E0B' },
+];
+
+const marketPlayers = [
+  {
+    region: 'Europe',
+    players: [
+      { name: 'Nuvve', country: '🇩🇰', investment: '$180M', focus: 'Fleet V2G aggregation' },
+      { name: 'Fermata Energy', country: '🇬🇧', investment: '$65M', focus: 'Commercial V2B' },
+      { name: 'Wallbox', country: '🇪🇸', investment: '$450M', focus: 'Residential & commercial' },
+      { name: 'ABB E-mobility', country: '🇨🇭', investment: '$280M', focus: 'DC fast charging + V2G' },
+    ],
+  },
+  {
+    region: 'North America',
+    players: [
+      { name: 'Dcbel', country: '🇨🇦', investment: '$42M', focus: 'Residential V2H' },
+      { name: 'Fermata Energy', country: '🇺🇸', investment: '$25M', focus: 'Fleet V2G/V2B' },
+      { name: 'Ford Pro', country: '🇺🇸', investment: '$500M+', focus: 'Integrated F-150 Lightning' },
+      { name: 'GM Energy', country: '🇺🇸', investment: '$750M', focus: 'Ultium-based V2H/V2G' },
+    ],
+  },
+  {
+    region: 'Asia Pacific',
+    players: [
+      { name: 'Nissan', country: '🇯🇵', investment: '$200M', focus: 'CHAdeMO V2H pioneer' },
+      { name: 'Hyundai/Kia', country: '🇰🇷', investment: '$350M', focus: 'V2L & V2G integration' },
+      { name: 'BYD', country: '🇨🇳', investment: '$600M', focus: 'Integrated energy ecosystem' },
+      { name: 'CATL', country: '🇨🇳', investment: '$1.2B', focus: 'Battery + grid services' },
+    ],
   },
 ];
 
@@ -135,7 +201,7 @@ export default function MarketsPage() {
         {/* Market metrics */}
         <section className="mb-10">
           <h3 className="text-lg font-semibold text-foreground mb-4">Market Indicators</h3>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {marketMetrics.map((item, index) => {
               const Icon = item.icon;
               return (
@@ -143,18 +209,101 @@ export default function MarketsPage() {
                   key={index}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: index * 0.1 }}
-                  className="p-5 rounded-xl bg-card border hover:border-primary/40 hover:shadow-md transition-all"
+                  transition={{ duration: 0.4, delay: index * 0.05 }}
+                  className="p-4 rounded-xl bg-card border hover:border-primary/40 hover:shadow-md transition-all"
                 >
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center mb-4`}>
-                    <Icon className="w-6 h-6 text-white" />
+                  <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${item.color} flex items-center justify-center mb-3`}>
+                    <Icon className="w-5 h-5 text-white" />
                   </div>
-                  <p className="text-sm text-muted-foreground">{item.title}</p>
-                  <p className="text-2xl font-bold text-foreground mt-1">{item.value}</p>
-                  <p className="text-xs text-muted-foreground mt-1">{item.subtitle}</p>
+                  <p className="text-xs text-muted-foreground">{item.title}</p>
+                  <p className="text-xl font-bold text-foreground mt-1">{item.value}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">{item.subtitle}</p>
                 </motion.div>
               );
             })}
+          </div>
+        </section>
+
+        {/* Market Players Section */}
+        <section className="mb-10">
+          <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+            <Users className="w-5 h-5 text-primary" />
+            Global Market Players & Investment
+          </h3>
+          <div className="grid lg:grid-cols-5 gap-6">
+            {/* Pie Chart */}
+            <div className="lg:col-span-2 p-6 rounded-xl bg-card border">
+              <h4 className="text-sm font-semibold text-muted-foreground mb-4">Market Share by Region</h4>
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <RechartsPie>
+                    <Pie
+                      data={marketByRegion}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={50}
+                      outerRadius={80}
+                      paddingAngle={2}
+                      dataKey="value"
+                      label={({ name, value }) => `${name}: ${value}%`}
+                      labelLine={false}
+                    >
+                      {marketByRegion.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip 
+                      formatter={(value: number) => [`${value}%`, 'Market Share']}
+                      contentStyle={{ 
+                        backgroundColor: 'hsl(var(--card))', 
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '8px'
+                      }}
+                    />
+                  </RechartsPie>
+                </ResponsiveContainer>
+              </div>
+              <div className="flex flex-wrap justify-center gap-3 mt-4">
+                {marketByRegion.map((region, index) => (
+                  <div key={index} className="flex items-center gap-1.5">
+                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: region.color }} />
+                    <span className="text-xs text-muted-foreground">{region.name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Players by Region */}
+            <div className="lg:col-span-3 space-y-4">
+              {marketPlayers.map((regionData, regionIndex) => (
+                <motion.div
+                  key={regionData.region}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.4, delay: regionIndex * 0.1 }}
+                  className="p-4 rounded-xl bg-card border"
+                >
+                  <h4 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+                    <Globe className="w-4 h-4 text-primary" />
+                    {regionData.region}
+                  </h4>
+                  <div className="grid grid-cols-2 gap-3">
+                    {regionData.players.map((player, playerIndex) => (
+                      <div 
+                        key={playerIndex}
+                        className="p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
+                      >
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-sm font-medium text-foreground">{player.country} {player.name}</span>
+                          <span className="text-xs font-bold text-primary">{player.investment}</span>
+                        </div>
+                        <p className="text-xs text-muted-foreground">{player.focus}</p>
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </section>
 
