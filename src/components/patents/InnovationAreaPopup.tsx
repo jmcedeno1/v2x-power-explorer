@@ -1,9 +1,8 @@
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Badge } from '@/components/ui/badge';
 import { TrendingUp, TrendingDown, Minus, Sparkles, Building2, Lightbulb, Target, Cpu, FileText } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { PatentAreaDetails, Technology } from '@/data/patentAreasData';
+import { PatentAreaDetails, Technology, KeyPlayer } from '@/data/patentAreasData';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { ReactNode, useState } from 'react';
@@ -52,8 +51,8 @@ function TechnologyPopup({ tech, idx }: { tech: Technology; idx: number }) {
   const [open, setOpen] = useState(false);
   
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
         <motion.div
           initial={{ opacity: 0, y: 5 }}
           animate={{ opacity: 1, y: 0 }}
@@ -77,34 +76,76 @@ function TechnologyPopup({ tech, idx }: { tech: Technology; idx: number }) {
             {statusConfig[tech.status].label}
           </Badge>
         </motion.div>
-      </PopoverTrigger>
-      <PopoverContent className="w-72 p-0 overflow-hidden z-50 bg-card" side="top" align="center">
+      </DialogTrigger>
+      <DialogContent className="max-w-sm p-0 overflow-hidden">
         <div className={cn(
-          'px-3 py-2 border-b flex items-center gap-2',
+          'px-4 py-3 border-b flex items-center gap-2',
           statusConfig[tech.status].color
         )}>
-          <Cpu className="w-4 h-4" />
-          <span className="font-medium text-sm">{tech.name}</span>
+          <Cpu className="w-5 h-5" />
+          <span className="font-semibold text-base">{tech.name}</span>
         </div>
-        <div className="p-3 space-y-2">
-          <p className="text-xs text-muted-foreground leading-relaxed">
+        <div className="p-4 space-y-3">
+          <p className="text-sm text-muted-foreground leading-relaxed">
             {tech.description}
           </p>
-          <div className="flex items-center justify-between pt-1 border-t">
-            <div className="flex items-center gap-1 text-xs text-muted-foreground">
-              <FileText className="w-3 h-3" />
+          <div className="flex items-center justify-between pt-2 border-t">
+            <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+              <FileText className="w-4 h-4" />
               <span>{tech.patents.toLocaleString()} patents</span>
             </div>
             <Badge 
               variant="outline" 
-              className={cn('text-[10px]', statusConfig[tech.status].color)}
+              className={cn('text-xs', statusConfig[tech.status].color)}
             >
               {statusConfig[tech.status].description}
             </Badge>
           </div>
         </div>
-      </PopoverContent>
-    </Popover>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function KeyPlayerPopup({ player }: { player: KeyPlayer }) {
+  const [open, setOpen] = useState(false);
+  
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Badge 
+          variant="secondary" 
+          className="text-xs cursor-pointer hover:bg-secondary/80 transition-colors"
+        >
+          {player.name}
+        </Badge>
+      </DialogTrigger>
+      <DialogContent className="max-w-sm p-0 overflow-hidden">
+        <div className="px-4 py-3 border-b bg-secondary/50 flex items-center gap-2">
+          <Building2 className="w-5 h-5 text-primary" />
+          <span className="font-semibold text-base">{player.name}</span>
+        </div>
+        <div className="p-4 space-y-4">
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            {player.description}
+          </p>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+              <Target className="w-4 h-4 text-primary" />
+              <span>IP Focus Areas</span>
+            </div>
+            <ul className="space-y-1.5">
+              {player.ipFocus.map((focus, idx) => (
+                <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
+                  <div className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
+                  {focus}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -213,41 +254,7 @@ export function InnovationAreaPopup({ area, children }: InnovationAreaPopupProps
           </h5>
           <div className="flex flex-wrap gap-1.5">
             {area.keyPlayers.map((player) => (
-              <Popover key={player.name}>
-                <PopoverTrigger asChild>
-                  <Badge 
-                    variant="secondary" 
-                    className="text-xs cursor-pointer hover:bg-secondary/80 transition-colors"
-                  >
-                    {player.name}
-                  </Badge>
-                </PopoverTrigger>
-                <PopoverContent className="w-72 p-0 overflow-hidden z-50 bg-card" side="top" align="center">
-                  <div className="px-3 py-2 border-b bg-secondary/50 flex items-center gap-2">
-                    <Building2 className="w-4 h-4 text-primary" />
-                    <span className="font-medium text-sm">{player.name}</span>
-                  </div>
-                  <div className="p-3 space-y-3">
-                    <p className="text-xs text-muted-foreground leading-relaxed">
-                      {player.description}
-                    </p>
-                    <div className="space-y-1.5">
-                      <div className="flex items-center gap-1 text-xs font-medium text-foreground">
-                        <Target className="w-3 h-3 text-primary" />
-                        <span>IP Focus Areas</span>
-                      </div>
-                      <ul className="space-y-1">
-                        {player.ipFocus.map((focus, idx) => (
-                          <li key={idx} className="flex items-start gap-2 text-xs text-muted-foreground">
-                            <div className="w-1 h-1 rounded-full bg-primary mt-1.5 shrink-0" />
-                            {focus}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                </PopoverContent>
-              </Popover>
+              <KeyPlayerPopup key={player.name} player={player} />
             ))}
           </div>
         </div>
