@@ -57,8 +57,12 @@ const systemThreats = [
   { threat: 'Protection system incompatibility', likelihood: 'medium', impact: 'high' },
 ];
 
+const questionTypeOrder = { strategic: 0, opportunity: 1, challenge: 2 };
+
 export default function RisksPage() {
-  const risksQuestions = expertQuestions.filter(q => q.module === 'risks');
+  const risksQuestions = expertQuestions
+    .filter(q => q.module === 'risks')
+    .sort((a, b) => questionTypeOrder[a.type] - questionTypeOrder[b.type]);
 
   return (
     <MainLayout>

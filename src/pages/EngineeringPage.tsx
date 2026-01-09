@@ -43,8 +43,12 @@ const techSpecs = [
   { label: 'Liquid Cooling', value: 'Standard', status: 'mature' },
 ];
 
+const questionTypeOrder = { strategic: 0, opportunity: 1, challenge: 2 };
+
 export default function EngineeringPage() {
-  const engineeringQuestions = expertQuestions.filter(q => q.module === 'engineering');
+  const engineeringQuestions = expertQuestions
+    .filter(q => q.module === 'engineering')
+    .sort((a, b) => questionTypeOrder[a.type] - questionTypeOrder[b.type]);
 
   return (
     <MainLayout>

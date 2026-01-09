@@ -44,8 +44,12 @@ const gridCodeChallenges = [
   { challenge: 'Double taxation policies', status: 'varies', region: 'Regional' },
 ];
 
+const questionTypeOrder = { strategic: 0, opportunity: 1, challenge: 2 };
+
 export default function StandardsPage() {
-  const standardsQuestions = expertQuestions.filter(q => q.module === 'standards');
+  const standardsQuestions = expertQuestions
+    .filter(q => q.module === 'standards')
+    .sort((a, b) => questionTypeOrder[a.type] - questionTypeOrder[b.type]);
 
   return (
     <MainLayout>

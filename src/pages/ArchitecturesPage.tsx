@@ -40,8 +40,12 @@ const systemComponents = [
   { name: 'Site Energy Management', function: 'Coordination & optimization', icon: Building2 },
 ];
 
+const questionTypeOrder = { strategic: 0, opportunity: 1, challenge: 2 };
+
 export default function ArchitecturesPage() {
-  const archQuestions = expertQuestions.filter(q => q.module === 'architectures');
+  const archQuestions = expertQuestions
+    .filter(q => q.module === 'architectures')
+    .sort((a, b) => questionTypeOrder[a.type] - questionTypeOrder[b.type]);
 
   return (
     <MainLayout>
