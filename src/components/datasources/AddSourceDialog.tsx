@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { FileText, Link, Video, Plus, X, Search, Upload, Globe, FileUp, ClipboardPaste, ArrowRight } from 'lucide-react';
+import { FileText, Link, Video, Plus, X, Search, Upload, Globe, FileUp, ClipboardPaste, ArrowRight, PenLine } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -28,7 +28,9 @@ interface AddSourceDialogProps {
   maxSources?: number;
 }
 
-type AddMode = 'main' | 'website' | 'file' | 'paste';
+type AddMode = 'main' | 'website' | 'file' | 'paste' | 'note';
+
+const isTranscriptsCategory = (category?: SourceCategory) => category === 'transcripts_notes';
 
 export function AddSourceDialog({ 
   onAdd, 
@@ -41,18 +43,36 @@ export function AddSourceDialog({
   const [searchQuery, setSearchQuery] = useState('');
   const [url, setUrl] = useState('');
   const [pastedText, setPastedText] = useState('');
+  const [noteText, setNoteText] = useState('');
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState<SourceCategory>(defaultCategory || 'technical');
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const showTranscriptsMode = isTranscriptsCategory(defaultCategory);
 
   const resetForm = () => {
     setMode('main');
     setSearchQuery('');
     setUrl('');
     setPastedText('');
+    setNoteText('');
     setTitle('');
     setCategory(defaultCategory || 'technical');
+  };
+
+  const handleSubmitNote = () => {
+    if (!noteText.trim() || !title.trim()) return;
+    
+    onAdd({
+      title: title.trim(),
+      category: 'transcripts_notes',
+      type: 'file',
+      description: noteText.trim(),
+      tags: ['note'],
+    });
+    
+    handleClose();
   };
 
   const handleClose = () => {
@@ -240,6 +260,16 @@ export function AddSourceDialog({
                   <ClipboardPaste className="w-4 h-4" />
                   Copied text
                 </Button>
+                {showTranscriptsMode && (
+                  <Button
+                    variant="secondary"
+                    className="rounded-full gap-2 px-5"
+                    onClick={() => setMode('note')}
+                  >
+                    <PenLine className="w-4 h-4" />
+                    Write note
+                  </Button>
+                )}
               </div>
 
               <input
@@ -376,6 +406,55 @@ export function AddSourceDialog({
                   className="w-full"
                 >
                   Add Content
+                </Button>
+              </div>
+            </motion.div>
+          )}
+
+          {mode === 'note' && (
+            <motion.div
+              key="note"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="px-6 pb-6 space-y-4"
+            >
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setMode('main')}
+                className="mb-2"
+              >
+                ← Back
+              </Button>
+              
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label>Note Title *</Label>
+                  <Input
+                    placeholder="e.g., Meeting with Grid Operator, Expert Interview Notes"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    className="text-base"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Note Content *</Label>
+                  <textarea
+                    placeholder="Write your meeting transcript, expert contributions, ideas, or general notes here..."
+                    value={noteText}
+                    onChange={(e) => setNoteText(e.target.value)}
+                    className="w-full min-h-[180px] rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 resize-y"
+                  />
+                </div>
+
+                <Button 
+                  onClick={handleSubmitNote} 
+                  disabled={!noteText.trim() || !title.trim()}
+                  className="w-full"
+                >
+                  Add Note
                 </Button>
               </div>
             </motion.div>
