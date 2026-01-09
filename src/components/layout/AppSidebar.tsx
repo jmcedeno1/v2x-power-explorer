@@ -15,6 +15,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Zap,
+  Database,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -35,6 +36,7 @@ const navItems: NavItem[] = [
   { id: 'architectures', label: 'System Architectures', icon: Network, path: '/architectures' },
   { id: 'pilots', label: 'Pilots & Demonstrators', icon: FlaskConical, path: '/pilots' },
   { id: 'opportunities', label: 'Opportunity Map', icon: Map, path: '/opportunities' },
+  { id: 'datasources', label: 'Data Sources', icon: Database, path: '/datasources' },
   { id: 'notes', label: 'Notes & Changes', icon: StickyNote, path: '/notes' },
   { id: 'recommendations', label: 'Recommendations', icon: Award, path: '/recommendations' },
 ];
