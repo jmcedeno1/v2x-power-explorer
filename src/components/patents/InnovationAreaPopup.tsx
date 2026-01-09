@@ -1,11 +1,11 @@
-import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
-import { TrendingUp, TrendingDown, Minus, Sparkles, Building2, Lightbulb, Target } from 'lucide-react';
+import { TrendingUp, TrendingDown, Minus, Sparkles, Building2, Lightbulb, Target, X } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { PatentAreaDetails } from '@/data/patentAreasData';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 
 interface InnovationAreaPopupProps {
   area: PatentAreaDetails;
@@ -48,22 +48,18 @@ const chartColors = [
 ];
 
 export function InnovationAreaPopup({ area, children }: InnovationAreaPopupProps) {
+  const [open, setOpen] = useState(false);
   const StatusIcon = statusConfig[area.status].icon;
   
   // Get technology keys from first trend point (excluding 'year')
   const techKeys = Object.keys(area.patentTrends[0]).filter(k => k !== 'year');
 
   return (
-    <HoverCard openDelay={200} closeDelay={150}>
-      <HoverCardTrigger asChild>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
         {children}
-      </HoverCardTrigger>
-      <HoverCardContent 
-        className="w-[480px] p-0 overflow-hidden" 
-        side="right" 
-        align="start"
-        sideOffset={12}
-      >
+      </DialogTrigger>
+      <DialogContent className="max-w-lg p-0 overflow-hidden">
         <div className={cn(
           'p-4 border-b',
           area.status === 'saturated' ? 'bg-muted/50' :
@@ -199,7 +195,7 @@ export function InnovationAreaPopup({ area, children }: InnovationAreaPopupProps
             ))}
           </ul>
         </div>
-      </HoverCardContent>
-    </HoverCard>
+      </DialogContent>
+    </Dialog>
   );
 }
