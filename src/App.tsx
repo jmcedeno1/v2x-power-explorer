@@ -11,6 +11,7 @@ import StandardsPage from "./pages/StandardsPage";
 import ArchitecturesPage from "./pages/ArchitecturesPage";
 import PilotsPage from "./pages/PilotsPage";
 import OpportunitiesPage from "./pages/OpportunitiesPage";
+import DataSourcesPage from "./pages/DataSourcesPage";
 import NotesPage from "./pages/NotesPage";
 import RecommendationsPage from "./pages/RecommendationsPage";
 import NotFound from "./pages/NotFound";
@@ -32,6 +33,7 @@ const App = () => (
           <Route path="/architectures" element={<ArchitecturesPage />} />
           <Route path="/pilots" element={<PilotsPage />} />
           <Route path="/opportunities" element={<OpportunitiesPage />} />
+          <Route path="/datasources" element={<DataSourcesPage />} />
           <Route path="/notes" element={<NotesPage />} />
           <Route path="/recommendations" element={<RecommendationsPage />} />
           <Route path="*" element={<NotFound />} />
