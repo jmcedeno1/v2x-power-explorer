@@ -6,7 +6,8 @@ export type SourceCategory =
   | 'market_studies'
   | 'pilots'
   | 'commercial'
-  | 'industry_news';
+  | 'industry_news'
+  | 'transcripts_notes';
 
 export type SourceType = 'file' | 'weblink' | 'video';
 
@@ -33,6 +34,7 @@ export const sourceCategoryLabels: Record<SourceCategory, string> = {
   pilots: 'Pilots',
   commercial: 'Commercial Content',
   industry_news: 'Industry News',
+  transcripts_notes: 'Transcripts & Notes',
 };
 
 export const sourceCategoryDescriptions: Record<SourceCategory, string> = {
@@ -44,4 +46,5 @@ export const sourceCategoryDescriptions: Record<SourceCategory, string> = {
   pilots: 'Pilot project reports, demonstration results, and case studies',
   commercial: 'Company websites, product brochures, corporate reports, and promotional videos',
   industry_news: 'News articles, press releases, industry updates, and news videos',
+  transcripts_notes: 'Meeting transcripts, expert contributions, ideas, and general notes',
 };

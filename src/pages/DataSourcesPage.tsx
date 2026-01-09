@@ -21,6 +21,7 @@ const categories: SourceCategory[] = [
   'pilots',
   'commercial',
   'industry_news',
+  'transcripts_notes',
 ];
 
 export default function DataSourcesPage() {

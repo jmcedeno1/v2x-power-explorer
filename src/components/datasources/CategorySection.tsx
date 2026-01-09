@@ -24,6 +24,7 @@ const categoryIcons: Record<SourceCategory, React.ElementType> = {
   pilots: FileText,
   commercial: Link,
   industry_news: Link,
+  transcripts_notes: FileText,
 };
 
 const categoryColors: Record<SourceCategory, string> = {
@@ -35,6 +36,7 @@ const categoryColors: Record<SourceCategory, string> = {
   pilots: 'from-cyan-500/20 to-sky-500/20 border-cyan-500/30',
   commercial: 'from-rose-500/20 to-pink-500/20 border-rose-500/30',
   industry_news: 'from-yellow-500/20 to-amber-500/20 border-yellow-500/30',
+  transcripts_notes: 'from-indigo-500/20 to-purple-500/20 border-indigo-500/30',
 };
 
 export function CategorySection({ category, sources, onAddSource, onDeleteSource }: CategorySectionProps) {
