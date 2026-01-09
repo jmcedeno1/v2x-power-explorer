@@ -45,7 +45,7 @@ export const reportHighlights: Highlight[] = [
   {
     id: 'h5',
     title: 'Megawatt-Scale Future',
-    description: 'MCS enabling up to 3.75 MW charging with Automotive Ethernet, replacing PLC communication.',
+    description: 'MCS enabling up to 3.75 MW bidirectional charging for heavy-duty fleets and depot-scale applications.',
     icon: 'Activity',
     category: 'technology',
     impact: 'high',
@@ -53,7 +53,7 @@ export const reportHighlights: Highlight[] = [
   {
     id: 'h6',
     title: 'Grid-Critical Transition',
-    description: 'V2X moving from lab experiments to grid-critical infrastructure requiring new safety and security frameworks.',
+    description: 'V2X bidirectional energy moving from lab experiments to grid-critical infrastructure requiring new power system frameworks.',
     icon: 'Shield',
     category: 'regulation',
     impact: 'high',
@@ -298,7 +298,7 @@ const patentsQuestions: ExpertQuestion[] = [
     question: 'Which parts of the V2X power stack appear overcrowded or at risk of becoming commoditized?',
     options: [
       { id: 'a', label: 'A', description: 'Basic DC/DC converter topologies and control methods' },
-      { id: 'b', label: 'B', description: 'Standard communication protocols (ISO 15118 implementations)' },
+      { id: 'b', label: 'B', description: 'Standard charging protocols (ISO 15118 implementations)' },
       { id: 'c', label: 'C', description: 'Basic grid-tie inverter designs' },
       { id: 'd', label: 'D', description: 'All of the above—differentiation must come from integration' },
     ],
@@ -323,7 +323,7 @@ const patentsQuestions: ExpertQuestion[] = [
     options: [
       { id: 'a', label: 'A', description: 'Integrated depot energy management systems' },
       { id: 'b', label: 'B', description: 'Multi-service revenue optimization platforms' },
-      { id: 'c', label: 'C', description: 'Vehicle-grid communication orchestration layers' },
+      { id: 'c', label: 'C', description: 'Vehicle-grid power orchestration layers' },
       { id: 'd', label: 'D', description: 'Site-level power quality and grid compliance systems' },
     ],
   },
@@ -345,7 +345,7 @@ const patentsQuestions: ExpertQuestion[] = [
     type: 'challenge',
     question: 'Where do patents risk locking the industry into suboptimal architectures?',
     options: [
-      { id: 'a', label: 'A', description: 'Proprietary communication protocols fragmenting the ecosystem' },
+      { id: 'a', label: 'A', description: 'Proprietary power control protocols fragmenting the ecosystem' },
       { id: 'b', label: 'B', description: 'OEM-specific bidirectional implementations limiting interoperability' },
       { id: 'c', label: 'C', description: 'Regional patent strategies creating geographic barriers' },
       { id: 'd', label: 'D', description: 'Legacy power electronics patents blocking innovative topologies' },
@@ -394,7 +394,7 @@ const patentsQuestions: ExpertQuestion[] = [
     question: 'What patent concentration represents a long-term strategic risk?',
     options: [
       { id: 'a', label: 'A', description: 'Chinese dominance in core power electronics patents' },
-      { id: 'b', label: 'B', description: 'OEM control over battery communication protocols' },
+      { id: 'b', label: 'B', description: 'OEM control over battery management protocols' },
       { id: 'c', label: 'C', description: 'Utility patents on grid interconnection methods' },
       { id: 'd', label: 'D', description: 'Tech giants entering with software platform patents' },
     ],

@@ -25,7 +25,7 @@ const standards = [
     name: 'IEC 61850',
     year: 'Ongoing',
     status: 'developing',
-    description: 'Grid integration and communication standards',
+    description: 'Grid integration and power system automation standards',
     features: ['Substation automation', 'DER integration', 'Grid services'],
   },
   {
@@ -157,7 +157,7 @@ export default function StandardsPage() {
               <li className="flex items-start gap-3">
                 <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
                 <p className="text-sm text-foreground">
-                  The <strong>Megawatt Charging System (MCS)</strong> replaces Powerline Communication with Automotive Ethernet for higher bandwidth
+                  The <strong>Megawatt Charging System (MCS)</strong> enables up to 3.75 MW bidirectional power transfer with enhanced control protocols
                 </p>
               </li>
               <li className="flex items-start gap-3">
