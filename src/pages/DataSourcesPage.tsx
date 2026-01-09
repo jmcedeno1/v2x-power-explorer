@@ -162,7 +162,7 @@ export default function DataSourcesPage() {
               className="pl-10"
             />
           </div>
-          <AddSourceDialog onAdd={handleAddSource} />
+          <AddSourceDialog onAdd={handleAddSource} totalSources={sources.length} maxSources={300} />
         </div>
 
         {/* Category Sections */}
