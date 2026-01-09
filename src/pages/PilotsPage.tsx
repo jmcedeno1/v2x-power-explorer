@@ -17,11 +17,15 @@ const pilotStats = [
   { label: 'Planned', value: pilotProjects.filter(p => p.status === 'planned').length, color: 'text-energy-amber' },
 ];
 
+const questionTypeOrder = { strategic: 0, opportunity: 1, challenge: 2 };
+
 export default function PilotsPage() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [filter, setFilter] = useState<string>('all');
   const [selectedPilot, setSelectedPilot] = useState<string | null>(null);
-  const pilotQuestions = expertQuestions.filter(q => q.module === 'pilots');
+  const pilotQuestions = expertQuestions
+    .filter(q => q.module === 'pilots')
+    .sort((a, b) => questionTypeOrder[a.type] - questionTypeOrder[b.type]);
 
   const filteredPilots = filter === 'all' 
     ? pilotProjects 

@@ -23,8 +23,12 @@ const strategicGaps = [
   { area: 'Thermal management for V2G', description: 'Long-duration discharge cooling solutions', icon: Cpu },
 ];
 
+const questionTypeOrder = { strategic: 0, opportunity: 1, challenge: 2 };
+
 export default function PatentsPage() {
-  const patentQuestions = expertQuestions.filter(q => q.module === 'patents');
+  const patentQuestions = expertQuestions
+    .filter(q => q.module === 'patents')
+    .sort((a, b) => questionTypeOrder[a.type] - questionTypeOrder[b.type]);
 
   return (
     <MainLayout>

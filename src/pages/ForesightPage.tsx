@@ -47,8 +47,12 @@ const investmentAreas = [
   { area: 'Standards development influence', focus: 'Strategic', timeline: 'Ongoing' },
 ];
 
+const questionTypeOrder = { strategic: 0, opportunity: 1, challenge: 2 };
+
 export default function ForesightPage() {
-  const foresightQuestions = expertQuestions.filter(q => q.module === 'foresight');
+  const foresightQuestions = expertQuestions
+    .filter(q => q.module === 'foresight')
+    .sort((a, b) => questionTypeOrder[a.type] - questionTypeOrder[b.type]);
 
   return (
     <MainLayout>

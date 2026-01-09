@@ -185,8 +185,12 @@ const revenueStreams = [
   },
 ];
 
+const questionTypeOrder = { strategic: 0, opportunity: 1, challenge: 2 };
+
 export default function MarketsPage() {
-  const marketQuestions = expertQuestions.filter(q => q.module === 'markets');
+  const marketQuestions = expertQuestions
+    .filter(q => q.module === 'markets')
+    .sort((a, b) => questionTypeOrder[a.type] - questionTypeOrder[b.type]);
 
   return (
     <MainLayout>
