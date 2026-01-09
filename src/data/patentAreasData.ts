@@ -2,6 +2,13 @@ export interface Technology {
   name: string;
   status: 'saturated' | 'active' | 'growing' | 'white-space';
   patents: number;
+  description: string;
+}
+
+export interface KeyPlayer {
+  name: string;
+  description: string;
+  ipFocus: string[];
 }
 
 export interface PatentTrendPoint {
@@ -15,7 +22,7 @@ export interface PatentAreaDetails {
   maturity: number;
   status: 'saturated' | 'active' | 'growing' | 'white-space';
   description: string;
-  keyPlayers: string[];
+  keyPlayers: KeyPlayer[];
   technologies: Technology[];
   patentTrends: PatentTrendPoint[];
   insights: string[];
@@ -29,12 +36,58 @@ export const patentAreasData: PatentAreaDetails[] = [
     maturity: 80,
     status: 'saturated',
     description: 'Fundamental power conversion architectures for bidirectional energy flow between EVs and the grid. Includes H-bridge, multi-level, and resonant converter designs.',
-    keyPlayers: ['Toyota', 'Nissan', 'Hyundai', 'ABB', 'Siemens'],
+    keyPlayers: [
+      { 
+        name: 'Toyota', 
+        description: 'Japanese automotive giant pioneering hybrid and EV technology since 1997.',
+        ipFocus: ['Bidirectional onboard chargers', 'Hybrid powertrain inverters', 'Solid-state battery integration']
+      },
+      { 
+        name: 'Nissan', 
+        description: 'Early V2G pioneer with Leaf, first mass-market EV with V2H capability.',
+        ipFocus: ['CHAdeMO V2X protocols', 'Home energy management systems', 'Vehicle-to-building solutions']
+      },
+      { 
+        name: 'Hyundai', 
+        description: 'Korean automaker rapidly expanding EV portfolio with V2L features.',
+        ipFocus: ['Vehicle-to-load technology', '800V architecture', 'Bidirectional charging systems']
+      },
+      { 
+        name: 'ABB', 
+        description: 'Swiss-Swedish multinational specializing in power and automation.',
+        ipFocus: ['High-power DC charging', 'Grid integration solutions', 'Industrial inverter systems']
+      },
+      { 
+        name: 'Siemens', 
+        description: 'German conglomerate with extensive power electronics expertise.',
+        ipFocus: ['Smart grid infrastructure', 'EV charging networks', 'Power conversion modules']
+      }
+    ],
     technologies: [
-      { name: 'H-Bridge Inverters', status: 'saturated', patents: 2850 },
-      { name: 'Multi-level Converters', status: 'saturated', patents: 1920 },
-      { name: 'Resonant Topologies', status: 'active', patents: 890 },
-      { name: 'Matrix Converters', status: 'growing', patents: 320 },
+      { 
+        name: 'H-Bridge Inverters', 
+        status: 'saturated', 
+        patents: 2850,
+        description: 'Classic four-switch topology for DC-AC conversion. Simple, reliable, but limited in power quality. Widely used in entry-level V2X systems.'
+      },
+      { 
+        name: 'Multi-level Converters', 
+        status: 'saturated', 
+        patents: 1920,
+        description: 'Advanced topology using multiple voltage levels to reduce harmonic distortion. Enables higher power and efficiency for grid-tied applications.'
+      },
+      { 
+        name: 'Resonant Topologies', 
+        status: 'active', 
+        patents: 890,
+        description: 'Soft-switching converters using LC resonance for reduced switching losses. Critical for high-frequency, high-efficiency bidirectional charging.'
+      },
+      { 
+        name: 'Matrix Converters', 
+        status: 'growing', 
+        patents: 320,
+        description: 'Direct AC-AC conversion without intermediate DC link. Compact design with potential for higher power density in V2X applications.'
+      },
     ],
     patentTrends: [
       { year: 2015, 'H-Bridge': 180, 'Multi-level': 95, 'Resonant': 45, 'Matrix': 12 },
@@ -64,13 +117,64 @@ export const patentAreasData: PatentAreaDetails[] = [
     maturity: 65,
     status: 'active',
     description: 'Silicon Carbide (SiC) and Gallium Nitride (GaN) power devices enabling higher efficiency, faster switching, and reduced thermal management needs.',
-    keyPlayers: ['Wolfspeed', 'Infineon', 'STMicroelectronics', 'ROHM', 'ON Semiconductor'],
+    keyPlayers: [
+      { 
+        name: 'Wolfspeed', 
+        description: 'Leading SiC wafer and device manufacturer, spun off from Cree.',
+        ipFocus: ['SiC MOSFET technology', 'High-voltage power modules', 'Automotive-grade devices']
+      },
+      { 
+        name: 'Infineon', 
+        description: 'German semiconductor giant, #1 in automotive power semiconductors.',
+        ipFocus: ['CoolSiC technology', 'GaN power ICs', 'Integrated driver solutions']
+      },
+      { 
+        name: 'STMicroelectronics', 
+        description: 'European semiconductor leader with strong automotive presence.',
+        ipFocus: ['SiC power modules', 'Tesla partnership technology', 'Wide-bandgap integration']
+      },
+      { 
+        name: 'ROHM', 
+        description: 'Japanese semiconductor company, early SiC technology pioneer.',
+        ipFocus: ['Full SiC power modules', 'Trench gate SiC MOSFETs', 'Automotive power solutions']
+      },
+      { 
+        name: 'ON Semiconductor', 
+        description: 'US-based company with growing SiC portfolio for EV applications.',
+        ipFocus: ['EliteSiC technology', 'Intelligent power modules', 'EV traction inverters']
+      }
+    ],
     technologies: [
-      { name: 'SiC MOSFETs', status: 'active', patents: 1450 },
-      { name: 'GaN HEMTs', status: 'growing', patents: 680 },
-      { name: 'SiC Diodes', status: 'saturated', patents: 890 },
-      { name: 'GaN-on-Si Integration', status: 'growing', patents: 420 },
-      { name: 'Diamond Semiconductors', status: 'white-space', patents: 45 },
+      { 
+        name: 'SiC MOSFETs', 
+        status: 'active', 
+        patents: 1450,
+        description: 'Silicon Carbide transistors enabling 10x lower losses than silicon. Key enabler for efficient high-power V2G chargers above 11kW.'
+      },
+      { 
+        name: 'GaN HEMTs', 
+        status: 'growing', 
+        patents: 680,
+        description: 'Gallium Nitride high-electron-mobility transistors for ultra-fast switching. Ideal for compact, high-frequency bidirectional converters.'
+      },
+      { 
+        name: 'SiC Diodes', 
+        status: 'saturated', 
+        patents: 890,
+        description: 'First commercial wide-bandgap devices, now mature. Zero reverse recovery enables efficient rectification in V2X systems.'
+      },
+      { 
+        name: 'GaN-on-Si Integration', 
+        status: 'growing', 
+        patents: 420,
+        description: 'Growing GaN on silicon substrates for cost reduction. Enables monolithic integration of power and control for compact chargers.'
+      },
+      { 
+        name: 'Diamond Semiconductors', 
+        status: 'white-space', 
+        patents: 45,
+        description: 'Ultimate wide-bandgap material with 20x thermal conductivity of silicon. Early research stage but transformative potential for extreme power.'
+      },
     ],
     patentTrends: [
       { year: 2015, 'SiC MOSFET': 65, 'GaN HEMT': 28, 'SiC Diode': 85, 'GaN-on-Si': 15 },
@@ -100,13 +204,64 @@ export const patentAreasData: PatentAreaDetails[] = [
     maturity: 45,
     status: 'growing',
     description: 'Software platforms that aggregate distributed EV batteries into Virtual Power Plants for grid services, demand response, and energy trading.',
-    keyPlayers: ['Tesla', 'Nuvve', 'Enel X', 'OVO Energy', 'Fermata Energy'],
+    keyPlayers: [
+      { 
+        name: 'Tesla', 
+        description: 'EV and energy company with integrated Autobidder VPP software.',
+        ipFocus: ['Autobidder optimization', 'Powerwall/Megapack integration', 'Real-time grid services']
+      },
+      { 
+        name: 'Nuvve', 
+        description: 'Pure-play V2G company founded by V2G pioneer Professor Kempton.',
+        ipFocus: ['GIVe platform', 'School bus V2G programs', 'Fleet aggregation software']
+      },
+      { 
+        name: 'Enel X', 
+        description: 'Global energy company\'s e-mobility and demand response division.',
+        ipFocus: ['JuiceNet platform', 'Demand response aggregation', 'Smart charging optimization']
+      },
+      { 
+        name: 'OVO Energy', 
+        description: 'UK energy supplier with VPP and V2G services for residential customers.',
+        ipFocus: ['Kaluza platform', 'Residential VPP', 'Time-of-use optimization']
+      },
+      { 
+        name: 'Fermata Energy', 
+        description: 'US V2G company focused on commercial fleet deployments.',
+        ipFocus: ['Bidirectional charger hardware', 'Fleet management software', 'Behind-the-meter optimization']
+      }
+    ],
     technologies: [
-      { name: 'Fleet Management Systems', status: 'active', patents: 520 },
-      { name: 'Real-time Optimization', status: 'growing', patents: 380 },
-      { name: 'Blockchain Settlement', status: 'growing', patents: 185 },
-      { name: 'AI/ML Prediction', status: 'growing', patents: 290 },
-      { name: 'P2P Energy Trading', status: 'white-space', patents: 75 },
+      { 
+        name: 'Fleet Management Systems', 
+        status: 'active', 
+        patents: 520,
+        description: 'Software coordinating charging/discharging across vehicle fleets while meeting mobility needs. Balances energy revenue with operational requirements.'
+      },
+      { 
+        name: 'Real-time Optimization', 
+        status: 'growing', 
+        patents: 380,
+        description: 'Algorithms optimizing V2G dispatch in real-time based on grid signals, prices, and vehicle availability. Critical for frequency regulation revenue.'
+      },
+      { 
+        name: 'Blockchain Settlement', 
+        status: 'growing', 
+        patents: 185,
+        description: 'Distributed ledger for transparent energy transaction settlement. Enables peer-to-peer trading and automated smart contract payments.'
+      },
+      { 
+        name: 'AI/ML Prediction', 
+        status: 'growing', 
+        patents: 290,
+        description: 'Machine learning for predicting vehicle availability, energy prices, and grid needs. Enables proactive optimization of V2G scheduling.'
+      },
+      { 
+        name: 'P2P Energy Trading', 
+        status: 'white-space', 
+        patents: 75,
+        description: 'Direct energy trading between EV owners without utility intermediary. Nascent space with regulatory hurdles but high disruption potential.'
+      },
     ],
     patentTrends: [
       { year: 2015, 'Fleet Mgmt': 18, 'Optimization': 12, 'Blockchain': 2, 'AI/ML': 8 },
@@ -136,12 +291,48 @@ export const patentAreasData: PatentAreaDetails[] = [
     maturity: 20,
     status: 'white-space',
     description: 'Control algorithms enabling V2X operation during grid outages without central coordination, including islanding detection and autonomous power management.',
-    keyPlayers: ['Emerging startups', 'University research', 'Tesla (Powerwall synergy)'],
+    keyPlayers: [
+      { 
+        name: 'Emerging startups', 
+        description: 'Early-stage companies exploring decentralized energy resilience.',
+        ipFocus: ['Microgrid controllers', 'Islanding detection', 'Emergency power systems']
+      },
+      { 
+        name: 'University research', 
+        description: 'Academic institutions leading foundational research in grid resilience.',
+        ipFocus: ['Distributed control theory', 'Multi-agent systems', 'Resilience algorithms']
+      },
+      { 
+        name: 'Tesla (Powerwall synergy)', 
+        description: 'Leveraging stationary storage expertise for V2X backup applications.',
+        ipFocus: ['Backup Gateway technology', 'Seamless transfer switches', 'Home islanding systems']
+      }
+    ],
     technologies: [
-      { name: 'Islanding Detection', status: 'active', patents: 145 },
-      { name: 'Autonomous Load Mgmt', status: 'growing', patents: 85 },
-      { name: 'Mesh Grid Formation', status: 'white-space', patents: 32 },
-      { name: 'Blackstart Coordination', status: 'white-space', patents: 18 },
+      { 
+        name: 'Islanding Detection', 
+        status: 'active', 
+        patents: 145,
+        description: 'Methods to detect when grid connection is lost. Critical safety requirement enabling transition to backup mode without backfeeding utility.'
+      },
+      { 
+        name: 'Autonomous Load Mgmt', 
+        status: 'growing', 
+        patents: 85,
+        description: 'Algorithms prioritizing critical loads during outages without user intervention. Manages limited EV battery for maximum resilience value.'
+      },
+      { 
+        name: 'Mesh Grid Formation', 
+        status: 'white-space', 
+        patents: 32,
+        description: 'Multiple EVs forming ad-hoc power networks during emergencies. Enables neighborhood-scale resilience beyond single-home backup.'
+      },
+      { 
+        name: 'Blackstart Coordination', 
+        status: 'white-space', 
+        patents: 18,
+        description: 'Using EVs to restart grid sections after complete blackout. Highly complex but strategically valuable for grid operators.'
+      },
     ],
     patentTrends: [
       { year: 2015, 'Islanding': 8, 'Autonomous': 3, 'Mesh': 1, 'Blackstart': 0 },
@@ -171,12 +362,53 @@ export const patentAreasData: PatentAreaDetails[] = [
     maturity: 15,
     status: 'white-space',
     description: 'Security architectures protecting bidirectional energy flow from malicious attacks, including authentication, encryption, and intrusion detection for V2X systems.',
-    keyPlayers: ['Argus (Continental)', 'Upstream Security', 'C2A Security', 'ChargePoint'],
+    keyPlayers: [
+      { 
+        name: 'Argus (Continental)', 
+        description: 'Israeli automotive cybersecurity company acquired by Continental.',
+        ipFocus: ['In-vehicle network protection', 'V2X security modules', 'OTA update security']
+      },
+      { 
+        name: 'Upstream Security', 
+        description: 'Cloud-based automotive cybersecurity platform company.',
+        ipFocus: ['Vehicle SOC services', 'Fleet-wide threat detection', 'Anomaly detection AI']
+      },
+      { 
+        name: 'C2A Security', 
+        description: 'Automotive cybersecurity lifecycle management solutions.',
+        ipFocus: ['DevSecOps for vehicles', 'Vulnerability management', 'Compliance automation']
+      },
+      { 
+        name: 'ChargePoint', 
+        description: 'EV charging network operator with security focus.',
+        ipFocus: ['Secure charging protocols', 'Network security', 'Payment protection']
+      }
+    ],
     technologies: [
-      { name: 'V2G Authentication', status: 'growing', patents: 95 },
-      { name: 'Energy Flow Encryption', status: 'white-space', patents: 42 },
-      { name: 'Intrusion Detection', status: 'white-space', patents: 28 },
-      { name: 'Secure Boot for EVSE', status: 'growing', patents: 65 },
+      { 
+        name: 'V2G Authentication', 
+        status: 'growing', 
+        patents: 95,
+        description: 'Protocols verifying identity of vehicles, chargers, and grid operators. Based on ISO 15118 PKI but adapted for bidirectional requirements.'
+      },
+      { 
+        name: 'Energy Flow Encryption', 
+        status: 'white-space', 
+        patents: 42,
+        description: 'Cryptographic protection of energy transaction data and control signals. Prevents manipulation of charging/discharging commands.'
+      },
+      { 
+        name: 'Intrusion Detection', 
+        status: 'white-space', 
+        patents: 28,
+        description: 'Systems detecting cyberattacks on V2X infrastructure in real-time. Critical for preventing grid-scale attacks via compromised EVs.'
+      },
+      { 
+        name: 'Secure Boot for EVSE', 
+        status: 'growing', 
+        patents: 65,
+        description: 'Hardware-rooted trust ensuring charger firmware integrity. Prevents installation of malicious code on charging infrastructure.'
+      },
     ],
     patentTrends: [
       { year: 2015, 'Authentication': 2, 'Encryption': 1, 'Intrusion': 0, 'Secure Boot': 3 },
