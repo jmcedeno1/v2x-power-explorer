@@ -60,6 +60,33 @@ export default function PatentsPage() {
           </div>
         </section>
 
+        {/* Key evidence - moved above Innovation Area Maturity */}
+        <section className="mb-10">
+          <h3 className="text-lg font-semibold text-foreground mb-4">IP Landscape Highlights</h3>
+          <div className="p-6 rounded-xl bg-gradient-to-br from-primary/5 to-accent/5 border border-primary/20">
+            <ul className="space-y-3">
+              <li className="flex items-start gap-3">
+                <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
+                <p className="text-sm text-foreground">
+                  Since 2020, patent filings have shifted from <strong>hardware to "commercial enablement" IP</strong> such as grid-stabilization and VPP platforms
+                </p>
+              </li>
+              <li className="flex items-start gap-3">
+                <div className="w-1.5 h-1.5 rounded-full bg-energy-green mt-2" />
+                <p className="text-sm text-foreground">
+                  Strategic gaps remain in <strong>grid-isolated control algorithms</strong> and <strong>cybersecurity of the bidirectional loop</strong>
+                </p>
+              </li>
+              <li className="flex items-start gap-3">
+                <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
+                <p className="text-sm text-foreground">
+                  Core inversion topologies are <strong>largely saturated</strong>, with innovation moving to software and system integration
+                </p>
+              </li>
+            </ul>
+          </div>
+        </section>
+
         {/* Patent area maturity */}
         <section className="mb-10">
           <h3 className="text-lg font-semibold text-foreground mb-4">Innovation Area Maturity</h3>
@@ -129,33 +156,6 @@ export default function PatentsPage() {
                 </motion.div>
               );
             })}
-          </div>
-        </section>
-
-        {/* Key evidence */}
-        <section className="mb-10">
-          <h3 className="text-lg font-semibold text-foreground mb-4">IP Landscape Highlights</h3>
-          <div className="p-6 rounded-xl bg-gradient-to-br from-primary/5 to-accent/5 border border-primary/20">
-            <ul className="space-y-3">
-              <li className="flex items-start gap-3">
-                <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
-                <p className="text-sm text-foreground">
-                  Since 2020, patent filings have shifted from <strong>hardware to "commercial enablement" IP</strong> such as grid-stabilization and VPP platforms
-                </p>
-              </li>
-              <li className="flex items-start gap-3">
-                <div className="w-1.5 h-1.5 rounded-full bg-energy-green mt-2" />
-                <p className="text-sm text-foreground">
-                  Strategic gaps remain in <strong>grid-isolated control algorithms</strong> and <strong>cybersecurity of the bidirectional loop</strong>
-                </p>
-              </li>
-              <li className="flex items-start gap-3">
-                <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
-                <p className="text-sm text-foreground">
-                  Core inversion topologies are <strong>largely saturated</strong>, with innovation moving to software and system integration
-                </p>
-              </li>
-            </ul>
           </div>
         </section>
 
