@@ -28,8 +28,11 @@ const Index = () => {
       <div className="p-8 max-w-[1600px] mx-auto">
         <ModuleHeader icon={<LayoutDashboard className="w-7 h-7 text-white" />} title="V2X Power Landscape" description="Interactive exploration of bidirectional energy technology state-of-the-art" badge="State of the Art 2024" />
 
-        {/* Hero section */}
-        
+        {/* System map */}
+        <section className="mb-10">
+          <h3 className="text-lg font-semibold text-foreground mb-4">V2X Energy Ecosystem</h3>
+          <SystemMapDiagram onNodeClick={handleNodeClick} />
+        </section>
 
         {/* Charts Section - Maturity & Market Size */}
         <div className="grid lg:grid-cols-2 gap-6 mb-10">
@@ -41,15 +44,6 @@ const Index = () => {
         <div className="mb-10">
           <KeyFindings />
         </div>
-
-        {/* Key metrics */}
-        
-
-        {/* System map */}
-        <section className="mb-10">
-          <h3 className="text-lg font-semibold text-foreground mb-4">V2X Energy Ecosystem</h3>
-          <SystemMapDiagram onNodeClick={handleNodeClick} />
-        </section>
 
         {/* Report highlights */}
         <section>
