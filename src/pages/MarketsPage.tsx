@@ -251,135 +251,133 @@ export default function MarketsPage() {
           </div>
         </section>
 
-        {/* Market Players Section */}
+        {/* Market Players & Revenue Stacking Section */}
         <section className="mb-10">
-          <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-            <Users className="w-5 h-5 text-primary" />
-            Global Market Players & Investment
-          </h3>
-          <div className="grid lg:grid-cols-5 gap-6">
-            {/* Pie Chart */}
-            <div className="lg:col-span-2 p-6 rounded-xl bg-card border">
-              <h4 className="text-sm font-semibold text-muted-foreground mb-4">Market Share by Region</h4>
-              <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <RechartsPie>
-                    <Pie data={marketByRegion} cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={2} dataKey="value" label={({
-                    name,
-                    value
-                  }) => `${name}: ${value}%`} labelLine={false}>
-                      {marketByRegion.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
-                    </Pie>
-                    <Tooltip formatter={(value: number) => [`${value}%`, 'Market Share']} contentStyle={{
-                    backgroundColor: 'hsl(var(--card))',
-                    border: '1px solid hsl(var(--border))',
-                    borderRadius: '8px'
+          <div className="grid lg:grid-cols-2 gap-6">
+            {/* Global Market Players & Investment */}
+            <div>
+              <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                <Users className="w-5 h-5 text-primary" />
+                Global Market Players & Investment
+              </h3>
+              <div className="p-6 rounded-xl bg-card border h-full">
+                <h4 className="text-sm font-semibold text-muted-foreground mb-4">Market Share by Region</h4>
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <RechartsPie>
+                      <Pie data={marketByRegion} cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={2} dataKey="value" label={({
+                      name,
+                      value
+                    }) => `${name}: ${value}%`} labelLine={false}>
+                        {marketByRegion.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
+                      </Pie>
+                      <Tooltip formatter={(value: number) => [`${value}%`, 'Market Share']} contentStyle={{
+                      backgroundColor: 'hsl(var(--card))',
+                      border: '1px solid hsl(var(--border))',
+                      borderRadius: '8px'
+                    }} />
+                    </RechartsPie>
+                  </ResponsiveContainer>
+                </div>
+                <div className="flex flex-wrap justify-center gap-3 mt-4">
+                  {marketByRegion.map((region, index) => <div key={index} className="flex items-center gap-1.5">
+                      <div className="w-3 h-3 rounded-full" style={{
+                    backgroundColor: region.color
                   }} />
-                  </RechartsPie>
-                </ResponsiveContainer>
-              </div>
-              <div className="flex flex-wrap justify-center gap-3 mt-4">
-                {marketByRegion.map((region, index) => <div key={index} className="flex items-center gap-1.5">
-                    <div className="w-3 h-3 rounded-full" style={{
-                  backgroundColor: region.color
-                }} />
-                    <span className="text-xs text-muted-foreground">{region.name}</span>
-                  </div>)}
+                      <span className="text-xs text-muted-foreground">{region.name}</span>
+                    </div>)}
+                </div>
               </div>
             </div>
 
-            {/* Players by Region */}
-            
-          </div>
-        </section>
-
-        {/* Revenue stacking visualization */}
-        <section className="mb-10">
-          <h3 className="text-lg font-semibold text-foreground mb-4">Revenue Stacking Portfolio</h3>
-          <div className="p-6 rounded-xl bg-card border">
-            <div className="space-y-4">
-            {revenueStreams.map((stream, index) => {
-              const StreamIcon = stream.icon;
-              return <motion.div key={index} initial={{
-                opacity: 0,
-                x: -20
-              }} animate={{
-                opacity: 1,
-                x: 0
-              }} transition={{
-                duration: 0.4,
-                delay: index * 0.1
-              }}>
-                  <div className="flex justify-between mb-1">
-                    <HoverCard openDelay={100} closeDelay={100}>
-                      <HoverCardTrigger asChild>
-                        <div className="flex items-center gap-2 cursor-pointer group">
-                          <div className={`w-6 h-6 rounded-md bg-gradient-to-br ${stream.color} flex items-center justify-center`}>
-                            <StreamIcon className="w-3.5 h-3.5 text-white" />
-                          </div>
-                          <span className="text-sm font-medium text-foreground group-hover:text-primary transition-colors underline decoration-dotted underline-offset-4">
-                            {stream.name}
-                          </span>
-                          <span className="text-xs text-muted-foreground">– {stream.description}</span>
-                        </div>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80 p-0 overflow-hidden" side="right" align="start">
-                        <div className={`h-2 bg-gradient-to-r ${stream.color}`} />
-                        <div className="p-4 space-y-3">
-                          <div className="flex items-center gap-2">
-                            <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${stream.color} flex items-center justify-center`}>
-                              <StreamIcon className="w-4 h-4 text-white" />
-                            </div>
-                            <h4 className="font-semibold text-foreground">{stream.tooltip.title}</h4>
-                          </div>
-                          
-                          <p className="text-sm text-muted-foreground">{stream.tooltip.definition}</p>
-                          
-                          <div className="space-y-2 text-xs">
-                            <div className="p-2 rounded-md bg-muted/50">
-                              <span className="font-medium text-foreground">How it works: </span>
-                              <span className="text-muted-foreground">{stream.tooltip.mechanism}</span>
-                            </div>
-                            
-                            <div className="flex items-center justify-between p-2 rounded-md bg-primary/10">
-                              <span className="font-medium text-foreground">Value Potential</span>
-                              <span className="font-semibold text-primary">{stream.tooltip.value}</span>
-                            </div>
-                            
-                            <div className="p-2 rounded-md bg-muted/50">
-                              <span className="font-medium text-foreground">Best for: </span>
-                              <span className="text-muted-foreground">{stream.tooltip.bestFor}</span>
-                            </div>
-                            
-                            <div className="p-2 rounded-md border border-primary/20 bg-primary/5">
-                              <span className="font-medium text-primary">💡 Example: </span>
-                              <span className="text-muted-foreground">{stream.tooltip.example}</span>
-                            </div>
-                          </div>
-                        </div>
-                      </HoverCardContent>
-                    </HoverCard>
-                    <span className="text-sm font-bold text-primary">{stream.share}%</span>
-                  </div>
-                  <div className="h-3 bg-muted rounded-full overflow-hidden">
-                    <motion.div initial={{
-                    width: 0
+            {/* Revenue Stacking Portfolio */}
+            <div>
+              <h3 className="text-lg font-semibold text-foreground mb-4">Revenue Stacking Portfolio</h3>
+              <div className="p-6 rounded-xl bg-card border h-full">
+                <div className="space-y-4">
+                {revenueStreams.map((stream, index) => {
+                  const StreamIcon = stream.icon;
+                  return <motion.div key={index} initial={{
+                    opacity: 0,
+                    x: -20
                   }} animate={{
-                    width: `${stream.share}%`
+                    opacity: 1,
+                    x: 0
                   }} transition={{
-                    duration: 0.8,
-                    delay: index * 0.1 + 0.3
-                  }} className="h-full bg-gradient-to-r from-primary to-accent rounded-full" />
-                  </div>
-                </motion.div>;
-            })}
-            </div>
+                    duration: 0.4,
+                    delay: index * 0.1
+                  }}>
+                      <div className="flex justify-between mb-1">
+                        <HoverCard openDelay={100} closeDelay={100}>
+                          <HoverCardTrigger asChild>
+                            <div className="flex items-center gap-2 cursor-pointer group">
+                              <div className={`w-6 h-6 rounded-md bg-gradient-to-br ${stream.color} flex items-center justify-center`}>
+                                <StreamIcon className="w-3.5 h-3.5 text-white" />
+                              </div>
+                              <span className="text-sm font-medium text-foreground group-hover:text-primary transition-colors underline decoration-dotted underline-offset-4">
+                                {stream.name}
+                              </span>
+                            </div>
+                          </HoverCardTrigger>
+                          <HoverCardContent className="w-80 p-0 overflow-hidden" side="right" align="start">
+                            <div className={`h-2 bg-gradient-to-r ${stream.color}`} />
+                            <div className="p-4 space-y-3">
+                              <div className="flex items-center gap-2">
+                                <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${stream.color} flex items-center justify-center`}>
+                                  <StreamIcon className="w-4 h-4 text-white" />
+                                </div>
+                                <h4 className="font-semibold text-foreground">{stream.tooltip.title}</h4>
+                              </div>
+                              
+                              <p className="text-sm text-muted-foreground">{stream.tooltip.definition}</p>
+                              
+                              <div className="space-y-2 text-xs">
+                                <div className="p-2 rounded-md bg-muted/50">
+                                  <span className="font-medium text-foreground">How it works: </span>
+                                  <span className="text-muted-foreground">{stream.tooltip.mechanism}</span>
+                                </div>
+                                
+                                <div className="flex items-center justify-between p-2 rounded-md bg-primary/10">
+                                  <span className="font-medium text-foreground">Value Potential</span>
+                                  <span className="font-semibold text-primary">{stream.tooltip.value}</span>
+                                </div>
+                                
+                                <div className="p-2 rounded-md bg-muted/50">
+                                  <span className="font-medium text-foreground">Best for: </span>
+                                  <span className="text-muted-foreground">{stream.tooltip.bestFor}</span>
+                                </div>
+                                
+                                <div className="p-2 rounded-md border border-primary/20 bg-primary/5">
+                                  <span className="font-medium text-primary">💡 Example: </span>
+                                  <span className="text-muted-foreground">{stream.tooltip.example}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </HoverCardContent>
+                        </HoverCard>
+                        <span className="text-sm font-bold text-primary">{stream.share}%</span>
+                      </div>
+                      <div className="h-3 bg-muted rounded-full overflow-hidden">
+                        <motion.div initial={{
+                        width: 0
+                      }} animate={{
+                        width: `${stream.share}%`
+                      }} transition={{
+                        duration: 0.8,
+                        delay: index * 0.1 + 0.3
+                      }} className="h-full bg-gradient-to-r from-primary to-accent rounded-full" />
+                      </div>
+                    </motion.div>;
+                })}
+                </div>
 
-            <div className="mt-6 p-4 rounded-lg bg-muted/50">
-              <p className="text-sm text-muted-foreground">
-                <strong className="text-foreground">Strategic Insight:</strong> Commercial traction is highest in heavy-duty fleets 
-                and bus depots, where vehicles have batteries exceeding 300–600 kWh and predictable schedules.
-              </p>
+                <div className="mt-6 p-4 rounded-lg bg-muted/50">
+                  <p className="text-sm text-muted-foreground">
+                    <strong className="text-foreground">Strategic Insight:</strong> Commercial traction is highest in heavy-duty fleets 
+                    and bus depots, where vehicles have batteries exceeding 300–600 kWh and predictable schedules.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </section>
