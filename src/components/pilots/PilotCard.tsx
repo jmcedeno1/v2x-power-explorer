@@ -44,7 +44,7 @@ export function PilotCard({ pilot, index, onClick }: PilotCardProps) {
             <span>{pilot.location}</span>
           </div>
         </div>
-        <div className={cn('w-2.5 h-2.5 rounded-full', statusColors[pilot.status])} />
+        <div className={cn('w-2.5 h-2.5 rounded-full', pilot.status ? statusColors[pilot.status] : 'bg-muted')} />
       </div>
 
       {/* Metrics */}
@@ -94,12 +94,14 @@ export function PilotCard({ pilot, index, onClick }: PilotCardProps) {
       )}
 
       {/* Maturity badge */}
-      <Badge
-        variant="outline"
-        className={cn('absolute top-4 right-4 text-xs capitalize', maturityColors[pilot.maturity])}
-      >
-        {pilot.maturity.replace('_', ' ')}
-      </Badge>
+      {pilot.maturity && (
+        <Badge
+          variant="outline"
+          className={cn('absolute top-4 right-4 text-xs capitalize', maturityColors[pilot.maturity])}
+        >
+          {pilot.maturity.replace('_', ' ')}
+        </Badge>
+      )}
     </motion.button>
   );
 }
