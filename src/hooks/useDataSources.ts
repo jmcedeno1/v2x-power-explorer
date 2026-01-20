@@ -150,3 +150,38 @@ export function useUploadFile() {
     },
   });
 }
+
+export function useExtractPdfText() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ sourceId, filePath }: { sourceId: string; filePath: string }) => {
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/extract-pdf-text`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({ sourceId, filePath }),
+        }
+      );
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Extraction failed");
+      }
+
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["data-sources"] });
+      toast.success("Document processed successfully");
+    },
+    onError: (error: Error) => {
+      console.error("Error extracting document:", error);
+      toast.error(error.message || "Failed to process document");
+    },
+  });
+}
