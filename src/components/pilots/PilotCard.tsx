@@ -72,7 +72,7 @@ export function PilotCard({ pilot, index, onClick }: PilotCardProps) {
           <span className="text-xs text-muted-foreground">Grid Services</span>
         </div>
         <div className="flex flex-wrap gap-1.5">
-          {pilot.gridServices.slice(0, 3).map((service, i) => (
+          {(pilot.gridServices || []).slice(0, 3).map((service, i) => (
             <Badge key={i} variant="secondary" className="text-xs">
               {service}
             </Badge>
@@ -81,14 +81,14 @@ export function PilotCard({ pilot, index, onClick }: PilotCardProps) {
       </div>
 
       {/* Bottlenecks */}
-      {pilot.bottlenecks.length > 0 && (
+      {(pilot.bottlenecks || []).length > 0 && (
         <div className="pt-3 border-t">
           <div className="flex items-center gap-1.5 mb-2">
             <AlertCircle className="w-3.5 h-3.5 text-energy-amber" />
             <span className="text-xs text-muted-foreground">Key Bottlenecks</span>
           </div>
           <p className="text-xs text-muted-foreground line-clamp-2">
-            {pilot.bottlenecks.join(' • ')}
+            {(pilot.bottlenecks || []).join(' • ')}
           </p>
         </div>
       )}
