@@ -14,7 +14,93 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      data_sources: {
+        Row: {
+          author: string | null
+          category: string
+          content: string | null
+          content_summary: string | null
+          created_at: string
+          description: string | null
+          file_name: string | null
+          file_path: string | null
+          id: string
+          is_processed: boolean | null
+          source_date: string | null
+          source_type: string
+          tags: string[] | null
+          title: string
+          updated_at: string
+          url: string | null
+        }
+        Insert: {
+          author?: string | null
+          category: string
+          content?: string | null
+          content_summary?: string | null
+          created_at?: string
+          description?: string | null
+          file_name?: string | null
+          file_path?: string | null
+          id?: string
+          is_processed?: boolean | null
+          source_date?: string | null
+          source_type: string
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+          url?: string | null
+        }
+        Update: {
+          author?: string | null
+          category?: string
+          content?: string | null
+          content_summary?: string | null
+          created_at?: string
+          description?: string | null
+          file_name?: string | null
+          file_path?: string | null
+          id?: string
+          is_processed?: boolean | null
+          source_date?: string | null
+          source_type?: string
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+          url?: string | null
+        }
+        Relationships: []
+      }
+      generated_content: {
+        Row: {
+          content: Json
+          content_type: string
+          created_at: string
+          id: string
+          last_generated_at: string
+          module: string
+          source_ids: string[] | null
+        }
+        Insert: {
+          content?: Json
+          content_type: string
+          created_at?: string
+          id?: string
+          last_generated_at?: string
+          module: string
+          source_ids?: string[] | null
+        }
+        Update: {
+          content?: Json
+          content_type?: string
+          created_at?: string
+          id?: string
+          last_generated_at?: string
+          module?: string
+          source_ids?: string[] | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
