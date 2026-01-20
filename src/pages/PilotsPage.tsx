@@ -5,9 +5,8 @@ import { MainLayout } from '@/components/layout/MainLayout';
 import { ModuleHeader } from '@/components/ui/module-header';
 import { PilotCard } from '@/components/pilots/PilotCard';
 import { PilotPopup } from '@/components/pilots/PilotPopup';
-import { QuestionCard } from '@/components/questions/QuestionCard';
 import { Button } from '@/components/ui/button';
-import { pilotProjects, expertQuestions } from '@/data/v2xData';
+import { pilotProjects } from '@/data/v2xData';
 import { cn } from '@/lib/utils';
 
 const pilotStats = [
@@ -17,15 +16,10 @@ const pilotStats = [
   { label: 'Planned', value: pilotProjects.filter(p => p.status === 'planned').length, color: 'text-energy-amber' },
 ];
 
-const questionTypeOrder = { strategic: 0, opportunity: 1, challenge: 2 };
-
 export default function PilotsPage() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [filter, setFilter] = useState<string>('all');
   const [selectedPilot, setSelectedPilot] = useState<string | null>(null);
-  const pilotQuestions = expertQuestions
-    .filter(q => q.module === 'pilots')
-    .sort((a, b) => questionTypeOrder[a.type] - questionTypeOrder[b.type]);
 
   const filteredPilots = filter === 'all' 
     ? pilotProjects 
@@ -162,16 +156,6 @@ export default function PilotsPage() {
                 </p>
               </li>
             </ul>
-          </div>
-        </section>
-
-        {/* Expert questions */}
-        <section>
-          <h3 className="text-lg font-semibold text-foreground mb-4">Expert Interview Questions</h3>
-          <div className="space-y-3">
-            {pilotQuestions.map((question, index) => (
-              <QuestionCard key={question.id} question={question} index={index} />
-            ))}
           </div>
         </section>
       </div>

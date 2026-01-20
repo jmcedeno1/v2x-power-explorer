@@ -2,8 +2,6 @@ import { motion } from 'framer-motion';
 import { Cpu, Thermometer, Gauge, Battery, Zap } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { ModuleHeader } from '@/components/ui/module-header';
-import { QuestionCard } from '@/components/questions/QuestionCard';
-import { expertQuestions } from '@/data/v2xData';
 
 const engineeringHighlights = [
   {
@@ -43,13 +41,7 @@ const techSpecs = [
   { label: 'Liquid Cooling', value: 'Standard', status: 'mature' },
 ];
 
-const questionTypeOrder = { strategic: 0, opportunity: 1, challenge: 2 };
-
 export default function EngineeringPage() {
-  const engineeringQuestions = expertQuestions
-    .filter(q => q.module === 'engineering')
-    .sort((a, b) => questionTypeOrder[a.type] - questionTypeOrder[b.type]);
-
   return (
     <MainLayout>
       <div className="p-8 max-w-[1600px] mx-auto">
@@ -143,16 +135,6 @@ export default function EngineeringPage() {
                 </p>
               </li>
             </ul>
-          </div>
-        </section>
-
-        {/* Expert questions */}
-        <section>
-          <h3 className="text-lg font-semibold text-foreground mb-4">Expert Interview Questions</h3>
-          <div className="space-y-3">
-            {engineeringQuestions.map((question, index) => (
-              <QuestionCard key={question.id} question={question} index={index} />
-            ))}
           </div>
         </section>
       </div>
