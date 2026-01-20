@@ -9,7 +9,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { CategorySection } from '@/components/datasources/CategorySection';
 import { AddSourceDialog } from '@/components/datasources/AddSourceDialog';
 import { SourceCategory, sourceCategoryLabels } from '@/types/dataSource';
-import { useDataSources, useAddDataSource, useDeleteDataSource, useProcessSource, useUploadFile } from '@/hooks/useDataSources';
+import { useDataSources, useAddDataSource, useDeleteDataSource, useProcessSource, useUploadFile, useExtractPdfText } from '@/hooks/useDataSources';
 import { useGenerateAllReports } from '@/hooks/useGeneratedContent';
 import { toast } from 'sonner';
 
@@ -32,6 +32,7 @@ export default function DataSourcesPage() {
   const deleteSource = useDeleteDataSource();
   const processSource = useProcessSource();
   const uploadFile = useUploadFile();
+  const extractPdfText = useExtractPdfText();
   const generateAllReports = useGenerateAllReports();
 
   const handleAddSource = async (newSource: {
@@ -41,6 +42,7 @@ export default function DataSourcesPage() {
     type: 'file' | 'weblink' | 'video';
     url?: string;
     fileName?: string;
+    filePath?: string;
     author?: string;
     date?: string;
     tags: string[];
@@ -52,7 +54,7 @@ export default function DataSourcesPage() {
         category: newSource.category,
         source_type: newSource.type,
         url: newSource.url || null,
-        file_path: null,
+        file_path: newSource.filePath || null,
         file_name: newSource.fileName || null,
         author: newSource.author || null,
         source_date: newSource.date || null,
@@ -63,9 +65,18 @@ export default function DataSourcesPage() {
       if (newSource.description && result?.id) {
         processSource.mutate({ sourceId: result.id, content: newSource.description });
       }
+      
+      // If it's a file upload with a file path, trigger PDF extraction
+      if (newSource.filePath && result?.id) {
+        extractPdfText.mutate({ sourceId: result.id, filePath: newSource.filePath });
+      }
     } catch (error) {
       console.error('Error adding source:', error);
     }
+  };
+
+  const handleFileUpload = async (file: File) => {
+    return await uploadFile.mutateAsync(file);
   };
 
   const handleDeleteSource = (id: string) => {
@@ -251,7 +262,7 @@ export default function DataSourcesPage() {
             />
           </div>
           <div className="flex gap-3">
-            <AddSourceDialog onAdd={handleAddSource} totalSources={sources.length} maxSources={300} />
+            <AddSourceDialog onAdd={handleAddSource} onFileUpload={handleFileUpload} totalSources={sources.length} maxSources={300} />
             <Button
               onClick={handleGenerateReport}
               disabled={generateAllReports.isPending || sources.length === 0}
@@ -281,7 +292,7 @@ export default function DataSourcesPage() {
               Upload documents, add web links, or paste content to build your research repository. 
               Once you have sources, click "Generate Report" to create content for all modules.
             </p>
-            <AddSourceDialog onAdd={handleAddSource} totalSources={0} maxSources={300} />
+            <AddSourceDialog onAdd={handleAddSource} onFileUpload={handleFileUpload} totalSources={0} maxSources={300} />
           </motion.div>
         )}
 

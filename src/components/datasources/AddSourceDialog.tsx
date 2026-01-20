@@ -23,6 +23,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 interface AddSourceDialogProps {
   onAdd: (source: Omit<DataSource, 'id' | 'createdAt'>) => void;
+  onFileUpload?: (file: File) => Promise<{ filePath: string; fileName: string }>;
+  onExtractPdf?: (sourceId: string, filePath: string) => void;
   defaultCategory?: SourceCategory;
   totalSources?: number;
   maxSources?: number;
@@ -34,6 +36,8 @@ const isTranscriptsCategory = (category?: SourceCategory) => category === 'trans
 
 export function AddSourceDialog({ 
   onAdd, 
+  onFileUpload,
+  onExtractPdf,
   defaultCategory,
   totalSources = 0,
   maxSources = 300,
@@ -47,6 +51,7 @@ export function AddSourceDialog({
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState<SourceCategory>(defaultCategory || 'technical');
   const [isDragging, setIsDragging] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const showTranscriptsMode = isTranscriptsCategory(defaultCategory);
@@ -124,19 +129,42 @@ export function AddSourceDialog({
     handleClose();
   };
 
-  const handleFileSelect = (files: FileList | null) => {
+  const handleFileSelect = async (files: FileList | null) => {
     if (!files || files.length === 0) return;
     
-    Array.from(files).forEach((file) => {
-      onAdd({
-        title: file.name,
-        category,
-        type: 'file',
-        fileName: file.name,
-        tags: [],
-      });
-    });
+    setIsUploading(true);
     
+    for (const file of Array.from(files)) {
+      try {
+        if (onFileUpload) {
+          // Upload file and get path
+          const { filePath, fileName } = await onFileUpload(file);
+          
+          // Add source with file info - the extraction will be triggered in DataSourcesPage
+          onAdd({
+            title: file.name,
+            category,
+            type: 'file',
+            fileName: fileName,
+            tags: [],
+            filePath: filePath,
+          } as any);
+        } else {
+          // Fallback: just add without file path
+          onAdd({
+            title: file.name,
+            category,
+            type: 'file',
+            fileName: file.name,
+            tags: [],
+          });
+        }
+      } catch (error) {
+        console.error('Error uploading file:', error);
+      }
+    }
+    
+    setIsUploading(false);
     handleClose();
   };
 
