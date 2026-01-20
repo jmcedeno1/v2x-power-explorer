@@ -173,7 +173,7 @@ serve(async (req) => {
       });
     }
 
-    // Generate content using AI with tool calling for structured output
+    // Generate content using AI - direct JSON output approach
     const aiResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -181,29 +181,17 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
+        model: "google/gemini-2.5-flash",
         messages: [
-          { role: "system", content: moduleConfig.systemPrompt },
-          { role: "user", content: `Based on these source materials, generate the ${module} module content:\n\n${combinedContext.substring(0, 30000)}` },
-        ],
-        tools: [
-          {
-            type: "function",
-            function: {
-              name: "save_module_content",
-              description: "Save the generated module content",
-              parameters: {
-                type: "object",
-                properties: moduleConfig.contentTypes.reduce((acc, type) => {
-                  acc[type] = { type: "array", items: { type: "object" } };
-                  return acc;
-                }, {} as Record<string, unknown>),
-                required: moduleConfig.contentTypes,
-              },
-            },
+          { 
+            role: "system", 
+            content: `${moduleConfig.systemPrompt}\n\nIMPORTANT: You MUST respond with ONLY valid JSON. No markdown, no code blocks, no explanations. Just the raw JSON object.` 
+          },
+          { 
+            role: "user", 
+            content: `Based on these source materials, generate the ${module} module content. Respond with ONLY a JSON object:\n\n${combinedContext.substring(0, 30000)}` 
           },
         ],
-        tool_choice: { type: "function", function: { name: "save_module_content" } },
       }),
     });
 
@@ -229,28 +217,32 @@ serve(async (req) => {
     const aiData = await aiResponse.json();
     let generatedContent: Record<string, unknown> = {};
 
-    // Extract content from tool call
-    const toolCall = aiData.choices?.[0]?.message?.tool_calls?.[0];
-    if (toolCall?.function?.arguments) {
-      try {
-        generatedContent = JSON.parse(toolCall.function.arguments);
-      } catch {
-        console.error("Failed to parse tool call arguments");
+    // Parse JSON from AI response
+    const content = aiData.choices?.[0]?.message?.content || "";
+    console.log("AI response content:", content.substring(0, 500));
+    
+    try {
+      // Clean up the response - remove markdown code blocks if present
+      let cleanedContent = content.trim();
+      if (cleanedContent.startsWith("```json")) {
+        cleanedContent = cleanedContent.slice(7);
+      } else if (cleanedContent.startsWith("```")) {
+        cleanedContent = cleanedContent.slice(3);
       }
-    }
-
-    // If tool calling didn't work, try parsing from content
-    if (Object.keys(generatedContent).length === 0) {
-      const content = aiData.choices?.[0]?.message?.content || "";
-      try {
-        // Try to extract JSON from response
-        const jsonMatch = content.match(/\{[\s\S]*\}/);
-        if (jsonMatch) {
-          generatedContent = JSON.parse(jsonMatch[0]);
-        }
-      } catch {
-        console.error("Failed to parse content as JSON");
+      if (cleanedContent.endsWith("```")) {
+        cleanedContent = cleanedContent.slice(0, -3);
       }
+      cleanedContent = cleanedContent.trim();
+      
+      // Try to extract JSON object
+      const jsonMatch = cleanedContent.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        generatedContent = JSON.parse(jsonMatch[0]);
+        console.log("Successfully parsed content keys:", Object.keys(generatedContent));
+      }
+    } catch (parseError) {
+      console.error("Failed to parse AI content as JSON:", parseError);
+      console.error("Raw content:", content);
     }
 
     const sourceIds = sources.map(s => s.id);
