@@ -2,8 +2,6 @@ import { motion } from 'framer-motion';
 import { TrendingUp, DollarSign, PieChart, Layers, Zap, Activity, ArrowUpDown, Shield, Sun, BarChart3, Building2, Globe, Users } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { ModuleHeader } from '@/components/ui/module-header';
-import { QuestionCard } from '@/components/questions/QuestionCard';
-import { expertQuestions } from '@/data/v2xData';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { PieChart as RechartsPie, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 const marketMetrics = [{
@@ -213,13 +211,8 @@ const revenueStreams = [{
     example: 'Absorbing excess midday solar prevents curtailment and maximizes self-consumption rates up to 90%.'
   }
 }];
-const questionTypeOrder = {
-  strategic: 0,
-  opportunity: 1,
-  challenge: 2
-};
+
 export default function MarketsPage() {
-  const marketQuestions = expertQuestions.filter(q => q.module === 'markets').sort((a, b) => questionTypeOrder[a.type] - questionTypeOrder[b.type]);
   return <MainLayout>
       <div className="p-8 max-w-[1600px] mx-auto">
         <ModuleHeader icon={<TrendingUp className="w-7 h-7 text-white" />} title="Markets & Business Models" description="Economic landscape and revenue opportunities in bidirectional energy" badge="Economic" />
@@ -406,14 +399,6 @@ export default function MarketsPage() {
                 </p>
               </li>
             </ul>
-          </div>
-        </section>
-
-        {/* Expert questions */}
-        <section>
-          <h3 className="text-lg font-semibold text-foreground mb-4">Expert Interview Questions</h3>
-          <div className="space-y-3">
-            {marketQuestions.map((question, index) => <QuestionCard key={question.id} question={question} index={index} />)}
           </div>
         </section>
       </div>

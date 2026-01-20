@@ -2,8 +2,6 @@ import { motion } from 'framer-motion';
 import { Scale, FileCheck, Globe, Shield, Zap } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { ModuleHeader } from '@/components/ui/module-header';
-import { QuestionCard } from '@/components/questions/QuestionCard';
-import { expertQuestions } from '@/data/v2xData';
 import { cn } from '@/lib/utils';
 
 const standards = [
@@ -44,12 +42,7 @@ const gridCodeChallenges = [
   { challenge: 'Double taxation policies', status: 'varies', region: 'Regional' },
 ];
 
-const questionTypeOrder = { strategic: 0, opportunity: 1, challenge: 2 };
-
 export default function StandardsPage() {
-  const standardsQuestions = expertQuestions
-    .filter(q => q.module === 'standards')
-    .sort((a, b) => questionTypeOrder[a.type] - questionTypeOrder[b.type]);
 
   return (
     <MainLayout>
@@ -167,16 +160,6 @@ export default function StandardsPage() {
                 </p>
               </li>
             </ul>
-          </div>
-        </section>
-
-        {/* Expert questions */}
-        <section>
-          <h3 className="text-lg font-semibold text-foreground mb-4">Expert Interview Questions</h3>
-          <div className="space-y-3">
-            {standardsQuestions.map((question, index) => (
-              <QuestionCard key={question.id} question={question} index={index} />
-            ))}
           </div>
         </section>
       </div>
