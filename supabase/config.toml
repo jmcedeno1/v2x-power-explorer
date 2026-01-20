@@ -1,1 +1,7 @@
 project_id = "ukskuwonbkklkauqtrve"
+
+[functions.process-source]
+verify_jwt = false
+
+[functions.generate-report]
+verify_jwt = false
