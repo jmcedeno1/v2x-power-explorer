@@ -190,7 +190,7 @@ export default function PilotsPage() {
               <h3 className="text-lg font-semibold text-foreground mb-4">Key Observations</h3>
               <div className="p-6 rounded-xl bg-gradient-to-br from-primary/5 to-accent/5 border border-primary/20">
                 <ul className="space-y-3">
-                  {((content?.observations as string[]) || []).map((item: string, index: number) => (
+                  {([] as string[]).map((item: string, index: number) => (
                     <li key={index} className="flex items-start gap-3">
                       <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
                       <p className="text-sm text-foreground" dangerouslySetInnerHTML={{ __html: item }} />
