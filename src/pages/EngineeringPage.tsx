@@ -17,7 +17,9 @@ export default function EngineeringPage() {
     <MainLayout>
       <div className="p-8 max-w-[1600px] mx-auto">
         <ModuleHeader
-          icon={<Cpu className="w-7 h-7 text-white" heroImage={heroImg} />}
+          icon={<Cpu className="w-7 h-7 text-white"
+          heroImage={heroImg}
+        />}
           title="Engineering & Research"
           description="Technical deep-dive into bidirectional power electronics and system design"
           badge="Technical"

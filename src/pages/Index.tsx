@@ -34,7 +34,9 @@ const Index = () => {
     <MainLayout>
       <div className="p-8 max-w-[1600px] mx-auto">
         <ModuleHeader 
-          icon={<LayoutDashboard className="w-7 h-7 text-white" heroImage={heroImg} />} 
+          icon={<LayoutDashboard className="w-7 h-7 text-white"
+          heroImage={heroImg}
+        />} 
           title="V2X Power Landscape" 
           description="Interactive exploration of bidirectional energy technology state-of-the-art" 
           badge="State of the Art 2024" 
