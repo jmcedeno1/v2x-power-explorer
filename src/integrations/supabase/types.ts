@@ -341,6 +341,7 @@ export type Database = {
           fleet_size: number | null
           gap_categories: string[] | null
           id: string
+          image_url: string | null
           investment_usd: number | null
           latitude: number | null
           location: string | null
@@ -364,6 +365,7 @@ export type Database = {
           fleet_size?: number | null
           gap_categories?: string[] | null
           id?: string
+          image_url?: string | null
           investment_usd?: number | null
           latitude?: number | null
           location?: string | null
@@ -387,6 +389,7 @@ export type Database = {
           fleet_size?: number | null
           gap_categories?: string[] | null
           id?: string
+          image_url?: string | null
           investment_usd?: number | null
           latitude?: number | null
           location?: string | null
