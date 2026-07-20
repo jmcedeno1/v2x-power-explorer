@@ -18,6 +18,7 @@ import {
   Database,
   ShieldAlert,
   Telescope,
+  Download,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -41,6 +42,7 @@ const navItems: NavItem[] = [
   { id: 'foresight', label: 'Foresight & Strategy', icon: Telescope, path: '/foresight' },
   { id: 'opportunities', label: 'Opportunity Map', icon: Map, path: '/opportunities' },
   { id: 'datasources', label: 'Data Sources', icon: Database, path: '/datasources' },
+  { id: 'corpus', label: 'Corpus & Ingestion', icon: Download, path: '/corpus' },
   { id: 'notes', label: 'Notes & Changes', icon: StickyNote, path: '/notes' },
   { id: 'recommendations', label: 'Recommendations', icon: Award, path: '/recommendations' },
 ];
