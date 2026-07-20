@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import heroImg from "@/assets/hero-pilots.jpg";
 import { motion } from 'framer-motion';
 import { FlaskConical, Grid3X3, List } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
@@ -36,7 +37,7 @@ export default function PilotsPage() {
     <MainLayout>
       <div className="p-8 max-w-[1600px] mx-auto">
         <ModuleHeader
-          icon={<FlaskConical className="w-7 h-7 text-white" />}
+          icon={<FlaskConical className="w-7 h-7 text-white" heroImage={heroImg} />}
           title="Pilots & Demonstrators"
           description="Real-world V2X deployments from lab research to grid-critical infrastructure"
           badge="Demonstrators"

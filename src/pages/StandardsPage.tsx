@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import heroImg from "@/assets/hero-standards.jpg";
 import { Scale, FileCheck, Shield } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { ModuleHeader } from '@/components/ui/module-header';
@@ -15,7 +16,7 @@ export default function StandardsPage() {
     <MainLayout>
       <div className="p-8 max-w-[1600px] mx-auto">
         <ModuleHeader
-          icon={<Scale className="w-7 h-7 text-white" />}
+          icon={<Scale className="w-7 h-7 text-white" heroImage={heroImg} />}
           title="Standards & Regulation"
           description="Grid codes, protocols, and regulatory landscape for V2X deployment"
           badge="Regulatory"
