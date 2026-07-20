@@ -24,7 +24,9 @@ import {
   Info,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { pilotDetailsMap } from '@/data/pilotDetailsData';
+import { getPilotMedia, explainGap } from '@/data/pilotMedia';
 
 interface PilotPopupProps {
   pilotId: string | null;
@@ -408,6 +410,14 @@ function TechCategory({
 
 // Fallback popup for DB pilots without rich hardcoded details
 function FallbackPopup({ pilot, open, onClose }: { pilot: any; open: boolean; onClose: () => void }) {
+  const media = getPilotMedia(pilot.name);
+  const images: { url: string; caption?: string; credit?: string }[] =
+    media?.images && media.images.length > 0
+      ? media.images
+      : pilot.imageUrl
+      ? [{ url: pilot.imageUrl, caption: pilot.name }]
+      : [];
+
   const metrics: { icon: React.ReactNode; label: string; value: string; color: string }[] = [];
   if (pilot.powerLevel && pilot.powerLevel !== '—')
     metrics.push({ icon: <Zap className="w-5 h-5" />, label: 'Power Level', value: pilot.powerLevel, color: 'text-primary' });
@@ -418,10 +428,12 @@ function FallbackPopup({ pilot, open, onClose }: { pilot: any; open: boolean; on
   if (pilot.startDate)
     metrics.push({ icon: <Clock className="w-5 h-5" />, label: 'Start', value: String(pilot.startDate).slice(0, 10), color: 'text-energy-blue' });
 
+  const gaps: string[] = pilot.bottlenecks || [];
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-3xl max-h-[85vh] p-0 gap-0 overflow-hidden">
-        <ScrollArea className="max-h-[85vh]">
+      <DialogContent className="max-w-4xl max-h-[90vh] p-0 gap-0 overflow-hidden">
+        <ScrollArea className="max-h-[90vh]">
           <div className="p-6 space-y-5">
             <DialogHeader>
               <div className="flex items-center gap-3 mb-2">
@@ -444,76 +456,135 @@ function FallbackPopup({ pilot, open, onClose }: { pilot: any; open: boolean; on
               </div>
             </DialogHeader>
 
-            {pilot.description ? (
-              <div className="p-4 rounded-lg border bg-card">
-                <h4 className="text-sm font-semibold mb-2 flex items-center gap-2 text-foreground">
-                  <Info className="w-4 h-4" /> Description
-                </h4>
-                <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
-                  {pilot.description}
-                </p>
-              </div>
-            ) : (
-              <div className="p-4 rounded-lg border border-dashed bg-muted/30 text-sm text-muted-foreground">
-                No detailed description available yet. Additional sources can be added to enrich this pilot.
-              </div>
-            )}
-
             {metrics.length > 0 && (
-              <div>
-                <h4 className="text-sm font-semibold text-muted-foreground mb-3 flex items-center gap-2">
-                  <Gauge className="w-4 h-4" /> Key Metrics
-                </h4>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  {metrics.map((m) => (
-                    <div key={m.label} className="p-4 rounded-lg bg-muted/50 border text-center">
-                      <div className={cn('flex justify-center mb-2', m.color)}>{m.icon}</div>
-                      <p className="text-xs text-muted-foreground leading-tight mb-1">{m.label}</p>
-                      <p className="text-lg font-bold text-foreground">{m.value}</p>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {metrics.map((m) => (
+                  <div key={m.label} className="p-3 rounded-lg bg-muted/50 border text-center">
+                    <div className={cn('flex justify-center mb-1', m.color)}>{m.icon}</div>
+                    <p className="text-[11px] text-muted-foreground leading-tight mb-0.5">{m.label}</p>
+                    <p className="text-base font-bold text-foreground">{m.value}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <Tabs defaultValue="overview" className="w-full">
+              <TabsList className="grid grid-cols-4 w-full">
+                <TabsTrigger value="overview">Overview</TabsTrigger>
+                <TabsTrigger value="gallery">
+                  Gallery{images.length > 0 ? ` (${images.length})` : ''}
+                </TabsTrigger>
+                <TabsTrigger value="gaps">
+                  Gaps{gaps.length > 0 ? ` (${gaps.length})` : ''}
+                </TabsTrigger>
+                <TabsTrigger value="partners">Partners</TabsTrigger>
+              </TabsList>
+
+              {/* Overview */}
+              <TabsContent value="overview" className="mt-4 space-y-4">
+                {pilot.description ? (
+                  <div className="p-4 rounded-lg border bg-card">
+                    <h4 className="text-sm font-semibold mb-2 flex items-center gap-2 text-foreground">
+                      <Info className="w-4 h-4" /> Description
+                    </h4>
+                    <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
+                      {pilot.description}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="p-4 rounded-lg border border-dashed bg-muted/30 text-sm text-muted-foreground">
+                    No detailed description available yet.
+                  </div>
+                )}
+
+                {pilot.gridServices?.length > 0 && (
+                  <div className="p-4 rounded-lg border bg-card">
+                    <h4 className="text-sm font-semibold mb-2 text-primary flex items-center gap-2">
+                      <Zap className="w-4 h-4" /> V2X Services
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      {pilot.gridServices.map((s: string) => (
+                        <Badge key={s} variant="outline" className="text-xs">{s}</Badge>
+                      ))}
                     </div>
-                  ))}
-                </div>
-              </div>
-            )}
+                  </div>
+                )}
+              </TabsContent>
 
-            {pilot.gridServices?.length > 0 && (
-              <div className="p-4 rounded-lg border bg-card">
-                <h4 className="text-sm font-semibold mb-2 text-primary flex items-center gap-2">
-                  <Zap className="w-4 h-4" /> V2X Services
-                </h4>
-                <div className="flex flex-wrap gap-2">
-                  {pilot.gridServices.map((s: string) => (
-                    <Badge key={s} variant="outline" className="text-xs">{s}</Badge>
-                  ))}
-                </div>
-              </div>
-            )}
+              {/* Gallery */}
+              <TabsContent value="gallery" className="mt-4">
+                {images.length > 0 ? (
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    {images.map((img, i) => (
+                      <figure key={i} className="rounded-lg overflow-hidden border bg-card">
+                        <div className="aspect-[16/10] bg-muted overflow-hidden">
+                          <img
+                            src={img.url}
+                            alt={img.caption || pilot.name}
+                            className="w-full h-full object-cover"
+                            loading="lazy"
+                          />
+                        </div>
+                        {(img.caption || img.credit) && (
+                          <figcaption className="p-2.5 text-xs">
+                            {img.caption && <p className="text-foreground">{img.caption}</p>}
+                            {img.credit && <p className="text-muted-foreground mt-0.5">© {img.credit}</p>}
+                          </figcaption>
+                        )}
+                      </figure>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="p-6 rounded-lg border border-dashed bg-muted/30 text-sm text-muted-foreground text-center">
+                    No photos available for this pilot yet.
+                  </div>
+                )}
+              </TabsContent>
 
-            {pilot.partners?.length > 0 && (
-              <div className="p-4 rounded-lg border bg-card">
-                <h4 className="text-sm font-semibold mb-2 text-primary flex items-center gap-2">
-                  <Building2 className="w-4 h-4" /> Partners
-                </h4>
-                <div className="flex flex-wrap gap-2">
-                  {pilot.partners.map((p: string) => (
-                    <Badge key={p} variant="secondary" className="text-xs">{p}</Badge>
-                  ))}
-                </div>
-              </div>
-            )}
+              {/* Gaps / Bottlenecks */}
+              <TabsContent value="gaps" className="mt-4 space-y-3">
+                {gaps.length > 0 ? (
+                  gaps.map((g) => {
+                    const detail = explainGap(g, media?.gapExplanations);
+                    return (
+                      <div key={g} className="p-4 rounded-lg border bg-card">
+                        <div className="flex items-center gap-2 mb-1.5">
+                          <TrendingDown className="w-4 h-4 text-energy-amber" />
+                          <h5 className="text-sm font-semibold text-foreground">{g}</h5>
+                        </div>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          {detail || 'Identified as an open technical or regulatory gap for this pilot. Additional context to be added as sources are collected.'}
+                        </p>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div className="p-6 rounded-lg border border-dashed bg-muted/30 text-sm text-muted-foreground text-center">
+                    No gaps or bottlenecks recorded for this pilot.
+                  </div>
+                )}
+              </TabsContent>
 
-            {pilot.bottlenecks?.length > 0 && (
-              <div className="p-4 rounded-lg border bg-card">
-                <h4 className="text-sm font-semibold mb-2 text-energy-amber flex items-center gap-2">
-                  <TrendingDown className="w-4 h-4" /> Gaps / Bottlenecks
-                </h4>
-                <div className="flex flex-wrap gap-2">
-                  {pilot.bottlenecks.map((b: string) => (
-                    <Badge key={b} variant="outline" className="text-xs">{b}</Badge>
-                  ))}
-                </div>
-              </div>
-            )}
+              {/* Partners */}
+              <TabsContent value="partners" className="mt-4">
+                {pilot.partners?.length > 0 ? (
+                  <div className="p-4 rounded-lg border bg-card">
+                    <h4 className="text-sm font-semibold mb-3 text-primary flex items-center gap-2">
+                      <Building2 className="w-4 h-4" /> Partners ({pilot.partners.length})
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      {pilot.partners.map((p: string) => (
+                        <Badge key={p} variant="secondary" className="text-xs">{p}</Badge>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-6 rounded-lg border border-dashed bg-muted/30 text-sm text-muted-foreground text-center">
+                    No partner list recorded for this pilot.
+                  </div>
+                )}
+              </TabsContent>
+            </Tabs>
           </div>
         </ScrollArea>
       </DialogContent>
