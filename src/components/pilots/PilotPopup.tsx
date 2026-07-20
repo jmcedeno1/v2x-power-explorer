@@ -28,28 +28,47 @@ import { pilotDetailsMap } from '@/data/pilotDetailsData';
 
 interface PilotPopupProps {
   pilotId: string | null;
+  pilotData?: any; // fallback DB record
   open: boolean;
   onClose: () => void;
 }
 
-const maturityColors = {
+const maturityColors: Record<string, string> = {
   lab: 'bg-energy-blue/10 text-energy-blue border-energy-blue/30',
   pilot: 'bg-energy-amber/10 text-energy-amber border-energy-amber/30',
   depot: 'bg-energy-green/10 text-energy-green border-energy-green/30',
   grid_critical: 'bg-energy-purple/10 text-energy-purple border-energy-purple/30',
 };
 
-const statusColors = {
+const statusColors: Record<string, string> = {
   active: 'bg-energy-green text-white',
   completed: 'bg-energy-blue text-white',
   planned: 'bg-energy-amber text-white',
 };
 
-export function PilotPopup({ pilotId, open, onClose }: PilotPopupProps) {
-  if (!pilotId) return null;
-  
-  const pilot = pilotDetailsMap[pilotId];
-  if (!pilot) return null;
+function findRichDetails(pilotId: string | null, pilotData?: any) {
+  if (!pilotId && !pilotData) return null;
+  // Try by id first
+  if (pilotId && pilotDetailsMap[pilotId]) return pilotDetailsMap[pilotId];
+  // Then match by name (case-insensitive)
+  const name = pilotData?.name?.toLowerCase().trim();
+  if (!name) return null;
+  const match = Object.values(pilotDetailsMap).find(
+    (p: any) => p.name?.toLowerCase().trim() === name
+  );
+  return match || null;
+}
+
+export function PilotPopup({ pilotId, pilotData, open, onClose }: PilotPopupProps) {
+  if (!pilotId && !pilotData) return null;
+
+  const pilot: any = findRichDetails(pilotId, pilotData);
+
+  // Fallback: render from DB record when rich details aren't available
+  if (!pilot) {
+    if (!pilotData) return null;
+    return <FallbackPopup pilot={pilotData} open={open} onClose={onClose} />;
+  }
 
   // Build metrics array based on available data
   const metricsToShow = [];
