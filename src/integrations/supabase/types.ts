@@ -336,15 +336,22 @@ export type Database = {
           description: string | null
           end_date: string | null
           evidence_uid: string
+          evidence_uids: string[] | null
+          failure_mode_count: number | null
           fleet_size: number | null
+          gap_categories: string[] | null
           id: string
+          investment_usd: number | null
+          latitude: number | null
           location: string | null
+          longitude: number | null
           name: string
           partners: string[]
           power_kw: number | null
           start_date: string | null
           status: string | null
           updated_at: string
+          v2x_type: string[] | null
         }
         Insert: {
           country?: string | null
@@ -352,15 +359,22 @@ export type Database = {
           description?: string | null
           end_date?: string | null
           evidence_uid: string
+          evidence_uids?: string[] | null
+          failure_mode_count?: number | null
           fleet_size?: number | null
+          gap_categories?: string[] | null
           id?: string
+          investment_usd?: number | null
+          latitude?: number | null
           location?: string | null
+          longitude?: number | null
           name: string
           partners?: string[]
           power_kw?: number | null
           start_date?: string | null
           status?: string | null
           updated_at?: string
+          v2x_type?: string[] | null
         }
         Update: {
           country?: string | null
@@ -368,15 +382,22 @@ export type Database = {
           description?: string | null
           end_date?: string | null
           evidence_uid?: string
+          evidence_uids?: string[] | null
+          failure_mode_count?: number | null
           fleet_size?: number | null
+          gap_categories?: string[] | null
           id?: string
+          investment_usd?: number | null
+          latitude?: number | null
           location?: string | null
+          longitude?: number | null
           name?: string
           partners?: string[]
           power_kw?: number | null
           start_date?: string | null
           status?: string | null
           updated_at?: string
+          v2x_type?: string[] | null
         }
         Relationships: []
       }
