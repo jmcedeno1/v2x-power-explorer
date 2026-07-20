@@ -22,7 +22,9 @@ export default function MarketsPage() {
     <MainLayout>
       <div className="p-8 max-w-[1600px] mx-auto">
         <ModuleHeader 
-          icon={<TrendingUp className="w-7 h-7 text-white" heroImage={heroImg} />} 
+          icon={<TrendingUp className="w-7 h-7 text-white"
+          heroImage={heroImg}
+        />} 
           title="Markets & Business Models" 
           description="Economic landscape and revenue opportunities in bidirectional energy" 
           badge="Economic" 

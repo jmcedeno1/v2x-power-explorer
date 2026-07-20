@@ -22,7 +22,9 @@ export default function PatentsPage() {
     <MainLayout>
       <div className="p-8 max-w-[1600px] mx-auto">
         <ModuleHeader 
-          icon={<FileText className="w-7 h-7 text-white" heroImage={heroImg} />} 
+          icon={<FileText className="w-7 h-7 text-white"
+          heroImage={heroImg}
+        />} 
           title="Patents & IP" 
           description="Intellectual property landscape and strategic innovation opportunities" 
           badge="IP Analysis" 

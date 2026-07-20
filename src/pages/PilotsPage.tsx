@@ -37,7 +37,9 @@ export default function PilotsPage() {
     <MainLayout>
       <div className="p-8 max-w-[1600px] mx-auto">
         <ModuleHeader
-          icon={<FlaskConical className="w-7 h-7 text-white" heroImage={heroImg} />}
+          icon={<FlaskConical className="w-7 h-7 text-white"
+          heroImage={heroImg}
+        />}
           title="Pilots & Demonstrators"
           description="Real-world V2X deployments from lab research to grid-critical infrastructure"
           badge="Demonstrators"
