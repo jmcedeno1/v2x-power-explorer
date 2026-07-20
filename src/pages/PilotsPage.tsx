@@ -29,6 +29,7 @@ function mapRow(r: any) {
     country: r.country,
     status: r.status || 'active',
     powerLevel: r.power_kw ? `${Number(r.power_kw).toLocaleString()} kW` : '—',
+    powerKw: r.power_kw ?? null,
     vehicleCount: r.fleet_size ?? 0,
     gridServices: r.v2x_type || [],
     bottlenecks: r.gap_categories || [],
@@ -38,6 +39,7 @@ function mapRow(r: any) {
     investmentUsd: r.investment_usd,
     startDate: r.start_date,
     endDate: r.end_date,
+    imageUrl: r.image_url,
   };
 }
 
