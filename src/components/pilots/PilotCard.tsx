@@ -60,36 +60,15 @@ export function PilotCard({ pilot, index, onClick }: PilotCardProps) {
       whileHover={{ y: -4 }}
       className="group relative w-full text-left rounded-xl bg-card border hover:border-primary/40 hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col"
     >
-      {/* Photo */}
-      {pilot.imageUrl ? (
-        <div className="relative aspect-[16/9] overflow-hidden bg-muted">
-          <img
-            src={pilot.imageUrl}
-            alt={pilot.name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-            loading="lazy"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-          {pilot.maturity && (
-            <Badge
-              variant="outline"
-              className={cn('absolute top-3 right-3 text-xs capitalize backdrop-blur-sm bg-background/80', maturityColors[pilot.maturity])}
-            >
-              {pilot.maturity.replace('_', ' ')}
-            </Badge>
-          )}
-        </div>
-      ) : (
-        <div className="relative h-2 bg-gradient-to-r from-primary/20 via-accent/20 to-primary/20">
-          {pilot.maturity && (
-            <Badge
-              variant="outline"
-              className={cn('absolute top-3 right-3 text-xs capitalize', maturityColors[pilot.maturity])}
-            >
-              {pilot.maturity.replace('_', ' ')}
-            </Badge>
-          )}
-        </div>
+      {/* Top accent bar (no photo on card face) */}
+      <div className="relative h-1.5 bg-gradient-to-r from-primary/40 via-accent/40 to-primary/40" />
+      {pilot.maturity && (
+        <Badge
+          variant="outline"
+          className={cn('absolute top-3 right-3 text-[10px] capitalize', maturityColors[pilot.maturity])}
+        >
+          {pilot.maturity.replace('_', ' ')}
+        </Badge>
       )}
 
       <div className="p-5 flex-1 flex flex-col">
