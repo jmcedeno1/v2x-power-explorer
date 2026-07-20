@@ -1,7 +1,7 @@
-import { motion } from 'framer-motion';
-import { FileQuestion, Upload, ArrowRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { useNavigate } from 'react-router-dom';
+interface EmptyModuleStateProps {
+  moduleName: string;
+}
+
 
 interface EmptyModuleStateProps {
   moduleName: string;
