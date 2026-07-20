@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import heroImg from "@/assets/hero-engineering.jpg";
 import { Cpu, Thermometer, Gauge, Battery, Zap } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { ModuleHeader } from '@/components/ui/module-header';
@@ -16,7 +17,7 @@ export default function EngineeringPage() {
     <MainLayout>
       <div className="p-8 max-w-[1600px] mx-auto">
         <ModuleHeader
-          icon={<Cpu className="w-7 h-7 text-white" />}
+          icon={<Cpu className="w-7 h-7 text-white" heroImage={heroImg} />}
           title="Engineering & Research"
           description="Technical deep-dive into bidirectional power electronics and system design"
           badge="Technical"

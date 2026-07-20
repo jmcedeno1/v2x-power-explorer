@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import heroImg from "@/assets/hero-markets.jpg";
 import { TrendingUp, DollarSign, PieChart, Layers, Zap, Activity, ArrowUpDown, Shield, Sun, BarChart3, Building2, Globe, Users } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { ModuleHeader } from '@/components/ui/module-header';
@@ -21,7 +22,7 @@ export default function MarketsPage() {
     <MainLayout>
       <div className="p-8 max-w-[1600px] mx-auto">
         <ModuleHeader 
-          icon={<TrendingUp className="w-7 h-7 text-white" />} 
+          icon={<TrendingUp className="w-7 h-7 text-white" heroImage={heroImg} />} 
           title="Markets & Business Models" 
           description="Economic landscape and revenue opportunities in bidirectional energy" 
           badge="Economic" 

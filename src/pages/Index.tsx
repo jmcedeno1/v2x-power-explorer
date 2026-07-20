@@ -1,4 +1,5 @@
 import { LayoutDashboard, ArrowRight } from 'lucide-react';
+import heroImg from "@/assets/hero-overview.jpg";
 import { MainLayout } from '@/components/layout/MainLayout';
 import { ModuleHeader } from '@/components/ui/module-header';
 import { EmptyModuleState } from '@/components/ui/empty-module-state';
@@ -33,7 +34,7 @@ const Index = () => {
     <MainLayout>
       <div className="p-8 max-w-[1600px] mx-auto">
         <ModuleHeader 
-          icon={<LayoutDashboard className="w-7 h-7 text-white" />} 
+          icon={<LayoutDashboard className="w-7 h-7 text-white" heroImage={heroImg} />} 
           title="V2X Power Landscape" 
           description="Interactive exploration of bidirectional energy technology state-of-the-art" 
           badge="State of the Art 2024" 

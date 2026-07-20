@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import heroImg from "@/assets/hero-patents.jpg";
 import { FileText, Cloud, Lock, Cpu } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { ModuleHeader } from '@/components/ui/module-header';
@@ -21,7 +22,7 @@ export default function PatentsPage() {
     <MainLayout>
       <div className="p-8 max-w-[1600px] mx-auto">
         <ModuleHeader 
-          icon={<FileText className="w-7 h-7 text-white" />} 
+          icon={<FileText className="w-7 h-7 text-white" heroImage={heroImg} />} 
           title="Patents & IP" 
           description="Intellectual property landscape and strategic innovation opportunities" 
           badge="IP Analysis" 
