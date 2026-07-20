@@ -85,6 +85,7 @@ export default function CorpusPage() {
   const openalex = useIngest("import-openalex");
   const lensP = useIngest("import-lens");
   const lensS = useIngest("import-lens");
+  const fromSource = useIngest("import-from-source-supabase");
   const runAll = useIngest("run-ingest");
 
   return (
@@ -130,6 +131,10 @@ export default function CorpusPage() {
             <Button onClick={() => lensS.mutate({ kind: "scholar" })} disabled={lensS.isPending} variant="secondary">
               {lensS.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Download className="w-4 h-4 mr-2" />}
               Import Lens scholar
+            </Button>
+            <Button onClick={() => fromSource.mutate(undefined)} disabled={fromSource.isPending} variant="default">
+              {fromSource.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Download className="w-4 h-4 mr-2" />}
+              Import from source Supabase (patents + publications)
             </Button>
             <Button onClick={() => runAll.mutate(undefined)} disabled={runAll.isPending} variant="default">
               {runAll.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <RefreshCw className="w-4 h-4 mr-2" />}
