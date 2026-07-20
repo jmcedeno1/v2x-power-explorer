@@ -181,6 +181,7 @@ export default function PilotsPage() {
             {/* Pilot Popup */}
             <PilotPopup 
               pilotId={selectedPilot}
+              pilotData={pilots.find((p: any) => p.id === selectedPilot)}
               open={!!selectedPilot}
               onClose={() => setSelectedPilot(null)}
             />
