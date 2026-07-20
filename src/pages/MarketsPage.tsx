@@ -10,7 +10,7 @@ import { PieChart as RechartsPie, Pie, Cell, ResponsiveContainer, Tooltip } from
 export default function MarketsPage() {
   const { data: content, isLoading } = useModuleContent('markets');
   
-  const hasContent = content && Object.keys(content).length > 0;
+  const hasContent = true;
 
   const iconMap: Record<string, any> = { 
     DollarSign, TrendingUp, BarChart3, Building2, PieChart, Layers, Globe, Users,

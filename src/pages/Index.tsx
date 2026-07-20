@@ -14,7 +14,7 @@ const Index = () => {
   const navigate = useNavigate();
   const { data: content, isLoading } = useModuleContent('dashboard');
   
-  const hasContent = content && Object.keys(content).length > 0;
+  const hasContent = true;
 
   const handleNodeClick = (nodeId: string) => {
     const routes: Record<string, string> = {

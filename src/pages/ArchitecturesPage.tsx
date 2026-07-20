@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 export default function ArchitecturesPage() {
   const { data: content, isLoading } = useModuleContent('architectures');
   
-  const hasContent = content && Object.keys(content).length > 0;
+  const hasContent = true;
 
   const iconMap: Record<string, any> = { Cpu, Zap, Battery, Building2, Network };
 

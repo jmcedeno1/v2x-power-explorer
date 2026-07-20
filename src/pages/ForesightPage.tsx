@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 export default function ForesightPage() {
   const { data: content, isLoading } = useModuleContent('foresight');
   
-  const hasContent = content && Object.keys(content).length > 0;
+  const hasContent = true;
 
   return (
     <MainLayout>

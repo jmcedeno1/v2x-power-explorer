@@ -17,7 +17,7 @@ export default function PilotsPage() {
   
   const { data: content, isLoading } = useModuleContent('pilots');
   
-  const hasContent = content && Object.keys(content).length > 0;
+  const hasContent = true;
   
   const pilots = (content?.projects as any[]) || [];
   

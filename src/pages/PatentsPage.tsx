@@ -13,7 +13,7 @@ import { cn } from '@/lib/utils';
 export default function PatentsPage() {
   const { data: content, isLoading } = useModuleContent('patents');
   
-  const hasContent = content && Object.keys(content).length > 0;
+  const hasContent = true;
 
   const iconMap: Record<string, any> = { Cloud, Lock, Cpu };
 
