@@ -10,6 +10,7 @@ import { PilotCard } from '@/components/pilots/PilotCard';
 import { PilotPopup } from '@/components/pilots/PilotPopup';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { pilotDetailsMap } from '@/data/pilotDetailsData';
 
 export default function PilotsPage() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -20,7 +21,8 @@ export default function PilotsPage() {
   
   const hasContent = true;
   
-  const pilots = (content?.projects as any[]) || [];
+  const generated = (content?.projects as any[]) || [];
+  const pilots = generated.length > 0 ? generated : Object.values(pilotDetailsMap);
   
   const filteredPilots = filter === 'all' 
     ? pilots 
