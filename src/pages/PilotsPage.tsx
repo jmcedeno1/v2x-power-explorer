@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import heroImg from "@/assets/hero-pilots.jpg";
 import { motion } from 'framer-motion';
 import { FlaskConical, Grid3X3, List } from 'lucide-react';
@@ -10,23 +10,61 @@ import { PilotCard } from '@/components/pilots/PilotCard';
 import { PilotPopup } from '@/components/pilots/PilotPopup';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { pilotDetailsMap } from '@/data/pilotDetailsData';
+import { supabase } from '@/integrations/supabase/client';
+
+function maturityFromRow(r: any): string {
+  const fs = r.fleet_size ?? 0;
+  const pw = r.power_kw ?? 0;
+  if (fs >= 50 || pw >= 2000) return 'grid_critical';
+  if (fs >= 10 || pw >= 500) return 'depot';
+  if (fs >= 3) return 'pilot';
+  return 'lab';
+}
+
+function mapRow(r: any) {
+  return {
+    id: r.id,
+    name: r.name,
+    location: [r.location, r.country].filter(Boolean).join(', '),
+    country: r.country,
+    status: r.status || 'active',
+    powerLevel: r.power_kw ? `${Number(r.power_kw).toLocaleString()} kW` : '—',
+    vehicleCount: r.fleet_size ?? 0,
+    gridServices: r.v2x_type || [],
+    bottlenecks: r.gap_categories || [],
+    maturity: maturityFromRow(r),
+    description: r.description,
+    partners: r.partners || [],
+    investmentUsd: r.investment_usd,
+    startDate: r.start_date,
+    endDate: r.end_date,
+  };
+}
 
 export default function PilotsPage() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [filter, setFilter] = useState<string>('all');
   const [selectedPilot, setSelectedPilot] = useState<string | null>(null);
-  
-  const { data: content, isLoading } = useModuleContent('pilots');
-  
+  const [pilots, setPilots] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      const { data, error } = await supabase
+        .from('pilots')
+        .select('*')
+        .order('power_kw', { ascending: false });
+      if (!error && data) setPilots(data.map(mapRow));
+      setIsLoading(false);
+    })();
+  }, []);
+
   const hasContent = true;
-  
-  const generated = (content?.projects as any[]) || [];
-  const pilots = generated.length > 0 ? generated : Object.values(pilotDetailsMap);
-  
-  const filteredPilots = filter === 'all' 
-    ? pilots 
+
+  const filteredPilots = filter === 'all'
+    ? pilots
     : pilots.filter((p: any) => p.status === filter);
+
 
   const pilotStats = [
     { label: 'Total Pilots', value: pilots.length, color: 'text-primary' },
