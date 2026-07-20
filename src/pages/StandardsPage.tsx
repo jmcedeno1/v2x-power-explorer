@@ -16,12 +16,11 @@ export default function StandardsPage() {
     <MainLayout>
       <div className="p-8 max-w-[1600px] mx-auto">
         <ModuleHeader
-          icon={<Scale className="w-7 h-7 text-white"
-          heroImage={heroImg}
-        />}
+          icon={<Scale className="w-7 h-7 text-white" />}
           title="Standards & Regulation"
           description="Grid codes, protocols, and regulatory landscape for V2X deployment"
           badge="Regulatory"
+          heroImage={heroImg}
         />
 
         {!hasContent && !isLoading ? (
