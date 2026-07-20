@@ -30,10 +30,8 @@ Deno.serve(async (req) => {
 
     const results = await Promise.all(jobs);
 
-    // Update corpus manifest snapshot per source
-    const { data: byType } = await admin().rpc("noop_dummy").select().limit(0).then(() => ({ data: null } as any)).catch(() => ({ data: null } as any));
-    // Simpler: aggregate document counts
-    const { data: counts } = await admin().from("documents").select("source, doc_type", { count: "exact", head: false });
+    // Aggregate document counts by source and doc_type
+    const { data: counts } = await admin().from("documents").select("source, doc_type");
     const source_breakdown: Record<string, number> = {};
     const doc_type_breakdown: Record<string, number> = {};
     (counts ?? []).forEach((r: any) => {
