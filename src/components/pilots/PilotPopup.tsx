@@ -405,3 +405,118 @@ function TechCategory({
     </div>
   );
 }
+
+// Fallback popup for DB pilots without rich hardcoded details
+function FallbackPopup({ pilot, open, onClose }: { pilot: any; open: boolean; onClose: () => void }) {
+  const metrics: { icon: React.ReactNode; label: string; value: string; color: string }[] = [];
+  if (pilot.powerLevel && pilot.powerLevel !== '—')
+    metrics.push({ icon: <Zap className="w-5 h-5" />, label: 'Power Level', value: pilot.powerLevel, color: 'text-primary' });
+  if (pilot.vehicleCount)
+    metrics.push({ icon: <Car className="w-5 h-5" />, label: 'Vehicles', value: String(pilot.vehicleCount), color: 'text-accent' });
+  if (pilot.investmentUsd)
+    metrics.push({ icon: <Banknote className="w-5 h-5" />, label: 'Investment (USD)', value: `$${Number(pilot.investmentUsd).toLocaleString()}`, color: 'text-energy-amber' });
+  if (pilot.startDate)
+    metrics.push({ icon: <Clock className="w-5 h-5" />, label: 'Start', value: String(pilot.startDate).slice(0, 10), color: 'text-energy-blue' });
+
+  return (
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent className="max-w-3xl max-h-[85vh] p-0 gap-0 overflow-hidden">
+        <ScrollArea className="max-h-[85vh]">
+          <div className="p-6 space-y-5">
+            <DialogHeader>
+              <div className="flex items-center gap-3 mb-2">
+                <DialogTitle className="text-xl font-semibold text-foreground">{pilot.name}</DialogTitle>
+                {pilot.maturity && (
+                  <Badge variant="outline" className={cn('text-xs capitalize', maturityColors[pilot.maturity])}>
+                    {String(pilot.maturity).replace('_', ' ')}
+                  </Badge>
+                )}
+              </div>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <MapPin className="w-4 h-4" />
+                <span>{pilot.location || pilot.country || '—'}</span>
+                {pilot.status && (
+                  <>
+                    <span className="mx-2">•</span>
+                    <Badge className={cn('text-xs', statusColors[pilot.status])}>{pilot.status}</Badge>
+                  </>
+                )}
+              </div>
+            </DialogHeader>
+
+            {pilot.description ? (
+              <div className="p-4 rounded-lg border bg-card">
+                <h4 className="text-sm font-semibold mb-2 flex items-center gap-2 text-foreground">
+                  <Info className="w-4 h-4" /> Description
+                </h4>
+                <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
+                  {pilot.description}
+                </p>
+              </div>
+            ) : (
+              <div className="p-4 rounded-lg border border-dashed bg-muted/30 text-sm text-muted-foreground">
+                No detailed description available yet. Additional sources can be added to enrich this pilot.
+              </div>
+            )}
+
+            {metrics.length > 0 && (
+              <div>
+                <h4 className="text-sm font-semibold text-muted-foreground mb-3 flex items-center gap-2">
+                  <Gauge className="w-4 h-4" /> Key Metrics
+                </h4>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {metrics.map((m) => (
+                    <div key={m.label} className="p-4 rounded-lg bg-muted/50 border text-center">
+                      <div className={cn('flex justify-center mb-2', m.color)}>{m.icon}</div>
+                      <p className="text-xs text-muted-foreground leading-tight mb-1">{m.label}</p>
+                      <p className="text-lg font-bold text-foreground">{m.value}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {pilot.gridServices?.length > 0 && (
+              <div className="p-4 rounded-lg border bg-card">
+                <h4 className="text-sm font-semibold mb-2 text-primary flex items-center gap-2">
+                  <Zap className="w-4 h-4" /> V2X Services
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  {pilot.gridServices.map((s: string) => (
+                    <Badge key={s} variant="outline" className="text-xs">{s}</Badge>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {pilot.partners?.length > 0 && (
+              <div className="p-4 rounded-lg border bg-card">
+                <h4 className="text-sm font-semibold mb-2 text-primary flex items-center gap-2">
+                  <Building2 className="w-4 h-4" /> Partners
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  {pilot.partners.map((p: string) => (
+                    <Badge key={p} variant="secondary" className="text-xs">{p}</Badge>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {pilot.bottlenecks?.length > 0 && (
+              <div className="p-4 rounded-lg border bg-card">
+                <h4 className="text-sm font-semibold mb-2 text-energy-amber flex items-center gap-2">
+                  <TrendingDown className="w-4 h-4" /> Gaps / Bottlenecks
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  {pilot.bottlenecks.map((b: string) => (
+                    <Badge key={b} variant="outline" className="text-xs">{b}</Badge>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </ScrollArea>
+      </DialogContent>
+    </Dialog>
+  );
+}
