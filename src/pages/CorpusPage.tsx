@@ -115,11 +115,11 @@ export default function CorpusPage() {
             <CardTitle>Ingest data</CardTitle>
           </CardHeader>
           <CardContent className="flex flex-wrap gap-3">
-            <Button onClick={() => gdelt.mutate()} disabled={gdelt.isPending}>
+            <Button onClick={() => gdelt.mutate(undefined)} disabled={gdelt.isPending}>
               {gdelt.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Download className="w-4 h-4 mr-2" />}
               Import GDELT news
             </Button>
-            <Button onClick={() => openalex.mutate()} disabled={openalex.isPending} variant="secondary">
+            <Button onClick={() => openalex.mutate(undefined)} disabled={openalex.isPending} variant="secondary">
               {openalex.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Download className="w-4 h-4 mr-2" />}
               Import OpenAlex publications
             </Button>
@@ -131,7 +131,7 @@ export default function CorpusPage() {
               {lensS.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Download className="w-4 h-4 mr-2" />}
               Import Lens scholar
             </Button>
-            <Button onClick={() => runAll.mutate()} disabled={runAll.isPending} variant="default">
+            <Button onClick={() => runAll.mutate(undefined)} disabled={runAll.isPending} variant="default">
               {runAll.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <RefreshCw className="w-4 h-4 mr-2" />}
               Run all
             </Button>
