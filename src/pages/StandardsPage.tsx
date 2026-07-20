@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 export default function StandardsPage() {
   const { data: content, isLoading } = useModuleContent('standards');
   
-  const hasContent = content && Object.keys(content).length > 0;
+  const hasContent = true;
 
   return (
     <MainLayout>

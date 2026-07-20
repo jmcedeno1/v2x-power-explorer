@@ -8,7 +8,7 @@ import { useModuleContent } from '@/hooks/useGeneratedContent';
 export default function EngineeringPage() {
   const { data: content, isLoading } = useModuleContent('engineering');
   
-  const hasContent = content && Object.keys(content).length > 0;
+  const hasContent = true;
 
   const iconMap: Record<string, any> = { Gauge, Thermometer, Battery, Zap, Cpu };
 

@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 export default function RisksPage() {
   const { data: content, isLoading } = useModuleContent('risks');
   
-  const hasContent = content && Object.keys(content).length > 0;
+  const hasContent = true;
 
   const iconMap: Record<string, any> = { Zap, Lock, Scale, Users, ShieldAlert, AlertTriangle };
 
