@@ -1,7 +1,114 @@
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { TrendingUp, Sparkles, Lightbulb, Target, Layers } from 'lucide-react';
 import { ReactNode, useState } from 'react';
+
+// Brief explanations shown on hover for each scope tag.
+const SCOPE_DESCRIPTIONS: Record<string, string> = {
+  // V2G Bidirectional Power Conversion
+  'Bidirectional inverters': 'Power electronics that convert DC battery energy to grid-synchronized AC and vice versa.',
+  'DC-DC / DC-AC converters': 'Stages that step DC voltages up/down or convert between DC and AC in a bidirectional charger.',
+  'Isolated and non-isolated topologies': 'Circuit families with or without galvanic isolation between battery and grid sides.',
+  'Wide-bandgap (SiC/GaN) devices': 'Silicon-carbide and gallium-nitride semiconductors enabling higher efficiency and power density.',
+  // V2G Control & Dispatch
+  'Aggregator control loops': 'Software loops that coordinate many EVs as a single grid resource.',
+  'Predictive dispatch': 'Algorithms that forecast prices, load and driver behavior to plan charge/discharge.',
+  'Fleet optimization': 'Optimization across a full vehicle fleet to maximize revenue or minimize cost.',
+  'Real-time market bidding': 'Automated bidding of EV flexibility into wholesale or balancing markets.',
+  // V2H
+  'Home backup inverters': 'Inverters that supply a home from the EV battery during grid outages.',
+  'Islanding and transfer switches': 'Devices that safely disconnect the home from the grid to run in island mode.',
+  'Home energy management': 'Software controlling PV, battery, EV and loads inside a residence.',
+  'Residential bidirectional wall boxes': 'Home-scale AC/DC bidirectional chargers.',
+  // V2B
+  'Commercial bidirectional chargers': 'Higher-power bidirectional EVSE for commercial and industrial sites.',
+  'Building energy management integration': 'Integration between chargers and BMS/BEMS to optimize building loads.',
+  'Demand-charge reduction': 'Discharging EVs during peak-demand windows to lower utility demand charges.',
+  'Behind-the-meter dispatch': 'Local dispatch of EV flexibility on the customer side of the utility meter.',
+  // OBC
+  'Integrated bidirectional OBCs': 'Onboard chargers designed to send power back to the grid or home.',
+  'Motor-drive-based charging': 'Using the traction inverter and motor windings as part of the charger.',
+  'Single/three-phase AC bidirectional': 'AC bidirectional charging on 1-phase and 3-phase mains.',
+  'High-efficiency OBC topologies': 'Circuit topologies that maximize efficiency of the onboard charger.',
+  // Off-Board DC
+  'DC bidirectional wall boxes': 'Wall-mounted DC chargers with two-way power flow.',
+  'Grid-tied DC charging piles': 'Public/depot DC chargers connected directly to grid feeders.',
+  'CHAdeMO and CCS DC V2G': 'DC V2G stacks over CHAdeMO or CCS connectors.',
+  'Modular DC power blocks': 'Stackable DC power modules for scalable charging hubs.',
+  // Wireless
+  'Resonant inductive coupling': 'Magnetic resonance between coils to transfer power without wires.',
+  'Dynamic and static wireless V2G': 'Wireless V2G while parked (static) or while driving (dynamic in-road).',
+  'Coil and compensation network design': 'Coil geometry and matching networks for efficient wireless transfer.',
+  'Foreign-object detection': 'Sensing metallic objects between coils to prevent hazards.',
+  // BMS
+  'SoC / SoH estimation': 'Estimating battery state of charge and state of health in real time.',
+  'Cell monitoring and protection': 'Measuring cell voltages/temperatures and enforcing safe operating limits.',
+  'Fault detection': 'Detecting internal short-circuits, thermal runaway precursors, sensor faults.',
+  'Bidirectional-aware BMS logic': 'BMS strategies tuned for frequent charge/discharge cycling in V2G.',
+  // Battery Degradation
+  'Cycle life modeling': 'Models predicting how many charge/discharge cycles a battery can sustain.',
+  'Calendar ageing': 'Capacity loss over time even when the battery is idle.',
+  'Capacity fade under V2G': 'How bidirectional cycling affects usable capacity.',
+  'Ageing-aware control strategies': 'Dispatch rules that trade off revenue against battery wear.',
+  // Grid Services
+  'Frequency regulation': 'Fast up/down power adjustments that keep grid frequency at 50/60 Hz.',
+  'Voltage / reactive power support': 'Injecting or absorbing reactive power to hold voltage in limits.',
+  'Peak shaving and load balancing': 'Discharging during peaks and charging during valleys to flatten load.',
+  'Congestion management (Redispatch)': 'Relieving overloaded grid segments via targeted charge/discharge (e.g., Redispatch 3.0).',
+  // Smart Charging
+  'Managed charging platforms': 'Cloud platforms that control when connected EVs charge.',
+  'Time-of-use optimization': 'Shifting charging to cheap tariff windows.',
+  'PV self-consumption': 'Charging preferentially from local solar generation.',
+  'Multi-vehicle scheduling': 'Coordinating chargers across many vehicles at a site.',
+  // Renewables
+  'PV + EV coupled systems': 'Architectures that share power electronics between PV and EV.',
+  'Solar carports': 'Parking canopies with PV that charge vehicles directly.',
+  'Wind-farm-linked charging': 'Charging schemes co-located with or contracted to wind generation.',
+  'Renewable-priority scheduling': 'Charging logic that maximizes renewable share.',
+  // Standards
+  'ISO 15118-2 / -20 implementations': 'Communication stacks implementing the EV-EVSE ISO standard, including bidirectional -20.',
+  'CCS bidirectional': 'Bidirectional extensions for the Combined Charging System connector.',
+  'CHAdeMO V2X': 'CHAdeMO protocol extensions supporting V2G/V2H/V2B.',
+  'Plug-and-Charge (PnC)': 'Automatic vehicle authentication and billing via ISO 15118 certificates.',
+  // Cybersecurity
+  'Charging authentication': 'Verifying identity of vehicles, chargers and backends.',
+  'Secure communication (TLS, PKI)': 'Encrypted, certificate-based charging communications.',
+  'Intrusion detection': 'Monitoring charger networks for anomalies and attacks.',
+  'Firmware integrity': 'Signing and verifying charger firmware to prevent tampering.',
+  // Communication
+  'OCPP 2.0.1 / 2.1': 'Open Charge Point Protocol between chargers and backend platforms.',
+  'OpenADR / IEEE 2030.5': 'Utility demand-response and DER communication standards.',
+  'Plug-and-Charge (ISO 15118)': 'PnC identification and billing over ISO 15118.',
+  'Aggregator-to-charger APIs': 'APIs used by aggregators to command fleets of chargers.',
+  // Infrastructure
+  'AC and DC EVSE': 'AC (slow/medium) and DC (fast) charging station hardware.',
+  'Bidirectional wall boxes': 'Compact bidirectional chargers for residential or light-commercial use.',
+  'Depot and fleet chargers': 'High-power charging infrastructure for bus/truck/taxi depots.',
+  'Curbside and public charging': 'Publicly accessible on-street or destination chargers.',
+  // Cell Balancing
+  'Active and passive balancing': 'Redistributing energy between cells or bleeding it off resistively.',
+  'Cell equalization circuits': 'Analog/digital circuits that equalize cell voltages during cycling.',
+  'Pack topology innovations': 'New series/parallel arrangements and switching schemes.',
+  'Module-level power electronics': 'Per-module converters (MLPE) for finer control and higher availability.',
+  // Thermal
+  'Liquid cooling systems': 'Circulating coolant to remove heat from cells and power electronics.',
+  'Immersion cooling': 'Submerging cells or components in dielectric fluid for efficient cooling.',
+  'Heat pumps and integrated thermal loops': 'Shared thermal loops between cabin, battery and power electronics.',
+  'Cell-level thermal design': 'Optimizing heat paths at the individual cell level.',
+  // Isolation & Safety
+  'Galvanic isolation transformers': 'Transformers that block DC coupling between battery and grid.',
+  'Ground-fault detection': 'Sensing leakage currents to ground for personnel safety.',
+  'Leakage current mitigation': 'Filters and circuit design to minimize leakage in bidirectional systems.',
+  'Islanding and anti-islanding': 'Detecting grid loss and safely disconnecting or continuing in island mode.',
+  // Fleet & Microgrid
+  'Fleet aggregation platforms': 'Software aggregating many fleet EVs into a controllable resource.',
+  'VPP orchestration': 'Virtual Power Plant control layer combining EVs, batteries and DERs.',
+  'Microgrid controllers': 'Local controllers that operate a site as a grid-connected or islanded microgrid.',
+  'Depot energy management': 'Depot-level optimization of charging, discharging and site load.',
+};
+
+
 
 export type GrowingTopicInfo = {
   description: string;
