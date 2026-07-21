@@ -168,7 +168,7 @@ function useSummary() {
         .map(([topic, r]) => {
           const growthAbs = r.y2025 - r.y2020;
           const growthPct = r.y2020 > 0 ? ((r.y2025 - r.y2020) / r.y2020) * 100 : r.y2025 > 0 ? 100 : 0;
-          return { topic, y2020: r.y2020, y2025: r.y2025, growthAbs, growthPct, total: r.total };
+          return { topic, y2020: r.y2020, y2025: r.y2025, growthAbs, growthPct, total: r.y2020 + r.y2025 };
         })
         .filter((t) => t.growthAbs > 0 && t.y2025 >= 3) // require meaningful volume
         .sort((a, b) => b.growthAbs - a.growthAbs)
