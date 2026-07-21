@@ -27,7 +27,7 @@ Deno.serve(async (req) => {
     let res!: Response;
     let text = "";
     let rateLimited = false;
-    const delays = [0, 6000, 12000, 20000, 30000];
+    const delays = [0, 6000, 10000, 15000];
     for (let attempt = 0; attempt < delays.length; attempt++) {
       if (delays[attempt] > 0) await new Promise((r) => setTimeout(r, delays[attempt]));
       res = await fetch(url.toString(), { headers: { "User-Agent": "Mozilla/5.0 (compatible; BidirectionalResearchBot/1.0)" } });
