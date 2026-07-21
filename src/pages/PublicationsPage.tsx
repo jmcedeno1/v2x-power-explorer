@@ -19,6 +19,7 @@ import {
 type Pub = {
   id: string;
   title: string | null;
+  abstract: string | null;
   year: number | null;
   citations: number | null;
   orgs: string[] | null;
@@ -32,7 +33,7 @@ async function fetchAllPublications(): Promise<Pub[]> {
   for (let from = 0; from < 20000; from += pageSize) {
     const { data, error } = await supabase
       .from('documents')
-      .select('id,title,year,citations,orgs,countries,url')
+      .select('id,title,abstract,year,citations,orgs,countries,url')
       .eq('doc_type', 'publication')
       .range(from, from + pageSize - 1);
     if (error) throw error;
@@ -41,6 +42,41 @@ async function fetchAllPublications(): Promise<Pub[]> {
     if (data.length < pageSize) break;
   }
   return all;
+}
+
+// Topic taxonomy for V2X / bidirectional charging literature.
+// Each topic is matched against title + abstract with case-insensitive regex.
+const TOPIC_PATTERNS: { topic: string; pattern: RegExp }[] = [
+  { topic: 'Vehicle-to-Grid (V2G)', pattern: /\b(vehicle[- ]to[- ]grid|v2g)\b/i },
+  { topic: 'Vehicle-to-Home / Building', pattern: /\b(vehicle[- ]to[- ](home|building|house|load|everything)|v2h|v2b|v2l|v2x)\b/i },
+  { topic: 'Bidirectional Chargers & Power Electronics', pattern: /\b(bidirectional (charger|converter|inverter|dc[- ]dc)|dual[- ]active[- ]bridge|dab converter)\b/i },
+  { topic: 'Wide-Bandgap Semiconductors (SiC/GaN)', pattern: /\b(silicon carbide|\bsic\b|gallium nitride|\bgan\b|wide[- ]bandgap)\b/i },
+  { topic: 'Battery Degradation & SOH', pattern: /\b(battery (degradation|aging|ageing|health|lifetime)|state[- ]of[- ]health|\bsoh\b|calendar aging|cycle aging)\b/i },
+  { topic: 'Smart / Optimal Charging Scheduling', pattern: /\b(smart charging|charging (schedul|strateg|optimi[sz]ation|coordination)|optimal charging)\b/i },
+  { topic: 'Renewable Integration & Solar+EV', pattern: /\b(renewable (energy|integration)|photovoltaic|solar (pv|panel|energy)|wind (power|energy))\b/i },
+  { topic: 'Microgrids & Islanded Operation', pattern: /\b(microgrid|islanded|island mode|nanogrid)\b/i },
+  { topic: 'Frequency & Ancillary Services', pattern: /\b(frequency regulation|ancillary service|primary reserve|secondary reserve|grid support|frequency response)\b/i },
+  { topic: 'Peak Shaving & Demand Response', pattern: /\b(peak shaving|peak load|demand response|load shifting|load leveling|valley filling)\b/i },
+  { topic: 'Energy / Aggregator Markets', pattern: /\b(aggregator|energy market|electricity market|wholesale market|balancing market|day[- ]ahead)\b/i },
+  { topic: 'Machine Learning & Forecasting', pattern: /\b(machine learning|deep learning|neural network|reinforcement learning|lstm|forecast(ing)?)\b/i },
+  { topic: 'Energy Management Systems (EMS/HEMS)', pattern: /\b(energy management (system|strateg)|\bems\b|home energy management|\bhems\b|bems)\b/i },
+  { topic: 'Wireless / Inductive Bidirectional Charging', pattern: /\b(wireless (power|charging)|inductive (power|charging)|resonant (coupling|charging))\b/i },
+  { topic: 'Fleet & Commercial EV Charging', pattern: /\b(fleet|bus depot|electric bus|heavy[- ]duty|truck|logistics)\b/i },
+  { topic: 'Second-Life & Repurposed Batteries', pattern: /\b(second[- ]life|repurposed batter|reuse.{0,15}batter)\b/i },
+  { topic: 'EV Charging Infrastructure', pattern: /\b(charging (station|infrastructure|point)|\bevse\b|fast charg|dc fast)\b/i },
+  { topic: 'Cybersecurity of Charging', pattern: /\b(cybersecurity|cyber[- ]?attack|cyber[- ]?security|intrusion detection)\b/i },
+  { topic: 'Standards & Communication (ISO 15118, OCPP)', pattern: /\b(iso[ -]?15118|ocpp|chademo|\bccs\b|combined charging system|iec 61851)\b/i },
+  { topic: 'Grid Impact & Distribution Networks', pattern: /\b(distribution (network|grid|system)|grid impact|voltage (regulation|control)|hosting capacity|transformer aging)\b/i },
+];
+
+function classifyPublication(p: Pub): string[] {
+  const hay = `${p.title ?? ''} ${p.abstract ?? ''}`;
+  if (!hay.trim()) return [];
+  const hits: string[] = [];
+  for (const { topic, pattern } of TOPIC_PATTERNS) {
+    if (pattern.test(hay)) hits.push(topic);
+  }
+  return hits;
 }
 
 function useSummary() {
