@@ -221,7 +221,7 @@ export default function PublicationsPage() {
             <StatCard icon={Calendar} value={data?.peakYear || '-'} label="Peak year" />
             <StatCard icon={Globe} value={data?.countries ?? 0} label="Countries" />
             <StatCard icon={Building2} value={data?.institutions ?? 0} label="Institutions" />
-            <StatCard icon={BookOpen} value={0} label="Themes" />
+            <StatCard icon={BookOpen} value={data?.themes ?? 0} label="Growing themes" />
           </div>
 
           <Card className="mb-6">
