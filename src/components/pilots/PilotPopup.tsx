@@ -505,16 +505,34 @@ function FallbackPopup({ pilot, open, onClose }: { pilot: any; open: boolean; on
               </div>
             </DialogHeader>
 
-            {/* Copenhagen-style two-column: description/business/standard | metric grid */}
-            <div className="grid lg:grid-cols-5 gap-5">
-              <div className="lg:col-span-3 space-y-3">
-                {pilot.description && (
-                  <InfoSection title="Pilot Description" icon={<Info className="w-4 h-4" />} accentColor="text-foreground">
-                    {renderDescriptionSections(pilot.description) || (
-                      <p className="text-sm text-muted-foreground leading-relaxed">{pilot.description}</p>
-                    )}
-                  </InfoSection>
-                )}
+            {/* Horizontal metrics row */}
+            {metrics.length > 0 && (
+              <div>
+                <h4 className="text-sm font-semibold text-muted-foreground mb-3 flex items-center gap-2">
+                  <Gauge className="w-4 h-4" /> Key Metrics
+                </h4>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                  {metrics.map((m) => (
+                    <div key={m.label} className="p-3 rounded-lg bg-muted/50 border text-center">
+                      <div className={cn('flex justify-center mb-1', m.color)}>{m.icon}</div>
+                      <p className="text-[11px] text-muted-foreground leading-tight mb-0.5">{m.label}</p>
+                      <p className="text-base font-bold text-foreground">{m.value}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Full-width description + business/standard */}
+            <div className="space-y-3">
+              {pilot.description && (
+                <InfoSection title="Pilot Description" icon={<Info className="w-4 h-4" />} accentColor="text-foreground">
+                  {renderDescriptionSections(pilot.description) || (
+                    <p className="text-sm text-muted-foreground leading-relaxed">{pilot.description}</p>
+                  )}
+                </InfoSection>
+              )}
+              <div className="grid md:grid-cols-2 gap-3">
                 {media?.businessModel && (
                   <InfoSection title="Business Model" icon={<Building2 className="w-4 h-4" />} accentColor="text-primary">
                     <p className="font-semibold text-foreground">{media.businessModel.type}</p>
@@ -530,24 +548,8 @@ function FallbackPopup({ pilot, open, onClose }: { pilot: any; open: boolean; on
                   </InfoSection>
                 )}
               </div>
-
-              {metrics.length > 0 && (
-                <div className="lg:col-span-2">
-                  <h4 className="text-sm font-semibold text-muted-foreground mb-3 flex items-center gap-2">
-                    <Gauge className="w-4 h-4" /> Key Metrics
-                  </h4>
-                  <div className="grid grid-cols-2 gap-3">
-                    {metrics.map((m) => (
-                      <div key={m.label} className="p-3 rounded-lg bg-muted/50 border text-center">
-                        <div className={cn('flex justify-center mb-1', m.color)}>{m.icon}</div>
-                        <p className="text-[11px] text-muted-foreground leading-tight mb-0.5">{m.label}</p>
-                        <p className="text-base font-bold text-foreground">{m.value}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
+
 
             {/* Technology + Timeline (Copenhagen-style) */}
             {(media?.technology || media?.timeline) && (
