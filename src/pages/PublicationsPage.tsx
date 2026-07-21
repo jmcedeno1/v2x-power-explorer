@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { BookOpen, FileText, TrendingUp, Calendar, Globe, Building2, Quote, ExternalLink } from 'lucide-react';
+import { BookOpen, FileText, TrendingUp, Calendar, Globe, Building2, Quote, ExternalLink, Sparkles } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { ModuleHeader } from '@/components/ui/module-header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
