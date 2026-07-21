@@ -20,6 +20,7 @@ import {
   Telescope,
   Download,
   BookOpen,
+  Newspaper,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -35,6 +36,7 @@ const navItems: NavItem[] = [
   { id: 'overview', label: 'Overview Dashboard', icon: LayoutDashboard, path: '/' },
   { id: 'patents', label: 'Patents & IP', icon: FileText, path: '/patents' },
   { id: 'publications', label: 'Publications', icon: BookOpen, path: '/publications' },
+  { id: 'news', label: 'News & Media', icon: Newspaper, path: '/news' },
   { id: 'markets', label: 'Markets & Business', icon: TrendingUp, path: '/markets' },
   { id: 'pilots', label: 'Pilots & Demonstrators', icon: FlaskConical, path: '/pilots' },
   { id: 'engineering', label: 'Engineering & Research', icon: Cpu, path: '/engineering' },
