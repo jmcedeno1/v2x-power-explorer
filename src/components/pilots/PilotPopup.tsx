@@ -489,19 +489,13 @@ function FallbackPopup({ pilot, open, onClose }: { pilot: any; open: boolean; on
               {/* Overview */}
               <TabsContent value="overview" className="mt-4 space-y-4">
                 {pilot.description ? (
-                  <div className="p-4 rounded-lg border bg-card">
-                    <h4 className="text-sm font-semibold mb-2 flex items-center gap-2 text-foreground">
+                  <div className="p-4 rounded-lg border bg-card space-y-3">
+                    <h4 className="text-sm font-semibold flex items-center gap-2 text-foreground">
                       <Info className="w-4 h-4" /> Description
                     </h4>
-                    <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
-                      {pilot.description}
-                    </p>
+                    {renderDescriptionSections(pilot.description)}
                   </div>
-                ) : (
-                  <div className="p-4 rounded-lg border border-dashed bg-muted/30 text-sm text-muted-foreground">
-                    No detailed description available yet.
-                  </div>
-                )}
+                ) : null}
 
                 {pilot.gridServices?.length > 0 && (
                   <div className="p-4 rounded-lg border bg-card">
