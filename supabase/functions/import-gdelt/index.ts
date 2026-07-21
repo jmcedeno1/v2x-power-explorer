@@ -69,11 +69,17 @@ Deno.serve(async (req) => {
     try { json = JSON.parse(text); } catch { json = { articles: [] }; }
     const articles: any[] = json.articles ?? [];
 
+    // Strict bidirectional-charging taxonomy filter. Article title MUST match
+    // one of these patterns; GDELT frequently returns loosely-related noise
+    // (e.g. business jets, unrelated "V2" mentions) that we must reject.
+    const RELEVANCE_RE = /\b(v2g|v2h|v2b|v2l|v2x|vehicle[- ]to[- ](grid|home|building|load|everything|x)|bidirectional (charg|ev|inverter|power)|two[- ]way charg|reverse charg)\b/i;
+
     const docs: Doc[] = [];
+    let filtered = 0;
     for (const a of articles) {
       if (!a?.url || !a?.title) continue;
+      if (!RELEVANCE_RE.test(a.title)) { filtered++; continue; }
       const uidHash = await sha1Hex(a.url);
-      // GDELT seendate example: "20260119T142100Z"
       const sd: string | undefined = a.seendate;
       const iso = sd && sd.length >= 15
         ? `${sd.slice(0,4)}-${sd.slice(4,6)}-${sd.slice(6,8)}`
