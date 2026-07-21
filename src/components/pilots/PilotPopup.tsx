@@ -429,6 +429,8 @@ function FallbackPopup({ pilot, open, onClose }: { pilot: any; open: boolean; on
   if (pilot.startDate)
     metrics.push({ icon: <Clock className="w-5 h-5" />, label: 'Start', value: String(pilot.startDate).slice(0, 10), color: 'text-energy-blue' });
 
+  const references = media?.references || [];
+
   const gaps: string[] = pilot.bottlenecks || [];
 
   return (
