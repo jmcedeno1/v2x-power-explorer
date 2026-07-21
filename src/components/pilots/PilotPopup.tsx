@@ -29,6 +29,49 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { pilotDetailsMap } from '@/data/pilotDetailsData';
 import { getPilotMedia, explainGap } from '@/data/pilotMedia';
 
+// Parse a description into sections. A line starting with "## " (or "**Heading**"
+// on its own line) becomes a subtitle. Blank lines separate paragraphs.
+function renderDescriptionSections(text: string) {
+  const lines = text.split(/\r?\n/);
+  const blocks: { heading?: string; body: string }[] = [];
+  let current: { heading?: string; body: string } = { body: '' };
+  const push = () => {
+    if (current.heading || current.body.trim()) blocks.push(current);
+    current = { body: '' };
+  };
+  for (const raw of lines) {
+    const line = raw.trim();
+    const md = line.match(/^##\s+(.+)$/);
+    const bold = line.match(/^\*\*(.+?)\*\*:?\s*$/);
+    if (md || bold) {
+      push();
+      current = { heading: (md?.[1] || bold?.[1] || '').trim(), body: '' };
+    } else {
+      current.body += (current.body ? '\n' : '') + raw;
+    }
+  }
+  push();
+  if (blocks.length === 0) return null;
+  return (
+    <div className="space-y-3">
+      {blocks.map((b, i) => (
+        <div key={i}>
+          {b.heading && (
+            <h5 className="text-xs font-semibold uppercase tracking-wide text-primary mb-1">
+              {b.heading}
+            </h5>
+          )}
+          {b.body.trim() && (
+            <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
+              {b.body.trim()}
+            </p>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 interface PilotPopupProps {
   pilotId: string | null;
   pilotData?: any; // fallback DB record
