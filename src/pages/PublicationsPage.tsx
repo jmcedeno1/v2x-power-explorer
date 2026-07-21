@@ -313,6 +313,81 @@ export default function PublicationsPage() {
 
         <section className="mb-8">
           <div className="flex items-center gap-2 mb-4">
+            <Sparkles className="w-5 h-5 text-primary" />
+            <h3 className="text-lg font-semibold">Top 10 growing publication topics (2020 to 2025)</h3>
+          </div>
+          <Card>
+            <CardContent className="p-0">
+              {isLoading ? (
+                <div className="p-6 text-sm text-muted-foreground">Loading…</div>
+              ) : !data?.growingTopics?.length ? (
+                <div className="p-6 text-sm text-muted-foreground">
+                  Not enough publications in 2020 and 2025 to compute topic growth.
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
+                  <div className="p-4 h-[420px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart
+                        data={[...data.growingTopics].reverse()}
+                        layout="vertical"
+                        margin={{ left: 20, right: 20 }}
+                      >
+                        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                        <XAxis type="number" stroke="hsl(var(--muted-foreground))" fontSize={11} />
+                        <YAxis
+                          type="category"
+                          dataKey="topic"
+                          stroke="hsl(var(--muted-foreground))"
+                          fontSize={10}
+                          width={200}
+                        />
+                        <Tooltip
+                          contentStyle={{
+                            background: 'hsl(var(--card))',
+                            border: '1px solid hsl(var(--border))',
+                            borderRadius: 8,
+                            fontSize: 12,
+                          }}
+                          formatter={(value: number, name: string) => [value, name === 'y2020' ? '2020' : '2025']}
+                        />
+                        <Bar dataKey="y2020" fill="hsl(var(--muted-foreground))" name="2020" radius={[0, 2, 2, 0]} />
+                        <Bar dataKey="y2025" fill="hsl(var(--primary))" name="2025" radius={[0, 2, 2, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                  <ul className="divide-y divide-border border-l border-border">
+                    {data.growingTopics.map((t, i) => (
+                      <li key={t.topic} className="p-3 flex items-center gap-3 hover:bg-muted/30">
+                        <div className="text-lg font-bold text-muted-foreground w-6 shrink-0 tabular-nums">
+                          {i + 1}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-sm font-medium text-foreground truncate">{t.topic}</div>
+                          <div className="text-[11px] text-muted-foreground mt-0.5">
+                            {t.y2020} in 2020 &rarr; {t.y2025} in 2025 &middot; {t.total.toLocaleString()} total
+                          </div>
+                        </div>
+                        <div className="text-right shrink-0">
+                          <div className="text-sm font-bold text-primary tabular-nums">
+                            +{t.growthAbs}
+                          </div>
+                          <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                            {t.y2020 > 0 ? `+${Math.round(t.growthPct)}%` : 'new'}
+                          </div>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </section>
+
+
+        <section className="mb-8">
+          <div className="flex items-center gap-2 mb-4">
             <Quote className="w-5 h-5 text-primary" />
             <h3 className="text-lg font-semibold">Most-cited publications in the corpus</h3>
           </div>
