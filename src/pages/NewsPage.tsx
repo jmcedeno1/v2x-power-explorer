@@ -53,6 +53,8 @@ const TOPIC_PATTERNS: { name: string; re: RegExp }[] = [
 
 const COMPANIES = ['Nuvve', 'Wallbox', 'Fermata', 'The Mobility House', 'dcbel', 'Enphase', 'ChargePoint', 'Emporia', 'Indra'];
 
+const RELEVANCE_RE = /\b(v2g|v2h|v2b|v2l|v2x|vehicle[- ]to[- ](grid|home|building|load|everything|x)|bidirectional (charg|ev|inverter|power)|two[- ]way charg|reverse charg)\b/i;
+
 async function fetchNews(): Promise<NewsDoc[]> {
   const { data, error } = await supabase
     .from('documents')
@@ -61,7 +63,7 @@ async function fetchNews(): Promise<NewsDoc[]> {
     .order('date', { ascending: false })
     .limit(2000);
   if (error) throw error;
-  return (data ?? []) as NewsDoc[];
+  return ((data ?? []) as NewsDoc[]).filter((d) => d.title && RELEVANCE_RE.test(d.title));
 }
 
 function extractCountry(d: NewsDoc): string | null {
