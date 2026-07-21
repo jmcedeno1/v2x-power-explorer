@@ -7,11 +7,44 @@ export interface PilotReference {
   date?: string;
 }
 
+export interface PilotBusinessModel {
+  type: string;
+  description: string;
+}
+
+export interface PilotStandardization {
+  standard: string;
+  status: string;
+}
+
+export interface PilotTechCategoryItem {
+  name: string;
+  details: string[];
+}
+
+export interface PilotTechnology {
+  overview: string;
+  hardware: PilotTechCategoryItem[];
+  software: PilotTechCategoryItem[];
+}
+
+export interface PilotTimelineItem {
+  phase: string;
+  year: string;
+  description: string;
+}
+
 export interface PilotMedia {
   images?: { url: string; caption?: string; credit?: string }[];
   gapExplanations?: Record<string, string>;
   references?: PilotReference[];
+  businessModel?: PilotBusinessModel;
+  standardization?: PilotStandardization;
+  technology?: PilotTechnology;
+  timeline?: PilotTimelineItem[];
+  partnerLead?: string;
 }
+
 
 
 // Generic explanations reused across pilots when a specific one isn't provided
