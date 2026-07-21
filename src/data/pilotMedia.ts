@@ -348,7 +348,7 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
       'Business model':
         'German regulation in 2018-2021 did not allow a small distributed asset to be paid as a redispatch resource. Compensation was demonstrated via a blockchain-based settlement layer but required a regulatory sandbox - not a repeatable commercial framework.',
       'Warranty':
-        'Nissan LEAF batteries used for repeated V2G cycling raised warranty questions. The project produced early evidence that controlled V2G cycling did not materially accelerate degradation, feeding Nissan''s later official V2G warranty policy.',
+        'Nissan LEAF batteries used for repeated V2G cycling raised warranty questions. The project produced early evidence that controlled V2G cycling did not materially accelerate degradation, feeding Nissan\'s later official V2G warranty policy.',
       'Metering':
         'Sub-metering the redispatch-relevant kWh at each vehicle - separate from household consumption - required dedicated meters at each charger and a data pipeline back to TenneT.',
       'Allocation':
@@ -378,7 +378,7 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
       { phase: 'Project launch', year: 'Mar 2018', description: 'TenneT, Nissan and The Mobility House publicly announce the joint V2G redispatch pilot at Hannover Messe.' },
       { phase: 'Fleet deployment', year: '2018-2019', description: 'Nissan LEAF vehicles and CHAdeMO bidirectional chargers commissioned at sites in northern and southern Germany.' },
       { phase: 'Operational demonstration', year: '2019-2021', description: 'TenneT dispatches the aggregated fleet to absorb surplus wind and support southern loads; blockchain settles transactions per kWh.' },
-      { phase: 'Project completion', year: '2021', description: 'Findings fed into BNetzA regulatory work and into TenneT''s Redispatch 3.0 framework for <100 kW distributed flexibility.' },
+      { phase: 'Project completion', year: '2021', description: 'Findings fed into BNetzA regulatory work and into TenneT\'s Redispatch 3.0 framework for <100 kW distributed flexibility.' },
       { phase: 'Legacy', year: '2022+', description: 'Aggregator platform re-used in BDL Next and other successor projects; cited as a foundational V2G-for-TSO reference case.' },
     ],
     partnerLead: 'TenneT (TSO), Nissan (OEM), The Mobility House (aggregator), IBM (blockchain settlement)',
