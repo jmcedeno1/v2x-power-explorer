@@ -322,13 +322,17 @@ export function GrowingTopicPopup({ topic, y2020, y2025, growthAbs, growthPct, t
                     <Badge variant="secondary" className={desc ? 'text-xs cursor-help' : 'text-xs'}>{s}</Badge>
                   );
                   return desc ? (
-                    <HoverCard key={s} openDelay={100} closeDelay={80}>
-                      <HoverCardTrigger asChild>{badge}</HoverCardTrigger>
-                      <HoverCardContent side="top" className="w-64 text-xs leading-relaxed">
+                    <Popover key={s}>
+                      <PopoverTrigger asChild>
+                        <button type="button" title={desc} className="focus:outline-none">
+                          <Badge variant="secondary" className="text-xs cursor-help hover:bg-secondary/80">{s}</Badge>
+                        </button>
+                      </PopoverTrigger>
+                      <PopoverContent side="top" className="w-64 text-xs leading-relaxed z-[100]">
                         <div className="font-medium text-foreground mb-1">{s}</div>
                         <div className="text-muted-foreground">{desc}</div>
-                      </HoverCardContent>
-                    </HoverCard>
+                      </PopoverContent>
+                    </Popover>
                   ) : <span key={s}>{badge}</span>;
                 })}
               </div>
