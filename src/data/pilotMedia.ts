@@ -172,6 +172,107 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
     ],
     partnerLead: 'E.ON, BMW, Bayernwerk Netz, TenneT, FfE',
   },
+  'tepco v2g aggregator': {
+    images: [
+      {
+        url: '/__l5e/assets-v1/d1f0eb13-5a02-4d08-a5f1-2e7e597a777e/tepco-v2g-leaf.jpg',
+        caption: 'Nissan LEAF connected to a CHAdeMO bidirectional DC charger in the Tokyo service area',
+        credit: 'Illustrative / TEPCO',
+      },
+      {
+        url: '/__l5e/assets-v1/6f587b4f-2685-4e7f-8174-e3d7555ddbe9/tepco-control-room.jpg',
+        caption: 'TEPCO aggregator control room dispatching V2G flexibility across 63 chargers',
+        credit: 'Illustrative / TEPCO',
+      },
+    ],
+    references: [
+      {
+        title: 'Commencement of V2G aggregator business',
+        url: 'https://www.tepco.co.jp/en/hd/newsroom/press/archives/2019/commencement-of-v2g.html',
+        source: 'TEPCO Holdings press release',
+        date: 'Apr 2019',
+      },
+      {
+        title: 'TEPCO V2G project overview (PDF)',
+        url: 'https://www.tepco.co.jp/en/wp-content/uploads/1a6e08e849ea53ba28a5f1a20dcbf9ae.pdf',
+        source: 'TEPCO Holdings',
+      },
+      {
+        title: 'Global V2X and TEPCO challenge for carbon neutrality (Imazu)',
+        url: 'https://www.chademo.com/wp2021/wp-content/uploads/2022/10/Global%20V2X%20and%20TEPCO%20challenge%20for%20CN%20imazu.pdf',
+        source: 'CHAdeMO Association',
+        date: '2022',
+      },
+      {
+        title: 'CHAdeMO V2X at COP26 (PDF)',
+        url: 'https://www.copjapan.go.jp/cop/cop26/assets/pdf/chademo.pdf',
+        source: 'CHAdeMO / COP Japan',
+        date: '2021',
+      },
+      {
+        title: 'Mitsubishi Motors joins TEPCO V2G demonstration',
+        url: 'https://www.mitsubishi-motors.com/en/newsroom/newsrelease/2018/20180606_1.html',
+        source: 'Mitsubishi Motors press release',
+        date: 'Jun 2018',
+      },
+      {
+        title: 'TEPCO demand-side technologies (EMAK12)',
+        url: 'https://energyefficiencyhub.org/wp-content/uploads/2024/01/EMAK12-TEPCO-Demand-Side-Technologies-of-Electric-Power-Company.pdf',
+        source: 'IEA Energy Efficiency Hub',
+        date: '2024',
+      },
+      {
+        title: 'V2G business models',
+        url: 'https://emabler.com/resource/v2g-business-models',
+        source: 'eMabler',
+      },
+      {
+        title: 'Vehicle-to-Grid (V2G) technology in Japan',
+        url: 'https://linchpin-consulting.com/vehicle-to-grid-v2g-technology-in-japan-turning-ev-fleets-into-distributed-energy-assets/',
+        source: 'Linchpin Consulting',
+      },
+    ],
+    gapExplanations: {
+      'Standards':
+        'The pilot runs entirely on CHAdeMO bidirectional DC, which is dominant in Japan but has limited traction in Europe and North America where CCS and ISO 15118-20 are winning. Scaling the TEPCO model abroad requires cross-standard translation or dual-protocol hardware.',
+      'Business model':
+        'Japan\'s balancing and capacity markets only opened to aggregators progressively from 2021. Stacking JEPX arbitrage + frequency regulation + demand response in a single contract is still being formalised; today most revenue comes from one stream at a time.',
+      'Metering':
+        'Behind-the-meter measurement of import vs. V2G export at commercial sites relies on retrofitted sub-meters. A standardised billing meter for bidirectional flows is not yet mandated by METI.',
+      'TSO-DSO signalling':
+        'TEPCO Power Grid (TSO-like) and TEPCO Energy Partner (retailer/aggregator) coordinate internally, but external DSO/TSO signalling APIs for third-party V2G aggregators are still being defined under Japan\'s new balancing market rules.',
+      'User acceptance':
+        'Owners of Nissan LEAF and Mitsubishi Outlander PHEV report concerns about battery cycling under CHAdeMO V2G. TEPCO caps discharge depth and offers tariff incentives, but broader consumer roll-out needs clearer warranty coverage from OEMs.',
+    },
+    businessModel: {
+      type: 'Utility-led V2G aggregator',
+      description:
+        'Commercial and residential mix. TEPCO Energy Partner stacks JEPX energy arbitrage, TSO balancing/frequency regulation, and C&I peak-shaving. Vehicle owners are compensated via reduced tariffs and per-kWh discharge payments.',
+    },
+    standardization: {
+      standard: 'CHAdeMO 2.0 bidirectional DC',
+      status: 'Commercially deployed since 2019. Reference implementation for CHAdeMO V2G globally; feeds into METI 2030 balancing market design.',
+    },
+    technology: {
+      overview: 'Centralised DC bidirectional aggregator across 5 Tokyo sites',
+      hardware: [
+        { name: 'Nissan LEAF + Mitsubishi Outlander PHEV', details: ['CHAdeMO bidirectional DC', 'Native V2G/V2H firmware', 'Fleet of 59 vehicles'] },
+        { name: '63 CHAdeMO Bidirectional Chargers', details: ['10-20 kW DC per charger', '~630 kW aggregated', '5 sites in Tokyo area'] },
+      ],
+      software: [
+        { name: 'TEPCO Aggregator Platform', details: ['Sub-second dispatch to chargers', 'JEPX + balancing market bidding', 'Revenue-stacking optimiser'] },
+        { name: 'CHAdeMO V2G Protocol', details: ['CHAdeMO 2.0 bidirectional', 'Nissan/Mitsubishi vehicle integration', 'OCPP-style site controller'] },
+      ],
+    },
+    timeline: [
+      { phase: 'Nuvve / Nissan demo', year: '2017-2018', description: 'Early CHAdeMO V2G demonstrations with Nissan LEAF at TEPCO facilities.' },
+      { phase: 'Mitsubishi partnership', year: 'Jun 2018', description: 'Mitsubishi Motors joins the TEPCO V2G demonstration with Outlander PHEV.' },
+      { phase: 'Commercial launch', year: 'Apr 2019', description: 'Japan\'s first commercial V2G aggregator service begins under TEPCO Energy Partner.' },
+      { phase: 'Fleet expansion', year: '2022', description: '59 vehicles / 63 chargers across 5 sites providing ~630 kW aggregated flexibility.' },
+      { phase: 'Balancing market integration', year: '2024-2030', description: 'Full integration into Japan\'s new capacity and balancing markets under METI framework.' },
+    ],
+    partnerLead: 'TEPCO Holdings, TEPCO Energy Partner, Nissan, Mitsubishi Motors, Nuvve, CHAdeMO Association',
+  },
 };
 
 
