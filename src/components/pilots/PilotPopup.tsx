@@ -472,7 +472,7 @@ function FallbackPopup({ pilot, open, onClose }: { pilot: any; open: boolean; on
             )}
 
             <Tabs defaultValue="overview" className="w-full">
-              <TabsList className="grid grid-cols-4 w-full">
+              <TabsList className="grid grid-cols-5 w-full">
                 <TabsTrigger value="overview">Overview</TabsTrigger>
                 <TabsTrigger value="gallery">
                   Gallery{images.length > 0 ? ` (${images.length})` : ''}
@@ -481,6 +481,9 @@ function FallbackPopup({ pilot, open, onClose }: { pilot: any; open: boolean; on
                   Gaps{gaps.length > 0 ? ` (${gaps.length})` : ''}
                 </TabsTrigger>
                 <TabsTrigger value="partners">Partners</TabsTrigger>
+                <TabsTrigger value="references">
+                  References{references.length > 0 ? ` (${references.length})` : ''}
+                </TabsTrigger>
               </TabsList>
 
               {/* Overview */}
