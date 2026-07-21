@@ -603,32 +603,22 @@ function FallbackPopup({ pilot, open, onClose }: { pilot: any; open: boolean; on
 
 
 
-            <Tabs defaultValue="overview" className="w-full">
-              <TabsList className="grid grid-cols-5 w-full">
-                <TabsTrigger value="overview">Overview</TabsTrigger>
+            <Tabs defaultValue="services" className="w-full">
+              <TabsList className="grid grid-cols-4 w-full">
+                <TabsTrigger value="services">Services</TabsTrigger>
                 <TabsTrigger value="gallery">
                   Gallery{images.length > 0 ? ` (${images.length})` : ''}
                 </TabsTrigger>
                 <TabsTrigger value="gaps">
                   Gaps{gaps.length > 0 ? ` (${gaps.length})` : ''}
                 </TabsTrigger>
-                <TabsTrigger value="partners">Partners</TabsTrigger>
                 <TabsTrigger value="references">
                   References{references.length > 0 ? ` (${references.length})` : ''}
                 </TabsTrigger>
               </TabsList>
 
-              {/* Overview */}
-              <TabsContent value="overview" className="mt-4 space-y-4">
-                {pilot.description ? (
-                  <div className="p-4 rounded-lg border bg-card space-y-3">
-                    <h4 className="text-sm font-semibold flex items-center gap-2 text-foreground">
-                      <Info className="w-4 h-4" /> Description
-                    </h4>
-                    {renderDescriptionSections(pilot.description)}
-                  </div>
-                ) : null}
-
+              {/* Services + Partners */}
+              <TabsContent value="services" className="mt-4 space-y-4">
                 {pilot.gridServices?.length > 0 && (
                   <div className="p-4 rounded-lg border bg-card">
                     <h4 className="text-sm font-semibold mb-2 text-primary flex items-center gap-2">
@@ -641,7 +631,20 @@ function FallbackPopup({ pilot, open, onClose }: { pilot: any; open: boolean; on
                     </div>
                   </div>
                 )}
+                {pilot.partners?.length > 0 && (
+                  <div className="p-4 rounded-lg border bg-card">
+                    <h4 className="text-sm font-semibold mb-3 text-primary flex items-center gap-2">
+                      <Building2 className="w-4 h-4" /> Partners ({pilot.partners.length})
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      {pilot.partners.map((p: string) => (
+                        <Badge key={p} variant="secondary" className="text-xs">{p}</Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </TabsContent>
+
 
               {/* Gallery */}
               <TabsContent value="gallery" className="mt-4">
