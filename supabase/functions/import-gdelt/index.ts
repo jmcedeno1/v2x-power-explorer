@@ -1,11 +1,26 @@
 // GDELT 2.0 DOC API news importer — no API key required.
 // https://api.gdeltproject.org/api/v2/doc/doc?query=...&mode=ArtList&format=json
+import { z } from "npm:zod@3.25.76";
 import { corsHeaders, getActiveProfile, upsertDocuments, logQA, sha1Hex, type Doc } from "../_shared/corpus.ts";
+
+const BodySchema = z.object({
+  query: z.string().trim().min(1).max(200).optional(),
+  timespan: z.string().trim().regex(/^\d+\s*(minute|minutes|hour|hours|day|days|week|weeks|month|months)$/i).optional(),
+  maxrecords: z.number().int().min(1).max(250).optional(),
+});
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   try {
-    const body = await req.json().catch(() => ({}));
+    const rawBody = await req.json().catch(() => ({}));
+    const parsed = BodySchema.safeParse(rawBody);
+    if (!parsed.success) {
+      return new Response(JSON.stringify({ error: parsed.error.flatten().fieldErrors }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const body = parsed.data;
     const profile = await getActiveProfile();
     if (!profile) throw new Error("No active profile configured");
 
@@ -37,10 +52,18 @@ Deno.serve(async (req) => {
     }
     if (!res.ok || rateLimited) {
       await logQA({ level: "error", category: "api_error", section: "gdelt", message: `GDELT ${res.status}${rateLimited ? " rate-limited" : ""}`, details: { body: text.slice(0, 500) } });
-      const friendly = rateLimited
-        ? "GDELT is rate-limiting our IP (max 1 request per 5 seconds). Please wait a minute and try again."
-        : "GDELT request failed";
-      return new Response(JSON.stringify({ error: friendly, status: rateLimited ? 429 : res.status, details: text.slice(0, 500) }), { status: rateLimited ? 429 : res.status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      if (rateLimited) {
+        return new Response(JSON.stringify({
+          source: "gdelt",
+          fetched: 0,
+          upserted: 0,
+          query,
+          timespan,
+          rateLimited: true,
+          message: "GDELT rate limit reached; no articles imported for this query.",
+        }), { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+      return new Response(JSON.stringify({ error: "GDELT request failed", status: res.status, details: text.slice(0, 500) }), { status: res.status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
     let json: any = {};
     try { json = JSON.parse(text); } catch { json = { articles: [] }; }
