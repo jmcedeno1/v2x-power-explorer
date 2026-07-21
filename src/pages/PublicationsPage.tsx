@@ -27,8 +27,9 @@ type Pub = {
   url: string | null;
 };
 
-async function fetchAllPublications(): Promise<Pub[]> {
+async function fetchAllPublications(): Promise<{ pubs: Pub[]; pages: number[] }> {
   const all: Pub[] = [];
+  const pages: number[] = [];
   const pageSize = 1000;
   for (let from = 0; from < 20000; from += pageSize) {
     const { data, error } = await supabase
@@ -36,12 +37,19 @@ async function fetchAllPublications(): Promise<Pub[]> {
       .select('id,title,abstract,year,citations,orgs,countries,url')
       .eq('doc_type', 'publication')
       .range(from, from + pageSize - 1);
-    if (error) throw error;
-    if (!data || data.length === 0) break;
+    if (error) {
+      console.error('[Publications] fetch error at offset', from, error);
+      throw error;
+    }
+    const n = data?.length ?? 0;
+    pages.push(n);
+    console.log('[Publications] fetched page offset', from, 'rows', n);
+    if (!data || n === 0) break;
     all.push(...(data as Pub[]));
-    if (data.length < pageSize) break;
+    if (n < pageSize) break;
   }
-  return all;
+  console.log('[Publications] total fetched', all.length, 'pages', pages);
+  return { pubs: all, pages };
 }
 
 // Topic taxonomy for V2X / bidirectional charging literature.
@@ -94,7 +102,7 @@ function useSummary() {
   return useQuery({
     queryKey: ['publications-summary'],
     queryFn: async () => {
-      const pubs = await fetchAllPublications();
+      const { pubs, pages: fetchPages } = await fetchAllPublications();
 
       const yearCounts = new Map<number, number>();
       const instCounts = new Map<string, number>();
@@ -179,6 +187,7 @@ function useSummary() {
 
       return {
         total: pubs.length,
+        fetchPages,
         minYear: isFinite(minYear) ? minYear : null,
         maxYear: isFinite(maxYear) ? maxYear : null,
         peakYear,
@@ -204,7 +213,8 @@ const StatCard = ({ icon: Icon, value, label }: { icon: any; value: string | num
 );
 
 export default function PublicationsPage() {
-  const { data, isLoading } = useSummary();
+  const { data, isLoading, error } = useSummary();
+  const err = error as { message?: string; code?: string; details?: string; hint?: string } | null;
 
   return (
     <MainLayout>
@@ -215,6 +225,27 @@ export default function PublicationsPage() {
           description="Scholarly output on bidirectional charging and V2X energy flows, sourced from OpenAlex"
           badge="OpenAlex"
         />
+
+        <div className="mb-4 rounded-lg border bg-card p-3 text-xs font-mono">
+          <div>
+            <span className="text-muted-foreground">Status:</span>{' '}
+            {isLoading ? 'loading…' : err ? <span className="text-destructive">error</span> : 'loaded'}
+          </div>
+          <div>
+            <span className="text-muted-foreground">Rows fetched:</span> {data?.total ?? 0}
+            {data?.fetchPages && data.fetchPages.length > 0 && (
+              <> — pages: [{data.fetchPages.join(', ')}]</>
+            )}
+          </div>
+          {err && (
+            <div className="mt-1 text-destructive whitespace-pre-wrap">
+              {err.code ? `[${err.code}] ` : ''}
+              {err.message ?? String(error)}
+              {err.details ? `\ndetails: ${err.details}` : ''}
+              {err.hint ? `\nhint: ${err.hint}` : ''}
+            </div>
+          )}
+        </div>
 
         <section className="mb-8">
           <div className="flex items-center gap-2 mb-4">
