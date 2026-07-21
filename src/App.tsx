@@ -16,6 +16,7 @@ import OpportunitiesPage from "./pages/OpportunitiesPage";
 import DataSourcesPage from "./pages/DataSourcesPage";
 import CorpusPage from "./pages/CorpusPage";
 import PublicationsPage from "./pages/PublicationsPage";
+import NewsPage from "./pages/NewsPage";
 import NotesPage from "./pages/NotesPage";
 import RecommendationsPage from "./pages/RecommendationsPage";
 import NotFound from "./pages/NotFound";
@@ -42,6 +43,7 @@ const App = () => (
           <Route path="/datasources" element={<DataSourcesPage />} />
           <Route path="/corpus" element={<CorpusPage />} />
           <Route path="/publications" element={<PublicationsPage />} />
+          <Route path="/news" element={<NewsPage />} />
           <Route path="/notes" element={<NotesPage />} />
           <Route path="/recommendations" element={<RecommendationsPage />} />
           <Route path="*" element={<NotFound />} />

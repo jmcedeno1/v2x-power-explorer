@@ -22,7 +22,7 @@ Deno.serve(async (req) => {
     url.searchParams.set("maxrecords", String(maxrecords));
     url.searchParams.set("sort", "DateDesc");
 
-    const res = await fetch(url.toString());
+    const res = await fetch(url.toString(), { headers: { "User-Agent": "Mozilla/5.0 (compatible; BidirectionalResearchBot/1.0)" } });
     const text = await res.text();
     if (!res.ok) {
       await logQA({ level: "error", category: "api_error", section: "gdelt", message: `GDELT ${res.status}`, details: { body: text.slice(0, 500) } });
