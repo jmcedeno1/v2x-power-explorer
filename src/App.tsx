@@ -16,6 +16,7 @@ import OpportunitiesPage from "./pages/OpportunitiesPage";
 import DataSourcesPage from "./pages/DataSourcesPage";
 import CorpusPage from "./pages/CorpusPage";
 import PublicationsPage from "./pages/PublicationsPage";
+import NewsPage from "./pages/NewsPage";
 import NotesPage from "./pages/NotesPage";
 import RecommendationsPage from "./pages/RecommendationsPage";
 import NotFound from "./pages/NotFound";
