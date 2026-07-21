@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { BookOpen, FileText, TrendingUp, Calendar, Globe, Building2, Quote, ExternalLink } from 'lucide-react';
+import { BookOpen, FileText, TrendingUp, Calendar, Globe, Building2, Quote, ExternalLink, Sparkles } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { ModuleHeader } from '@/components/ui/module-header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -19,6 +19,7 @@ import {
 type Pub = {
   id: string;
   title: string | null;
+  abstract: string | null;
   year: number | null;
   citations: number | null;
   orgs: string[] | null;
@@ -32,7 +33,7 @@ async function fetchAllPublications(): Promise<Pub[]> {
   for (let from = 0; from < 20000; from += pageSize) {
     const { data, error } = await supabase
       .from('documents')
-      .select('id,title,year,citations,orgs,countries,url')
+      .select('id,title,abstract,year,citations,orgs,countries,url')
       .eq('doc_type', 'publication')
       .range(from, from + pageSize - 1);
     if (error) throw error;
@@ -41,6 +42,41 @@ async function fetchAllPublications(): Promise<Pub[]> {
     if (data.length < pageSize) break;
   }
   return all;
+}
+
+// Topic taxonomy for V2X / bidirectional charging literature.
+// Each topic is matched against title + abstract with case-insensitive regex.
+const TOPIC_PATTERNS: { topic: string; pattern: RegExp }[] = [
+  { topic: 'Vehicle-to-Grid (V2G)', pattern: /\b(vehicle[- ]to[- ]grid|v2g)\b/i },
+  { topic: 'Vehicle-to-Home / Building', pattern: /\b(vehicle[- ]to[- ](home|building|house|load|everything)|v2h|v2b|v2l|v2x)\b/i },
+  { topic: 'Bidirectional Chargers & Power Electronics', pattern: /\b(bidirectional (charger|converter|inverter|dc[- ]dc)|dual[- ]active[- ]bridge|dab converter)\b/i },
+  { topic: 'Wide-Bandgap Semiconductors (SiC/GaN)', pattern: /\b(silicon carbide|\bsic\b|gallium nitride|\bgan\b|wide[- ]bandgap)\b/i },
+  { topic: 'Battery Degradation & SOH', pattern: /\b(battery (degradation|aging|ageing|health|lifetime)|state[- ]of[- ]health|\bsoh\b|calendar aging|cycle aging)\b/i },
+  { topic: 'Smart / Optimal Charging Scheduling', pattern: /\b(smart charging|charging (schedul|strateg|optimi[sz]ation|coordination)|optimal charging)\b/i },
+  { topic: 'Renewable Integration & Solar+EV', pattern: /\b(renewable (energy|integration)|photovoltaic|solar (pv|panel|energy)|wind (power|energy))\b/i },
+  { topic: 'Microgrids & Islanded Operation', pattern: /\b(microgrid|islanded|island mode|nanogrid)\b/i },
+  { topic: 'Frequency & Ancillary Services', pattern: /\b(frequency regulation|ancillary service|primary reserve|secondary reserve|grid support|frequency response)\b/i },
+  { topic: 'Peak Shaving & Demand Response', pattern: /\b(peak shaving|peak load|demand response|load shifting|load leveling|valley filling)\b/i },
+  { topic: 'Energy / Aggregator Markets', pattern: /\b(aggregator|energy market|electricity market|wholesale market|balancing market|day[- ]ahead)\b/i },
+  { topic: 'Machine Learning & Forecasting', pattern: /\b(machine learning|deep learning|neural network|reinforcement learning|lstm|forecast(ing)?)\b/i },
+  { topic: 'Energy Management Systems (EMS/HEMS)', pattern: /\b(energy management (system|strateg)|\bems\b|home energy management|\bhems\b|bems)\b/i },
+  { topic: 'Wireless / Inductive Bidirectional Charging', pattern: /\b(wireless (power|charging)|inductive (power|charging)|resonant (coupling|charging))\b/i },
+  { topic: 'Fleet & Commercial EV Charging', pattern: /\b(fleet|bus depot|electric bus|heavy[- ]duty|truck|logistics)\b/i },
+  { topic: 'Second-Life & Repurposed Batteries', pattern: /\b(second[- ]life|repurposed batter|reuse.{0,15}batter)\b/i },
+  { topic: 'EV Charging Infrastructure', pattern: /\b(charging (station|infrastructure|point)|\bevse\b|fast charg|dc fast)\b/i },
+  { topic: 'Cybersecurity of Charging', pattern: /\b(cybersecurity|cyber[- ]?attack|cyber[- ]?security|intrusion detection)\b/i },
+  { topic: 'Standards & Communication (ISO 15118, OCPP)', pattern: /\b(iso[ -]?15118|ocpp|chademo|\bccs\b|combined charging system|iec 61851)\b/i },
+  { topic: 'Grid Impact & Distribution Networks', pattern: /\b(distribution (network|grid|system)|grid impact|voltage (regulation|control)|hosting capacity|transformer aging)\b/i },
+];
+
+function classifyPublication(p: Pub): string[] {
+  const hay = `${p.title ?? ''} ${p.abstract ?? ''}`;
+  if (!hay.trim()) return [];
+  const hits: string[] = [];
+  for (const { topic, pattern } of TOPIC_PATTERNS) {
+    if (pattern.test(hay)) hits.push(topic);
+  }
+  return hits;
 }
 
 function useSummary() {
@@ -97,6 +133,39 @@ function useSummary() {
         .sort((a, b) => (b.citations ?? 0) - (a.citations ?? 0))
         .slice(0, 10);
 
+      // Topic growth 2020 -> 2025
+      const topicCounts = new Map<string, { y2020: number; y2025: number; total: number }>();
+      for (const p of pubs) {
+        if (!p.year) continue;
+        if (p.year !== 2020 && p.year !== 2025) {
+          // still count for total to gauge topic size
+          const topics = classifyPublication(p);
+          for (const t of topics) {
+            const rec = topicCounts.get(t) ?? { y2020: 0, y2025: 0, total: 0 };
+            rec.total += 1;
+            topicCounts.set(t, rec);
+          }
+          continue;
+        }
+        const topics = classifyPublication(p);
+        for (const t of topics) {
+          const rec = topicCounts.get(t) ?? { y2020: 0, y2025: 0, total: 0 };
+          if (p.year === 2020) rec.y2020 += 1;
+          if (p.year === 2025) rec.y2025 += 1;
+          rec.total += 1;
+          topicCounts.set(t, rec);
+        }
+      }
+      const growingTopics = Array.from(topicCounts.entries())
+        .map(([topic, r]) => {
+          const growthAbs = r.y2025 - r.y2020;
+          const growthPct = r.y2020 > 0 ? ((r.y2025 - r.y2020) / r.y2020) * 100 : r.y2025 > 0 ? 100 : 0;
+          return { topic, y2020: r.y2020, y2025: r.y2025, growthAbs, growthPct, total: r.total };
+        })
+        .filter((t) => t.growthAbs > 0 && t.y2025 >= 3) // require meaningful volume
+        .sort((a, b) => b.growthAbs - a.growthAbs)
+        .slice(0, 10);
+
       return {
         total: pubs.length,
         minYear: isFinite(minYear) ? minYear : null,
@@ -104,10 +173,12 @@ function useSummary() {
         peakYear,
         countries: countryCounts.size,
         institutions: instCounts.size,
+        themes: growingTopics.length,
         perYear,
         topInstitutions,
         topCountries,
         mostCited,
+        growingTopics,
       };
     },
   });
@@ -150,7 +221,7 @@ export default function PublicationsPage() {
             <StatCard icon={Calendar} value={data?.peakYear || '-'} label="Peak year" />
             <StatCard icon={Globe} value={data?.countries ?? 0} label="Countries" />
             <StatCard icon={Building2} value={data?.institutions ?? 0} label="Institutions" />
-            <StatCard icon={BookOpen} value={0} label="Themes" />
+            <StatCard icon={BookOpen} value={data?.themes ?? 0} label="Growing themes" />
           </div>
 
           <Card className="mb-6">
@@ -239,6 +310,81 @@ export default function PublicationsPage() {
             </Card>
           </div>
         </section>
+
+        <section className="mb-8">
+          <div className="flex items-center gap-2 mb-4">
+            <Sparkles className="w-5 h-5 text-primary" />
+            <h3 className="text-lg font-semibold">Top 10 growing publication topics (2020 to 2025)</h3>
+          </div>
+          <Card>
+            <CardContent className="p-0">
+              {isLoading ? (
+                <div className="p-6 text-sm text-muted-foreground">Loading…</div>
+              ) : !data?.growingTopics?.length ? (
+                <div className="p-6 text-sm text-muted-foreground">
+                  Not enough publications in 2020 and 2025 to compute topic growth.
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
+                  <div className="p-4 h-[420px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart
+                        data={[...data.growingTopics].reverse()}
+                        layout="vertical"
+                        margin={{ left: 20, right: 20 }}
+                      >
+                        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                        <XAxis type="number" stroke="hsl(var(--muted-foreground))" fontSize={11} />
+                        <YAxis
+                          type="category"
+                          dataKey="topic"
+                          stroke="hsl(var(--muted-foreground))"
+                          fontSize={10}
+                          width={200}
+                        />
+                        <Tooltip
+                          contentStyle={{
+                            background: 'hsl(var(--card))',
+                            border: '1px solid hsl(var(--border))',
+                            borderRadius: 8,
+                            fontSize: 12,
+                          }}
+                          formatter={(value: number, name: string) => [value, name === 'y2020' ? '2020' : '2025']}
+                        />
+                        <Bar dataKey="y2020" fill="hsl(var(--muted-foreground))" name="2020" radius={[0, 2, 2, 0]} />
+                        <Bar dataKey="y2025" fill="hsl(var(--primary))" name="2025" radius={[0, 2, 2, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                  <ul className="divide-y divide-border border-l border-border">
+                    {data.growingTopics.map((t, i) => (
+                      <li key={t.topic} className="p-3 flex items-center gap-3 hover:bg-muted/30">
+                        <div className="text-lg font-bold text-muted-foreground w-6 shrink-0 tabular-nums">
+                          {i + 1}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-sm font-medium text-foreground truncate">{t.topic}</div>
+                          <div className="text-[11px] text-muted-foreground mt-0.5">
+                            {t.y2020} in 2020 &rarr; {t.y2025} in 2025 &middot; {t.total.toLocaleString()} total
+                          </div>
+                        </div>
+                        <div className="text-right shrink-0">
+                          <div className="text-sm font-bold text-primary tabular-nums">
+                            +{t.growthAbs}
+                          </div>
+                          <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                            {t.y2020 > 0 ? `+${Math.round(t.growthPct)}%` : 'new'}
+                          </div>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </section>
+
 
         <section className="mb-8">
           <div className="flex items-center gap-2 mb-4">
