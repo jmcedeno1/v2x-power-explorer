@@ -216,7 +216,9 @@ export default function PublicationsPage() {
               )}
             </CardContent>
           </Card>
+        </section>
       </div>
+
     </MainLayout>
   );
 }
