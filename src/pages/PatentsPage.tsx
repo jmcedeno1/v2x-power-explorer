@@ -34,6 +34,9 @@ export default function PatentsPage() {
           <EmptyModuleState moduleName="Patents" />
         ) : (
           <>
+            {/* Real patent corpus analytics (lens.org) */}
+            <PatentLandscape />
+
             {/* Key evidence - moved above Innovation Area Maturity */}
             <section className="mb-10">
               <h3 className="text-lg font-semibold text-foreground mb-4">IP Landscape Highlights</h3>
