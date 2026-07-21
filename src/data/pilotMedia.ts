@@ -1,9 +1,18 @@
 // Additional images and detailed gap explanations per pilot (matched by lowercase name)
 
+export interface PilotReference {
+  title: string;
+  url: string;
+  source?: string;
+  date?: string;
+}
+
 export interface PilotMedia {
   images?: { url: string; caption?: string; credit?: string }[];
   gapExplanations?: Record<string, string>;
+  references?: PilotReference[];
 }
+
 
 // Generic explanations reused across pilots when a specific one isn't provided
 export const GENERIC_GAP_EXPLANATIONS: Record<string, string> = {
