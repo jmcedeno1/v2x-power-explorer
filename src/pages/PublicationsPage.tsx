@@ -47,7 +47,18 @@ async function fetchAllPublications(): Promise<Pub[]> {
 // Topic taxonomy for V2X / bidirectional charging literature.
 // Each topic is matched against title + abstract with case-insensitive regex.
 const TOPIC_PATTERNS: { topic: string; pattern: RegExp }[] = [
-  { topic: 'Vehicle-to-Grid (V2G)', pattern: /\b(vehicle[- ]to[- ]grid|v2g)\b/i },
+  // V2G is too broad on its own — split into specific sub-angles.
+  // Each requires a V2G/vehicle-to-grid mention plus a sub-topic keyword.
+  { topic: 'V2G Economics & Business Models', pattern: /(?=.*\b(vehicle[- ]to[- ]grid|v2g)\b)(?=.*\b(econom|revenue|profit|business model|cost[- ]benefit|feasibility|monetiz|willingness[- ]to[- ]pay)\b)/is },
+  { topic: 'V2G Control & Dispatch Algorithms', pattern: /(?=.*\b(vehicle[- ]to[- ]grid|v2g)\b)(?=.*\b(control (strateg|scheme|algorithm)|dispatch|model predictive|mpc|droop control|hierarchical control)\b)/is },
+  { topic: 'V2G Optimal Scheduling & Bidding', pattern: /(?=.*\b(vehicle[- ]to[- ]grid|v2g)\b)(?=.*\b(schedul|optimi[sz]ation|bidding|stochastic|robust optimization|mixed[- ]integer)\b)/is },
+  { topic: 'V2G with Renewables & Solar', pattern: /(?=.*\b(vehicle[- ]to[- ]grid|v2g)\b)(?=.*\b(photovoltaic|solar|wind|renewable)\b)/is },
+  { topic: 'V2G Environmental & LCA', pattern: /(?=.*\b(vehicle[- ]to[- ]grid|v2g)\b)(?=.*\b(life[- ]cycle|\blca\b|emission|carbon|environmental|sustainab)\b)/is },
+  { topic: 'V2G User Behavior & Adoption', pattern: /(?=.*\b(vehicle[- ]to[- ]grid|v2g)\b)(?=.*\b(user (behavior|acceptance|preference)|adoption|survey|willingness|consumer)\b)/is },
+  { topic: 'V2G Field Trials & Pilots', pattern: /(?=.*\b(vehicle[- ]to[- ]grid|v2g)\b)(?=.*\b(pilot|demonstrat|field (trial|test)|case study|real[- ]world)\b)/is },
+  { topic: 'V2G Policy & Regulation', pattern: /(?=.*\b(vehicle[- ]to[- ]grid|v2g)\b)(?=.*\b(polic|regulat|tariff|incentive|subsid|framework)\b)/is },
+  { topic: 'V2G Battery Degradation', pattern: /(?=.*\b(vehicle[- ]to[- ]grid|v2g)\b)(?=.*\b(degradation|aging|ageing|state[- ]of[- ]health|\bsoh\b|lifetime|capacity fade)\b)/is },
+  { topic: 'V2G Simulation & Modeling', pattern: /(?=.*\b(vehicle[- ]to[- ]grid|v2g)\b)(?=.*\b(simulation|co[- ]simulation|matlab|digital twin|monte carlo|agent[- ]based)\b)/is },
   { topic: 'Vehicle-to-Home / Building', pattern: /\b(vehicle[- ]to[- ](home|building|house|load|everything)|v2h|v2b|v2l|v2x)\b/i },
   { topic: 'Bidirectional Chargers & Power Electronics', pattern: /\b(bidirectional (charger|converter|inverter|dc[- ]dc)|dual[- ]active[- ]bridge|dab converter)\b/i },
   { topic: 'Wide-Bandgap Semiconductors (SiC/GaN)', pattern: /\b(silicon carbide|\bsic\b|gallium nitride|\bgan\b|wide[- ]bandgap)\b/i },
