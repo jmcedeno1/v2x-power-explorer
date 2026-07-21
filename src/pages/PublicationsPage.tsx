@@ -27,8 +27,9 @@ type Pub = {
   url: string | null;
 };
 
-async function fetchAllPublications(): Promise<Pub[]> {
+async function fetchAllPublications(): Promise<{ pubs: Pub[]; pages: number[] }> {
   const all: Pub[] = [];
+  const pages: number[] = [];
   const pageSize = 1000;
   for (let from = 0; from < 20000; from += pageSize) {
     const { data, error } = await supabase
@@ -36,12 +37,19 @@ async function fetchAllPublications(): Promise<Pub[]> {
       .select('id,title,abstract,year,citations,orgs,countries,url')
       .eq('doc_type', 'publication')
       .range(from, from + pageSize - 1);
-    if (error) throw error;
-    if (!data || data.length === 0) break;
+    if (error) {
+      console.error('[Publications] fetch error at offset', from, error);
+      throw error;
+    }
+    const n = data?.length ?? 0;
+    pages.push(n);
+    console.log('[Publications] fetched page offset', from, 'rows', n);
+    if (!data || n === 0) break;
     all.push(...(data as Pub[]));
-    if (data.length < pageSize) break;
+    if (n < pageSize) break;
   }
-  return all;
+  console.log('[Publications] total fetched', all.length, 'pages', pages);
+  return { pubs: all, pages };
 }
 
 // Topic taxonomy for V2X / bidirectional charging literature.
