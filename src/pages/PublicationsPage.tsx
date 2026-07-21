@@ -102,7 +102,7 @@ function useSummary() {
   return useQuery({
     queryKey: ['publications-summary'],
     queryFn: async () => {
-      const pubs = await fetchAllPublications();
+      const { pubs, pages: fetchPages } = await fetchAllPublications();
 
       const yearCounts = new Map<number, number>();
       const instCounts = new Map<string, number>();
