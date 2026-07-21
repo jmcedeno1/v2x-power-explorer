@@ -273,6 +273,63 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
     ],
     partnerLead: 'TEPCO Holdings, TEPCO Energy Partner, Nissan, Mitsubishi Motors, Nuvve, CHAdeMO Association',
   },
+  'v2x cluster (horizon europe)': {
+    references: [
+      { title: 'Get to know the V2X cluster', url: 'https://scale-horizon.eu/get-to-know-the-v2x-cluster/', source: 'SCALE (Horizon Europe)', date: 'Sep 2025' },
+      { title: 'EV4EU - V2X cluster page', url: 'https://ev4eu.eu/v2xcluster/', source: 'EV4EU' },
+      { title: 'AHEAD - Horizon Europe project', url: 'https://horizon-ahead.eu/', source: 'AHEAD' },
+      { title: 'XL-Connect: new European project', url: 'https://www.e-redes.pt/en/news/2022/10/13/xl-connect-new-european-project', source: 'E-Redes press release', date: 'Oct 2022' },
+      { title: 'XL-Connect - V2X cluster news', url: 'https://xlconnect.eu/category/v2xcluster/', source: 'XL-Connect' },
+      { title: 'Ricardo - engineering and consultancy', url: 'https://www.ricardo.com/', source: 'Ricardo plc (XL-Connect coordinator)' },
+    ],
+    gapExplanations: {
+      'Standards':
+        'The eight cluster projects deliberately test overlapping standards (ISO 15118-20, OCPP 2.0.1, IEEE 2030.5, IEC 61851-28, EEBUS) to identify interoperability gaps. Cross-demo test protocols are being co-developed but no single European conformance certification exists yet.',
+      'TSO-DSO signalling':
+        'Each demo country (PT, DE, NL, DK, SI, GR, IT, CZ, IE) has a different TSO-DSO coordination model for behind-the-meter flexibility. The cluster is producing a comparative gap analysis feeding into ENTSO-E and CEER work on grid-code alignment.',
+      'Business model':
+        'Revenue stacking (arbitrage + FCR/aFRR + capacity + self-consumption) is tested in isolation by different demos but no single regulatory envelope in the EU allows all streams simultaneously; joint policy recommendation is a core cluster deliverable.',
+      'Cybersecurity':
+        'IEC 62443 and ISO/SAE 21434 compliance for bidirectional chargers and aggregator platforms is uneven across OEMs. The cluster is defining a shared cybersecurity baseline and shared threat model.',
+      'Interoperability':
+        'XL-Connect specifically targets multi-standard integration; early tests show significant vendor-specific behaviour in ISO 15118-20 bidirectional AC and DC implementations across BMW, Renault, Stellantis, Nissan and Kia vehicles.',
+      'User acceptance':
+        'EV4EU and FLOW run parallel user studies on opt-in/opt-out UX, guaranteed state-of-charge and battery-warranty concerns. Findings will feed a joint EU communication and consumer-protection framework.',
+      'Metering':
+        'Sub-metering of import vs. export from EV, PV and household at a single grid connection point is not harmonised across member states; the cluster is preparing a proposal to DG ENER on a common metering concept.',
+      'Allocation':
+        'No agreed allocation key for the value of an exported kWh between owner, aggregator, DSO and TSO. Cluster projects are trialling different splits and will compare results.',
+    },
+    businessModel: {
+      type: 'EU-funded R&I cluster',
+      description:
+        'Eight Horizon Europe projects (XL-Connect, SCALE, EV4EU, FLOW, Drive2X, AHEAD, ePowerMove, Neverflat) with ~EUR 80-90M combined public funding, 150+ partners across 15+ member states. Non-commercial R&I; outputs feed regulators (DG ENER, CEER, ENTSO-E), TSOs, DSOs and OEMs.',
+    },
+    standardization: {
+      standard: 'ISO 15118-20, OCPP 2.0.1, IEEE 2030.5, IEC 61851-28, EEBUS',
+      status: 'Cross-demo test protocols in development. Cluster targets a harmonised European conformance / certification approach for bidirectional charging by 2027.',
+    },
+    technology: {
+      overview: 'Multi-project pan-European bidirectional charging framework',
+      hardware: [
+        { name: 'Bidirectional AC/DC chargers', details: ['3.7-50 kW AC and up to 150 kW DC', 'Vendors: Wallbox, Enel X, Ricardo, ABB, EVBox', 'ISO 15118-20 + OCPP 2.0.1'] },
+        { name: 'EV fleet (~500 vehicles)', details: ['Renault, Stellantis, Nissan, Kia, Volvo', 'Mix of CCS bidirectional and CHAdeMO', 'Household, corporate and municipal fleets'] },
+      ],
+      software: [
+        { name: 'Aggregator + HEMS platforms', details: ['e-Redes, EDP, Iberdrola, Enel X', 'Cross-project data exchange schema', 'AHEAD AI dispatch layer'] },
+        { name: 'TSO-DSO signalling stack', details: ['TenneT, EirGrid, REN, Terna interfaces', 'Local flex-market pilots', 'Redispatch and congestion signals'] },
+      ],
+    },
+    timeline: [
+      { phase: 'XL-Connect launch', year: 'Oct 2022', description: 'XL-Connect kicks off under Horizon Europe, coordinated by Ricardo with e-Redes as demo host.' },
+      { phase: 'SCALE, EV4EU, FLOW launch', year: '2022-2023', description: 'First wave of sister projects starts field demonstrators across PT, DK, NL, SI, IT, IE, CZ, GR.' },
+      { phase: 'Drive2X, AHEAD, ePowerMove, Neverflat', year: '2023-2024', description: 'Second wave joins, adding scale-up demos, AI orchestration, high-power charging and battery resilience.' },
+      { phase: 'V2X Cluster formalised', year: 'Sep 2025', description: 'Eight projects publicly consolidate as the V2X Cluster with joint dissemination and policy roadmap.' },
+      { phase: 'Joint policy recommendations', year: '2026', description: 'Shared deliverables on metering, revenue stacking, cybersecurity and TSO-DSO coordination to DG ENER, CEER, ENTSO-E.' },
+      { phase: 'Cluster completion', year: '2027', description: 'Final demonstrators close; harmonised European V2X interoperability and certification framework proposed.' },
+    ],
+    partnerLead: 'Ricardo, e-Redes, EDP, Enel X, Iberdrola, TenneT, RWTH Aachen, TU Delft, DTU, IST, ElaadNL, Renault, Stellantis, Nissan, EirGrid',
+  },
 };
 
 
