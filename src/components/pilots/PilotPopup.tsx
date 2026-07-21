@@ -700,25 +700,8 @@ function FallbackPopup({ pilot, open, onClose }: { pilot: any; open: boolean; on
                 )}
               </TabsContent>
 
-              {/* Partners */}
-              <TabsContent value="partners" className="mt-4">
-                {pilot.partners?.length > 0 ? (
-                  <div className="p-4 rounded-lg border bg-card">
-                    <h4 className="text-sm font-semibold mb-3 text-primary flex items-center gap-2">
-                      <Building2 className="w-4 h-4" /> Partners ({pilot.partners.length})
-                    </h4>
-                    <div className="flex flex-wrap gap-2">
-                      {pilot.partners.map((p: string) => (
-                        <Badge key={p} variant="secondary" className="text-xs">{p}</Badge>
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  <div className="p-6 rounded-lg border border-dashed bg-muted/30 text-sm text-muted-foreground text-center">
-                    No partner list recorded for this pilot.
-                  </div>
-                )}
-              </TabsContent>
+
+
 
               {/* References */}
               <TabsContent value="references" className="mt-4">
