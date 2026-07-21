@@ -28,28 +28,44 @@ type Pub = {
 };
 
 async function fetchAllPublications(): Promise<{ pubs: Pub[]; pages: number[] }> {
-  const all: Pub[] = [];
-  const pages: number[] = [];
   const pageSize = 1000;
-  for (let from = 0; from < 20000; from += pageSize) {
-    const { data, error } = await supabase
-      .from('documents')
-      .select('id,title,abstract,year,citations,orgs,countries,url')
-      .eq('doc_type', 'publication')
-      .range(from, from + pageSize - 1);
-    if (error) {
-      console.error('[Publications] fetch error at offset', from, error);
-      throw error;
-    }
-    const n = data?.length ?? 0;
-    pages.push(n);
-    console.log('[Publications] fetched page offset', from, 'rows', n);
-    if (!data || n === 0) break;
-    all.push(...(data as Pub[]));
-    if (n < pageSize) break;
+
+  // Get total count first so we can parallelize the page requests.
+  const { count, error: countError } = await supabase
+    .from('documents')
+    .select('id', { count: 'exact', head: true })
+    .eq('doc_type', 'publication');
+  if (countError) {
+    console.error('[Publications] count error', countError);
+    throw countError;
   }
-  console.log('[Publications] total fetched', all.length, 'pages', pages);
-  return { pubs: all, pages };
+  const total = count ?? 0;
+  console.log('[Publications] total count', total);
+
+  const offsets: number[] = [];
+  for (let from = 0; from < total; from += pageSize) offsets.push(from);
+
+  const results = await Promise.all(
+    offsets.map(async (from) => {
+      const { data, error } = await supabase
+        .from('documents')
+        .select('id,title,abstract,year,citations,orgs,countries,url')
+        .eq('doc_type', 'publication')
+        .range(from, from + pageSize - 1);
+      if (error) {
+        console.error('[Publications] fetch error at offset', from, error);
+        throw error;
+      }
+      const rows = (data ?? []) as Pub[];
+      console.log('[Publications] fetched offset', from, 'rows', rows.length);
+      return rows;
+    }),
+  );
+
+  const pubs = results.flat();
+  const pages = results.map((r) => r.length);
+  console.log('[Publications] total fetched', pubs.length);
+  return { pubs, pages };
 }
 
 // Topic taxonomy for V2X / bidirectional charging literature.
