@@ -420,7 +420,7 @@ function FallbackPopup({ pilot, open, onClose }: { pilot: any; open: boolean; on
       : [];
 
   const metrics: { icon: React.ReactNode; label: string; value: string; color: string }[] = [];
-  if (pilot.powerLevel && pilot.powerLevel !== '—')
+  if (pilot.powerLevel && pilot.powerLevel !== '-')
     metrics.push({ icon: <Zap className="w-5 h-5" />, label: 'Power Level', value: pilot.powerLevel, color: 'text-primary' });
   if (pilot.vehicleCount)
     metrics.push({ icon: <Car className="w-5 h-5" />, label: 'Vehicles', value: String(pilot.vehicleCount), color: 'text-accent' });
@@ -449,7 +449,7 @@ function FallbackPopup({ pilot, open, onClose }: { pilot: any; open: boolean; on
               </div>
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <MapPin className="w-4 h-4" />
-                <span>{pilot.location || pilot.country || '—'}</span>
+                <span>{pilot.location || pilot.country || '-'}</span>
                 {pilot.status && (
                   <>
                     <span className="mx-2">•</span>

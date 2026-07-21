@@ -101,7 +101,7 @@ export default function CorpusPage() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card>
             <CardHeader className="pb-2"><CardTitle className="text-sm">Total documents</CardTitle></CardHeader>
-            <CardContent><div className="text-3xl font-semibold">{counts.data?.total ?? "—"}</div></CardContent>
+            <CardContent><div className="text-3xl font-semibold">{counts.data?.total ?? "-"}</div></CardContent>
           </Card>
           {["openalex", "lens_patent", "lens_scholar", "gdelt"].map((s) => (
             <Card key={s}>
@@ -168,7 +168,7 @@ export default function CorpusPage() {
                       <tr key={d.id} className="border-t border-border/50">
                         <td className="py-2 pr-3"><Badge className={sourceColors[d.source] ?? ""} variant="secondary">{d.source}</Badge></td>
                         <td className="py-2 pr-3 text-xs">{d.doc_type}</td>
-                        <td className="py-2 pr-3">{d.year ?? "—"}</td>
+                        <td className="py-2 pr-3">{d.year ?? "-"}</td>
                         <td className="py-2 pr-3 max-w-xl truncate" title={d.title}>{d.title}</td>
                         <td className="py-2 pr-3 max-w-xs truncate text-xs text-muted-foreground">{(d.orgs ?? []).slice(0, 2).join(", ")}</td>
                         <td className="py-2 pr-3">

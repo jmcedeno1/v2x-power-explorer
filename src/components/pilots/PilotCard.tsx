@@ -45,7 +45,7 @@ export function PilotCard({ pilot, index, onClick }: PilotCardProps) {
 
   const metrics = [
     { icon: Zap, label: 'Power', value: pilot.powerLevel, color: 'text-primary' },
-    { icon: Car, label: 'Vehicles', value: pilot.vehicleCount || '—', color: 'text-accent' },
+    { icon: Car, label: 'Vehicles', value: pilot.vehicleCount || '-', color: 'text-accent' },
     investment && { icon: DollarSign, label: 'Investment', value: investment, color: 'text-energy-green' },
     timeline && { icon: Calendar, label: 'Timeline', value: timeline, color: 'text-energy-blue' },
     partnerCount > 0 && { icon: Users, label: 'Partners', value: partnerCount, color: 'text-energy-amber' },
