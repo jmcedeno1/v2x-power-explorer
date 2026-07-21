@@ -330,6 +330,59 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
     ],
     partnerLead: 'Ricardo, e-Redes, EDP, Enel X, Iberdrola, TenneT, RWTH Aachen, TU Delft, DTU, IST, ElaadNL, Renault, Stellantis, Nissan, EirGrid',
   },
+  'redispatch v2g (tennet, nissan, the mobility house)': {
+    references: [
+      { title: 'V2G Redispatch - TenneT / Nissan / The Mobility House', url: 'https://www.v2g-hub.com/projects/v2g-redispatch-tennet-nissan-the-mobility-house-nissan/', source: 'V2G Hub' },
+      { title: 'TenneT, The Mobility House and Nissan start V2G project', url: 'https://www.electrive.com/2018/03/13/tennet-the-mobility-house-nissan-start-v2g-project/', source: 'electrive', date: 'Mar 2018' },
+      { title: 'Nissan, TenneT and The Mobility House: electric cars save surplus wind energy and reduce CO2', url: 'https://europe.nissannews.com/en-GB/releases/nissan-tennet-and-the-mobility-house-electric-cars-save-surplus-wind-energy-and-reduce-co2', source: 'Nissan Europe press release' },
+      { title: 'Vehicle-to-Grid - The Mobility House', url: 'https://www.mobilityhouse.com/int_en/vehicle-to-grid', source: 'The Mobility House' },
+      { title: 'VGI projects of The Mobility House', url: 'https://mobilityhouse-energy.com/int_en/knowledge-center/article/vgi-projects-of-the-mobility-house', source: 'The Mobility House - Knowledge Center' },
+      { title: 'V2G control for TSO redispatch (research article)', url: 'https://ietresearch.onlinelibrary.wiley.com/doi/10.1049/gtd2.13066', source: 'IET Generation, Transmission & Distribution' },
+      { title: 'Energy Sharing Opportunities V2B & V2G (Walgama, 2025)', url: 'https://sustain.ubc.ca/sites/default/files/2025-022_Energy%20Sharing%20Opportunities%20V2B%20&%20V2G_Walgama.pdf', source: 'UBC Sustainability' },
+    ],
+    gapExplanations: {
+      'Standards':
+        'The pilot ran exclusively on CHAdeMO bidirectional chargers - at the time the only production V2G-capable standard. ISO 15118-20 was not yet available and CCS bidirectional was still a concept, limiting the fleet to Nissan LEAF vehicles.',
+      'TSO-DSO signalling':
+        'Activating distributed EVs for TSO-level redispatch required custom signalling between TenneT (TSO), the DSOs hosting the chargers, and The Mobility House aggregator. No standard interface existed; the pilot built a bespoke chain that later informed Redispatch 3.0 design.',
+      'Business model':
+        'German regulation in 2018-2021 did not allow a small distributed asset to be paid as a redispatch resource. Compensation was demonstrated via a blockchain-based settlement layer but required a regulatory sandbox - not a repeatable commercial framework.',
+      'Warranty':
+        'Nissan LEAF batteries used for repeated V2G cycling raised warranty questions. The project produced early evidence that controlled V2G cycling did not materially accelerate degradation, feeding Nissan\'s later official V2G warranty policy.',
+      'Metering':
+        'Sub-metering the redispatch-relevant kWh at each vehicle - separate from household consumption - required dedicated meters at each charger and a data pipeline back to TenneT.',
+      'Allocation':
+        'How to split the value of a redispatch-serving kWh between vehicle owner, aggregator and TSO was resolved contractually in the pilot but never codified into German market rules.',
+    },
+    businessModel: {
+      type: 'TSO-led redispatch demonstrator',
+      description:
+        'TenneT (German/Dutch TSO) contracts The Mobility House as aggregator of a Nissan LEAF fleet. EV owners are compensated for making their bidirectional charger available; TenneT uses the aggregated asset to substitute for conventional redispatch dispatch, targeting a share of its ~EUR 1B/year redispatch cost.',
+    },
+    standardization: {
+      standard: 'CHAdeMO bidirectional, blockchain-based settlement (IBM Hyperledger)',
+      status: 'Regulatory sandbox under BNetzA. Findings fed into the design of Redispatch 3.0 and the German aggregator framework.',
+    },
+    technology: {
+      overview: 'TSO-orchestrated V2G aggregation using bidirectional Nissan LEAF fleet across northern and southern Germany',
+      hardware: [
+        { name: 'Nissan LEAF fleet', details: ['~20 vehicles, CHAdeMO bidirectional', '40-62 kWh battery packs', 'Northern (wind) and southern (load) sites'] },
+        { name: 'Bidirectional CHAdeMO chargers', details: ['~10 kW per unit, DC bidirectional', 'Aggregate flexibility ~100 kW', 'Located at homes and depot sites'] },
+      ],
+      software: [
+        { name: 'The Mobility House aggregator platform', details: ['Real-time dispatch of EV fleet', 'Interface to TenneT redispatch signals', 'Vehicle SOC forecasting and constraint management'] },
+        { name: 'IBM blockchain settlement layer', details: ['Per-kWh transaction ledger', 'Automated payments to vehicle owners', 'Auditable proof of redispatch service delivery'] },
+      ],
+    },
+    timeline: [
+      { phase: 'Project launch', year: 'Mar 2018', description: 'TenneT, Nissan and The Mobility House publicly announce the joint V2G redispatch pilot at Hannover Messe.' },
+      { phase: 'Fleet deployment', year: '2018-2019', description: 'Nissan LEAF vehicles and CHAdeMO bidirectional chargers commissioned at sites in northern and southern Germany.' },
+      { phase: 'Operational demonstration', year: '2019-2021', description: 'TenneT dispatches the aggregated fleet to absorb surplus wind and support southern loads; blockchain settles transactions per kWh.' },
+      { phase: 'Project completion', year: '2021', description: 'Findings fed into BNetzA regulatory work and into TenneT\'s Redispatch 3.0 framework for <100 kW distributed flexibility.' },
+      { phase: 'Legacy', year: '2022+', description: 'Aggregator platform re-used in BDL Next and other successor projects; cited as a foundational V2G-for-TSO reference case.' },
+    ],
+    partnerLead: 'TenneT (TSO), Nissan (OEM), The Mobility House (aggregator), IBM (blockchain settlement)',
+  },
 };
 
 
