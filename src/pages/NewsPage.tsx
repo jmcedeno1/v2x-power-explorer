@@ -87,10 +87,36 @@ export default function NewsPage() {
 
   const refresh = async () => {
     setRefreshing(true);
+    // Bidirectional charging taxonomy — broadened to maximise GDELT recall.
     const queries = [
-      'V2G', 'vehicle-to-grid', 'bidirectional charging', 'Nuvve', 'V2H',
-      'vehicle-to-home', 'Wallbox V2G', 'Fermata Energy', 'V2G pilot',
-      'V2G investment', 'bidirectional EV', 'V2G fleet',
+      // Core concepts
+      'V2G', '"vehicle-to-grid"', '"vehicle to grid"', '"bidirectional charging"',
+      '"bidirectional EV charging"', '"bidirectional charger"', '"reverse charging"',
+      // Flow variants
+      'V2H', '"vehicle-to-home"', 'V2B', '"vehicle-to-building"',
+      'V2L', '"vehicle-to-load"', 'V2X', '"vehicle-to-everything"',
+      // Use cases & value stacks
+      '"V2G pilot"', '"V2G project"', '"V2G trial"', '"V2G deployment"',
+      '"V2G fleet"', '"school bus V2G"', '"electric school bus" grid',
+      '"V2G revenue"', '"V2G investment"', '"grid services" EV',
+      '"frequency regulation" EV', '"demand response" EV',
+      '"virtual power plant" EV', 'VPP "electric vehicle"',
+      '"peak shaving" EV', '"energy arbitrage" EV',
+      // Standards & tech
+      'CHAdeMO V2G', '"ISO 15118"', '"CCS bidirectional"', '"SAE J3072"',
+      'MID meter V2G', '"DC bidirectional"', '"AC bidirectional"',
+      // Players / OEMs
+      'Nuvve', '"Fermata Energy"', '"Wallbox" V2G', 'dcbel',
+      '"The Mobility House"', 'Nissan V2G', 'Ford "Intelligent Backup Power"',
+      'Hyundai V2L', 'Kia V2L', 'GM "PowerShift"', 'Volkswagen bidirectional',
+      'BMW bidirectional', 'Renault V2G', 'Polestar bidirectional',
+      'Tesla bidirectional', 'BYD V2G', 'Rivian bidirectional',
+      // Utilities & programs
+      '"PG&E" V2G', '"Con Edison" V2G', 'Octopus V2G', '"E.ON" V2G',
+      '"Enel" V2G', 'TEPCO V2G', 'EDF V2G',
+      // Regulation & markets
+      '"FERC 2222" EV', 'Ofgem V2G', '"bidirectional charging" policy',
+      '"V2G tariff"', '"vehicle-to-grid" regulation',
     ];
     let fetched = 0, upserted = 0, rateLimited = 0;
     try {
