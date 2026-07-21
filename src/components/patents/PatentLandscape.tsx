@@ -1,7 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
 import { FileText, TrendingUp, Calendar, Building2, Sparkles, Award, ScrollText } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { supabase } from '@/integrations/supabase/client';
+import { patentsSummary } from '@/data/patentsSummary';
 import {
   ResponsiveContainer,
   AreaChart,
@@ -15,162 +14,6 @@ import {
 } from 'recharts';
 import { GrowingTopicPopup } from './GrowingTopicPopup';
 
-type Pat = {
-  id: string;
-  title: string | null;
-  abstract: string | null;
-  year: number | null;
-  citations: number | null;
-  orgs: string[] | null;
-  countries: string[] | null;
-  url: string | null;
-  doc_type: string | null;
-  lens_id: string | null;
-};
-
-async function fetchAllPatents(): Promise<Pat[]> {
-  const pageSize = 1000;
-  const { count, error: countError } = await supabase
-    .from('documents')
-    .select('id', { count: 'exact', head: true })
-    .in('doc_type', ['patent_application', 'patent_grant']);
-  if (countError) throw countError;
-  const total = count ?? 0;
-
-  const offsets: number[] = [];
-  for (let from = 0; from < total; from += pageSize) offsets.push(from);
-
-  const results = await Promise.all(
-    offsets.map(async (from) => {
-      const { data, error } = await supabase
-        .from('documents')
-        .select('id,title,abstract,year,citations,orgs,countries,url,doc_type,lens_id')
-        .in('doc_type', ['patent_application', 'patent_grant'])
-        .range(from, from + pageSize - 1);
-      if (error) throw error;
-      return (data ?? []) as Pat[];
-    }),
-  );
-  return results.flat();
-}
-
-// Bidirectional-charging patent taxonomy (title + abstract regex).
-const TOPIC_PATTERNS: { topic: string; pattern: RegExp }[] = [
-  { topic: 'V2G Bidirectional Power Conversion', pattern: /(?=.*\b(vehicle[- ]to[- ]grid|v2g|bidirectional)\b)(?=.*\b(inverter|converter|dc[- ]dc|dc[- ]ac|power electronic)\b)/is },
-  { topic: 'V2G Control & Dispatch', pattern: /(?=.*\b(v2g|vehicle[- ]to[- ]grid|bidirectional)\b)(?=.*\b(control|dispatch|scheduling|management|command)\b)/is },
-  { topic: 'V2H / Vehicle-to-Home', pattern: /\b(vehicle[- ]to[- ]home|\bv2h\b|home backup|residential.{0,30}(discharge|bidirectional))\b/i },
-  { topic: 'V2B / Vehicle-to-Building', pattern: /\b(vehicle[- ]to[- ]building|\bv2b\b|building.{0,30}(discharge|bidirectional))\b/i },
-  { topic: 'On-Board Bidirectional Charger', pattern: /\b(on[- ]board charger|obc|onboard.{0,20}bidirectional|integrated charger)\b/i },
-  { topic: 'Off-Board / DC Bidirectional Charger', pattern: /\b(off[- ]board|dc charger|dc fast|external charger).{0,40}(bidirectional|v2g|discharge)/i },
-  { topic: 'Wireless Bidirectional Charging', pattern: /\b(wireless|inductive|resonant).{0,30}(bidirectional|v2g|two[- ]way)/i },
-  { topic: 'Battery Management (BMS)', pattern: /\b(battery management|\bbms\b|state of charge|state of health|\bsoc\b|\bsoh\b)\b/i },
-  { topic: 'Battery Degradation & Ageing', pattern: /\b(degradation|aging|cycle life|calendar life|capacity fade)\b/i },
-  { topic: 'Grid Services & Ancillary', pattern: /\b(frequency regulation|ancillary service|grid service|peak shaving|load balancing|reactive power)\b/i },
-  { topic: 'Smart Charging & Scheduling', pattern: /\b(smart charging|charging schedul|charging optimi[sz]|managed charging)\b/i },
-  { topic: 'Renewables Integration (PV/Wind)', pattern: /\b(photovoltaic|solar|\bpv\b|wind).{0,40}(charging|vehicle|grid)/i },
-  { topic: 'Standards (ISO 15118, CCS, CHAdeMO)', pattern: /\b(iso[ -]?15118|\bccs\b|chademo|ocpp|iec 61851)\b/i },
-  { topic: 'Cybersecurity of Charging', pattern: /\b(cybersecurity|cyber[- ]?security|authentication.{0,20}charg|secure.{0,20}charg)\b/i },
-  { topic: 'Communication & Protocols', pattern: /\b(protocol|communication|handshake|plug[- ]and[- ]charge)\b/i },
-  { topic: 'Charging Infrastructure & EVSE', pattern: /\b(charging (station|infrastructure|point|pile)|\bevse\b|charging pole|charging pillar)\b/i },
-  { topic: 'Cell Balancing & Pack', pattern: /\b(cell balancing|pack balancing|equalization circuit)\b/i },
-  { topic: 'Thermal Management', pattern: /\b(thermal management|cooling system|liquid cool|heat dissipation)\b/i },
-  { topic: 'Isolation & Safety Circuits', pattern: /\b(galvanic isolation|isolation transformer|protection circuit|ground fault|leakage current)\b/i },
-  { topic: 'Fleet & Microgrid Integration', pattern: /\b(fleet|microgrid|virtual power plant|\bvpp\b|aggregator)\b/i },
-];
-
-function classify(p: Pat): string[] {
-  const hay = `${p.title ?? ''} ${p.abstract ?? ''}`;
-  if (!hay.trim()) return [];
-  const hits: string[] = [];
-  for (const { topic, pattern } of TOPIC_PATTERNS) if (pattern.test(hay)) hits.push(topic);
-  return hits;
-}
-
-function useSummary() {
-  return useQuery({
-    queryKey: ['patents-summary'],
-    queryFn: async () => {
-      const pats = await fetchAllPatents();
-
-      const yearCounts = new Map<number, number>();
-      const orgCounts = new Map<string, number>();
-      const countryCounts = new Map<string, number>();
-      let grants = 0;
-      let apps = 0;
-      let minYear = Infinity;
-      let maxYear = -Infinity;
-
-      for (const p of pats) {
-        if (p.doc_type === 'patent_grant') grants++;
-        else if (p.doc_type === 'patent_application') apps++;
-        if (p.year) {
-          yearCounts.set(p.year, (yearCounts.get(p.year) ?? 0) + 1);
-          if (p.year < minYear) minYear = p.year;
-          if (p.year > maxYear) maxYear = p.year;
-        }
-        (p.orgs ?? []).forEach((o) => { if (o) orgCounts.set(o, (orgCounts.get(o) ?? 0) + 1); });
-        (p.countries ?? []).forEach((c) => { if (c) countryCounts.set(c, (countryCounts.get(c) ?? 0) + 1); });
-      }
-
-      let peakYear = 0, peakCount = 0;
-      for (const [y, c] of yearCounts) if (c > peakCount) { peakCount = c; peakYear = y; }
-
-      const perYear = Array.from(yearCounts.entries())
-        .filter(([y]) => y >= 1990 && y <= new Date().getFullYear())
-        .sort((a, b) => a[0] - b[0])
-        .map(([year, count]) => ({ year, count }));
-
-      const topAssignees = Array.from(orgCounts.entries())
-        .sort((a, b) => b[1] - a[1]).slice(0, 10)
-        .map(([name, count]) => ({ name, count }));
-
-      const topCountries = Array.from(countryCounts.entries())
-        .sort((a, b) => b[1] - a[1]).slice(0, 10)
-        .map(([name, count]) => ({ name, count }));
-
-      const mostCited = [...pats]
-        .filter((p) => (p.citations ?? 0) > 0)
-        .sort((a, b) => (b.citations ?? 0) - (a.citations ?? 0))
-        .slice(0, 10);
-
-      // Topic growth 2020 -> 2025
-      const topicCounts = new Map<string, { y2020: number; y2025: number }>();
-      for (const p of pats) {
-        if (p.year !== 2020 && p.year !== 2025) continue;
-        for (const t of classify(p)) {
-          const rec = topicCounts.get(t) ?? { y2020: 0, y2025: 0 };
-          if (p.year === 2020) rec.y2020 += 1; else rec.y2025 += 1;
-          topicCounts.set(t, rec);
-        }
-      }
-      const growingTopics = Array.from(topicCounts.entries())
-        .map(([topic, r]) => {
-          const growthAbs = r.y2025 - r.y2020;
-          const growthPct = r.y2020 > 0 ? ((r.y2025 - r.y2020) / r.y2020) * 100 : r.y2025 > 0 ? 100 : 0;
-          return { topic, y2020: r.y2020, y2025: r.y2025, growthAbs, growthPct, total: r.y2020 + r.y2025 };
-        })
-        .filter((t) => t.growthAbs > 0 && t.y2025 >= 2)
-        .sort((a, b) => b.growthAbs - a.growthAbs)
-        .slice(0, 10);
-
-      return {
-        total: pats.length,
-        grants, apps,
-        minYear: isFinite(minYear) ? minYear : null,
-        maxYear: isFinite(maxYear) ? maxYear : null,
-        peakYear,
-        countries: countryCounts.size,
-        assignees: orgCounts.size,
-        perYear,
-        topAssignees,
-        topCountries,
-        mostCited,
-        growingTopics,
-      };
-    },
-  });
-}
-
 const StatCard = ({ icon: Icon, value, label }: { icon: any; value: string | number; label: string }) => (
   <div className="p-4 rounded-xl bg-card border flex flex-col gap-2">
     <Icon className="w-5 h-5 text-primary" />
@@ -180,7 +23,9 @@ const StatCard = ({ icon: Icon, value, label }: { icon: any; value: string | num
 );
 
 export function PatentLandscape() {
-  const { data, isLoading } = useSummary();
+  const data = patentsSummary;
+  const isLoading = false;
+
 
   return (
     <>
