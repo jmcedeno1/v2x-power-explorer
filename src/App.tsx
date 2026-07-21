@@ -15,6 +15,7 @@ import ForesightPage from "./pages/ForesightPage";
 import OpportunitiesPage from "./pages/OpportunitiesPage";
 import DataSourcesPage from "./pages/DataSourcesPage";
 import CorpusPage from "./pages/CorpusPage";
+import PublicationsPage from "./pages/PublicationsPage";
 import NotesPage from "./pages/NotesPage";
 import RecommendationsPage from "./pages/RecommendationsPage";
 import NotFound from "./pages/NotFound";
