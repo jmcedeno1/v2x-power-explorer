@@ -316,9 +316,21 @@ export function GrowingTopicPopup({ topic, y2020, y2025, growthAbs, growthPct, t
                 <Layers className="w-4 h-4 text-primary" /> Scope
               </h5>
               <div className="flex flex-wrap gap-1.5">
-                {info.scope.map((s) => (
-                  <Badge key={s} variant="secondary" className="text-xs">{s}</Badge>
-                ))}
+                {info.scope.map((s) => {
+                  const desc = SCOPE_DESCRIPTIONS[s];
+                  const badge = (
+                    <Badge variant="secondary" className={desc ? 'text-xs cursor-help' : 'text-xs'}>{s}</Badge>
+                  );
+                  return desc ? (
+                    <HoverCard key={s} openDelay={100} closeDelay={80}>
+                      <HoverCardTrigger asChild>{badge}</HoverCardTrigger>
+                      <HoverCardContent side="top" className="w-64 text-xs leading-relaxed">
+                        <div className="font-medium text-foreground mb-1">{s}</div>
+                        <div className="text-muted-foreground">{desc}</div>
+                      </HoverCardContent>
+                    </HoverCard>
+                  ) : <span key={s}>{badge}</span>;
+                })}
               </div>
             </div>
 
