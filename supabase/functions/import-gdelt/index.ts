@@ -22,22 +22,25 @@ Deno.serve(async (req) => {
     url.searchParams.set("maxrecords", String(maxrecords));
     url.searchParams.set("sort", "DateDesc");
 
-    // Retry with exponential backoff on 429 (GDELT rate limit: 1 req / 5s)
+    // Retry with backoff. GDELT often returns HTTP 200 with a plain-text
+    // rate-limit body (not 429), so we must detect that too.
     let res!: Response;
     let text = "";
-    const delays = [0, 6000, 12000, 20000];
+    let rateLimited = false;
+    const delays = [0, 6000, 12000, 20000, 30000];
     for (let attempt = 0; attempt < delays.length; attempt++) {
       if (delays[attempt] > 0) await new Promise((r) => setTimeout(r, delays[attempt]));
       res = await fetch(url.toString(), { headers: { "User-Agent": "Mozilla/5.0 (compatible; BidirectionalResearchBot/1.0)" } });
       text = await res.text();
-      if (res.status !== 429) break;
+      rateLimited = res.status === 429 || /Please limit requests to one every/i.test(text);
+      if (!rateLimited && res.ok) break;
     }
-    if (!res.ok) {
-      await logQA({ level: "error", category: "api_error", section: "gdelt", message: `GDELT ${res.status}`, details: { body: text.slice(0, 500) } });
-      const friendly = res.status === 429
+    if (!res.ok || rateLimited) {
+      await logQA({ level: "error", category: "api_error", section: "gdelt", message: `GDELT ${res.status}${rateLimited ? " rate-limited" : ""}`, details: { body: text.slice(0, 500) } });
+      const friendly = rateLimited
         ? "GDELT is rate-limiting our IP (max 1 request per 5 seconds). Please wait a minute and try again."
         : "GDELT request failed";
-      return new Response(JSON.stringify({ error: friendly, status: res.status, details: text.slice(0, 500) }), { status: res.status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ error: friendly, status: rateLimited ? 429 : res.status, details: text.slice(0, 500) }), { status: rateLimited ? 429 : res.status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
     let json: any = {};
     try { json = JSON.parse(text); } catch { json = { articles: [] }; }
