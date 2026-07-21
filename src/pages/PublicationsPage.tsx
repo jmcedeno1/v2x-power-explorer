@@ -152,26 +152,15 @@ function useSummary() {
         .sort((a, b) => (b.citations ?? 0) - (a.citations ?? 0))
         .slice(0, 10);
 
-      // Topic growth 2020 -> 2025
-      const topicCounts = new Map<string, { y2020: number; y2025: number; total: number }>();
+      // Topic growth 2020 -> 2025 (only classify pubs from those years — regex is expensive)
+      const topicCounts = new Map<string, { y2020: number; y2025: number }>();
       for (const p of pubs) {
-        if (!p.year) continue;
-        if (p.year !== 2020 && p.year !== 2025) {
-          // still count for total to gauge topic size
-          const topics = classifyPublication(p);
-          for (const t of topics) {
-            const rec = topicCounts.get(t) ?? { y2020: 0, y2025: 0, total: 0 };
-            rec.total += 1;
-            topicCounts.set(t, rec);
-          }
-          continue;
-        }
+        if (p.year !== 2020 && p.year !== 2025) continue;
         const topics = classifyPublication(p);
         for (const t of topics) {
-          const rec = topicCounts.get(t) ?? { y2020: 0, y2025: 0, total: 0 };
+          const rec = topicCounts.get(t) ?? { y2020: 0, y2025: 0 };
           if (p.year === 2020) rec.y2020 += 1;
-          if (p.year === 2025) rec.y2025 += 1;
-          rec.total += 1;
+          else rec.y2025 += 1;
           topicCounts.set(t, rec);
         }
       }
