@@ -187,6 +187,7 @@ function useSummary() {
 
       return {
         total: pubs.length,
+        fetchPages,
         minYear: isFinite(minYear) ? minYear : null,
         maxYear: isFinite(maxYear) ? maxYear : null,
         peakYear,
