@@ -98,8 +98,8 @@ Deno.serve(async (req) => {
       });
     }
     const result = await upsertDocuments(docs);
-    await logQA({ level: "info", category: "ingest", section: "gdelt", message: `Ingested ${docs.length} GDELT articles`, details: { query, timespan } });
-    return new Response(JSON.stringify({ source: "gdelt", fetched: articles.length, upserted: result.inserted, query, timespan }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    await logQA({ level: "info", category: "ingest", section: "gdelt", message: `Ingested ${docs.length} GDELT articles (filtered ${filtered} off-topic)`, details: { query, timespan } });
+    return new Response(JSON.stringify({ source: "gdelt", fetched: articles.length, kept: docs.length, filtered, upserted: result.inserted, query, timespan }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
     await logQA({ level: "error", category: "api_error", section: "gdelt", message: msg });
