@@ -1,0 +1,1 @@
+DELETE FROM public.documents WHERE source = 'gdelt' AND title !~* '\b(v2g|v2h|v2b|v2l|v2x|vehicle[- ]to[- ](grid|home|building|load|everything|x)|bidirectional (charg|ev|inverter|power)|two[- ]way charg|reverse charg)\b';
