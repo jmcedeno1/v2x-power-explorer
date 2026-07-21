@@ -213,7 +213,8 @@ const StatCard = ({ icon: Icon, value, label }: { icon: any; value: string | num
 );
 
 export default function PublicationsPage() {
-  const { data, isLoading } = useSummary();
+  const { data, isLoading, error } = useSummary();
+  const err = error as { message?: string; code?: string; details?: string; hint?: string } | null;
 
   return (
     <MainLayout>
