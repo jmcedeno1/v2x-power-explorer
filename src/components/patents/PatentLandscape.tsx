@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { FileText, TrendingUp, Calendar, Globe, Building2, Quote, ExternalLink, Sparkles, Award, ScrollText } from 'lucide-react';
+import { FileText, TrendingUp, Calendar, Building2, Sparkles, Award, ScrollText } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
 import {
@@ -315,54 +315,6 @@ export function PatentLandscape() {
         </Card>
       </section>
 
-      <section className="mb-10">
-        <div className="flex items-center gap-2 mb-4">
-          <Quote className="w-5 h-5 text-primary" />
-          <h3 className="text-lg font-semibold">Most-cited patents in the corpus</h3>
-        </div>
-        <Card>
-          <CardContent className="p-0">
-            {isLoading ? (
-              <div className="p-6 text-sm text-muted-foreground">Loading…</div>
-            ) : !data?.mostCited.length ? (
-              <div className="p-6 text-sm text-muted-foreground">No patents ingested yet.</div>
-            ) : (
-              <ul className="divide-y divide-border">
-                {data.mostCited.map((p, i) => {
-                  const url = p.url || (p.lens_id ? `https://www.lens.org/lens/patent/${p.lens_id}` : null);
-                  return (
-                    <li key={p.id} className="p-4 flex items-start gap-4 hover:bg-muted/30">
-                      <div className="text-2xl font-bold text-muted-foreground w-8 shrink-0 tabular-nums">{i + 1}</div>
-                      <div className="flex-1 min-w-0">
-                        <div className="font-medium text-sm text-foreground line-clamp-2">{p.title || 'Untitled'}</div>
-                        <div className="text-xs text-muted-foreground mt-1 flex flex-wrap gap-x-3 gap-y-1">
-                          {p.year && <span>{p.year}</span>}
-                          <span className="capitalize">{p.doc_type?.replace('patent_', '').replace('_', ' ')}</span>
-                          {(p.orgs ?? []).slice(0, 2).length > 0 && (
-                            <span className="truncate">{(p.orgs ?? []).slice(0, 2).join(', ')}</span>
-                          )}
-                          {(p.countries ?? []).length > 0 && <span>{(p.countries ?? []).join(', ')}</span>}
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3 shrink-0">
-                        <div className="text-right">
-                          <div className="text-lg font-bold text-primary tabular-nums">{p.citations ?? 0}</div>
-                          <div className="text-[10px] uppercase tracking-wider text-muted-foreground">citations</div>
-                        </div>
-                        {url && (
-                          <a href={url} target="_blank" rel="noreferrer" className="text-primary hover:text-primary/70" aria-label="Open patent">
-                            <ExternalLink className="w-4 h-4" />
-                          </a>
-                        )}
-                      </div>
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
-          </CardContent>
-        </Card>
-      </section>
     </>
   );
 }
