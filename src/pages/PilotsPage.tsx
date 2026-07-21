@@ -28,7 +28,7 @@ function mapRow(r: any) {
     location: [r.location, r.country].filter(Boolean).join(', '),
     country: r.country,
     status: r.status || 'active',
-    powerLevel: r.power_kw ? `${Number(r.power_kw).toLocaleString()} kW` : '—',
+    powerLevel: r.power_kw ? `${Number(r.power_kw).toLocaleString()} kW` : '-',
     powerKw: r.power_kw ?? null,
     vehicleCount: r.fleet_size ?? 0,
     gridServices: r.v2x_type || [],

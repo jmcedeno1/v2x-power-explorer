@@ -168,7 +168,7 @@ export const pilotDetailsMap: Record<string, PilotDetails> = {
     bottlenecks: ['Double taxation', 'Battery warranty'],
     maturity: 'pilot',
     status: 'completed',
-    description: 'A pioneering school bus V2G pilot funded by the California Energy Commission, deploying 8 Type C electric school buses in partnership with Blue Bird and Nuvve. This demonstration proved that school buses—with their predictable schedules and long idle periods—are ideal candidates for grid services, earning revenue during 10am-2pm windows and summer breaks while providing emergency backup power to schools.',
+    description: 'A pioneering school bus V2G pilot funded by the California Energy Commission, deploying 8 Type C electric school buses in partnership with Blue Bird and Nuvve. This demonstration proved that school buses-with their predictable schedules and long idle periods-are ideal candidates for grid services, earning revenue during 10am-2pm windows and summer breaks while providing emergency backup power to schools.',
     businessModel: {
       type: 'Public Fleet Services',
       description: 'School district fleet monetization. Grid services during idle hours (10am-2pm, summer).'
@@ -222,7 +222,7 @@ export const pilotDetailsMap: Record<string, PilotDetails> = {
     bottlenecks: ['Building code integration', 'User acceptance'],
     maturity: 'depot',
     status: 'active',
-    description: 'A landmark vehicle-to-building (V2B) integration project in Tokyo\'s commercial district, developed by Nissan and Mitsubishi Electric. This pilot connects 15 company fleet EVs to an office complex\'s energy management system, providing daily peak shaving during business hours and critical earthquake emergency backup power—a key priority in Japan\'s disaster-resilient building strategies.',
+    description: 'A landmark vehicle-to-building (V2B) integration project in Tokyo\'s commercial district, developed by Nissan and Mitsubishi Electric. This pilot connects 15 company fleet EVs to an office complex\'s energy management system, providing daily peak shaving during business hours and critical earthquake emergency backup power-a key priority in Japan\'s disaster-resilient building strategies.',
     businessModel: {
       type: 'Building Energy Management',
       description: 'Commercial building V2B. Peak shaving and emergency backup for office complexes.'
@@ -276,7 +276,7 @@ export const pilotDetailsMap: Record<string, PilotDetails> = {
     bottlenecks: ['Grid code compliance', 'Fleet coordination'],
     maturity: 'depot',
     status: 'active',
-    description: 'A solar-integrated logistics hub operated by BMW Group in partnership with E.ON, located at a last-mile delivery center near Munich. This pilot combines 500 kWp rooftop solar, a 200 kWh stationary battery, and 18 electric delivery vehicles to maximize renewable self-consumption while providing grid support services—demonstrating a replicable model for sustainable logistics operations.',
+    description: 'A solar-integrated logistics hub operated by BMW Group in partnership with E.ON, located at a last-mile delivery center near Munich. This pilot combines 500 kWp rooftop solar, a 200 kWh stationary battery, and 18 electric delivery vehicles to maximize renewable self-consumption while providing grid support services-demonstrating a replicable model for sustainable logistics operations.',
     businessModel: {
       type: 'Logistics Hub Optimization',
       description: 'Last-mile delivery fleet. Combining solar self-consumption with grid services.'
@@ -330,7 +330,7 @@ export const pilotDetailsMap: Record<string, PilotDetails> = {
     bottlenecks: ['MCS infrastructure', 'Scale coordination'],
     maturity: 'grid_critical',
     status: 'planned',
-    description: 'Europe\'s most ambitious grid-critical V2G project, planned for Hamburg Port in collaboration with transmission operator 50Hertz. This MW-scale trial will deploy 35 heavy-duty electric vehicles with megawatt charging system (MCS) infrastructure, targeting grid-forming capabilities and black-start support—establishing ports as critical energy infrastructure for Germany\'s renewable energy transition.',
+    description: 'Europe\'s most ambitious grid-critical V2G project, planned for Hamburg Port in collaboration with transmission operator 50Hertz. This MW-scale trial will deploy 35 heavy-duty electric vehicles with megawatt charging system (MCS) infrastructure, targeting grid-forming capabilities and black-start support-establishing ports as critical energy infrastructure for Germany\'s renewable energy transition.',
     businessModel: {
       type: 'Grid-Critical Infrastructure',
       description: 'Megawatt-scale port energy hub. Combining MCS charging with grid-critical services.'
