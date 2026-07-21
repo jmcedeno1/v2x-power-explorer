@@ -226,6 +226,27 @@ export default function PublicationsPage() {
           badge="OpenAlex"
         />
 
+        <div className="mb-4 rounded-lg border bg-card p-3 text-xs font-mono">
+          <div>
+            <span className="text-muted-foreground">Status:</span>{' '}
+            {isLoading ? 'loading…' : err ? <span className="text-destructive">error</span> : 'loaded'}
+          </div>
+          <div>
+            <span className="text-muted-foreground">Rows fetched:</span> {data?.total ?? 0}
+            {data?.fetchPages && data.fetchPages.length > 0 && (
+              <> — pages: [{data.fetchPages.join(', ')}]</>
+            )}
+          </div>
+          {err && (
+            <div className="mt-1 text-destructive whitespace-pre-wrap">
+              {err.code ? `[${err.code}] ` : ''}
+              {err.message ?? String(error)}
+              {err.details ? `\ndetails: ${err.details}` : ''}
+              {err.hint ? `\nhint: ${err.hint}` : ''}
+            </div>
+          )}
+        </div>
+
         <section className="mb-8">
           <div className="flex items-center gap-2 mb-4">
             <BookOpen className="w-5 h-5 text-primary" />
