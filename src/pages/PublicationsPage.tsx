@@ -133,6 +133,39 @@ function useSummary() {
         .sort((a, b) => (b.citations ?? 0) - (a.citations ?? 0))
         .slice(0, 10);
 
+      // Topic growth 2020 -> 2025
+      const topicCounts = new Map<string, { y2020: number; y2025: number; total: number }>();
+      for (const p of pubs) {
+        if (!p.year) continue;
+        if (p.year !== 2020 && p.year !== 2025) {
+          // still count for total to gauge topic size
+          const topics = classifyPublication(p);
+          for (const t of topics) {
+            const rec = topicCounts.get(t) ?? { y2020: 0, y2025: 0, total: 0 };
+            rec.total += 1;
+            topicCounts.set(t, rec);
+          }
+          continue;
+        }
+        const topics = classifyPublication(p);
+        for (const t of topics) {
+          const rec = topicCounts.get(t) ?? { y2020: 0, y2025: 0, total: 0 };
+          if (p.year === 2020) rec.y2020 += 1;
+          if (p.year === 2025) rec.y2025 += 1;
+          rec.total += 1;
+          topicCounts.set(t, rec);
+        }
+      }
+      const growingTopics = Array.from(topicCounts.entries())
+        .map(([topic, r]) => {
+          const growthAbs = r.y2025 - r.y2020;
+          const growthPct = r.y2020 > 0 ? ((r.y2025 - r.y2020) / r.y2020) * 100 : r.y2025 > 0 ? 100 : 0;
+          return { topic, y2020: r.y2020, y2025: r.y2025, growthAbs, growthPct, total: r.total };
+        })
+        .filter((t) => t.growthAbs > 0 && t.y2025 >= 3) // require meaningful volume
+        .sort((a, b) => b.growthAbs - a.growthAbs)
+        .slice(0, 10);
+
       return {
         total: pubs.length,
         minYear: isFinite(minYear) ? minYear : null,
@@ -140,10 +173,12 @@ function useSummary() {
         peakYear,
         countries: countryCounts.size,
         institutions: instCounts.size,
+        themes: growingTopics.length,
         perYear,
         topInstitutions,
         topCountries,
         mostCited,
+        growingTopics,
       };
     },
   });
