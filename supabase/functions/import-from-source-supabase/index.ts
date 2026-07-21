@@ -11,14 +11,18 @@ const PAGE_SIZE = 500;
 
 type Row = Record<string, unknown>;
 
-const COLS = [
-  "uid","source","doc_type","title","abstract","year","date","url","doi",
+const COMMON_COLS = [
+  "uid","source","doc_type","title","abstract","year","date","url",
   "lens_id","orgs","countries","citations","taxonomy_tags","standards_mentions","fetched_at",
 ];
+const TABLE_COLS: Record<string, string[]> = {
+  publications: [...COMMON_COLS, "doi"],
+  patents: COMMON_COLS,
+};
 
-function normalize(row: Row): Row {
+function normalize(row: Row, cols: string[]): Row {
   const out: Row = {};
-  for (const c of COLS) out[c] = row[c] ?? null;
+  for (const c of cols) out[c] = row[c] ?? null;
   out.title = out.title ?? "(untitled)";
   out.orgs = out.orgs ?? [];
   out.countries = out.countries ?? [];
@@ -29,10 +33,11 @@ function normalize(row: Row): Row {
 }
 
 async function importTable(sourceTable: string, target: ReturnType<typeof createClient>) {
+  const cols = TABLE_COLS[sourceTable] ?? COMMON_COLS;
   let offset = 0;
   let total = 0;
   while (true) {
-    const url = `${SOURCE_URL}/rest/v1/${sourceTable}?select=${COLS.join(",")}&order=created_at.asc&limit=${PAGE_SIZE}&offset=${offset}`;
+    const url = `${SOURCE_URL}/rest/v1/${sourceTable}?select=${cols.join(",")}&order=created_at.asc&limit=${PAGE_SIZE}&offset=${offset}`;
     const res = await fetch(url, {
       headers: { apikey: SOURCE_KEY, Authorization: `Bearer ${SOURCE_KEY}` },
     });
@@ -40,7 +45,7 @@ async function importTable(sourceTable: string, target: ReturnType<typeof create
     const rows = (await res.json()) as Row[];
     if (rows.length === 0) break;
 
-    const payload = rows.map(normalize);
+    const payload = rows.map((r) => normalize(r, cols));
     const { error } = await target.from("documents").upsert(payload, { onConflict: "uid" });
     if (error) throw new Error(`${sourceTable} upsert: ${error.message}`);
 

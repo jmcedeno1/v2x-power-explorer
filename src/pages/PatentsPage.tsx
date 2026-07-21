@@ -9,6 +9,7 @@ import { patentAreasData } from '@/data/patentAreasData';
 import { InnovationAreaPopup } from '@/components/patents/InnovationAreaPopup';
 import { PatentEvolutionChart } from '@/components/patents/PatentEvolutionChart';
 import { PatentBreakthroughTimeline } from '@/components/patents/PatentBreakthroughTimeline';
+import { PatentLandscape } from '@/components/patents/PatentLandscape';
 import { cn } from '@/lib/utils';
 
 export default function PatentsPage() {
@@ -33,6 +34,9 @@ export default function PatentsPage() {
           <EmptyModuleState moduleName="Patents" />
         ) : (
           <>
+            {/* Real patent corpus analytics (lens.org) */}
+            <PatentLandscape />
+
             {/* Key evidence - moved above Innovation Area Maturity */}
             <section className="mb-10">
               <h3 className="text-lg font-semibold text-foreground mb-4">IP Landscape Highlights</h3>
