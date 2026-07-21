@@ -22,6 +22,7 @@ import {
   ShieldCheck,
   Clock,
   Info,
+  ExternalLink,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -428,6 +429,8 @@ function FallbackPopup({ pilot, open, onClose }: { pilot: any; open: boolean; on
   if (pilot.startDate)
     metrics.push({ icon: <Clock className="w-5 h-5" />, label: 'Start', value: String(pilot.startDate).slice(0, 10), color: 'text-energy-blue' });
 
+  const references = media?.references || [];
+
   const gaps: string[] = pilot.bottlenecks || [];
 
   return (
@@ -469,7 +472,7 @@ function FallbackPopup({ pilot, open, onClose }: { pilot: any; open: boolean; on
             )}
 
             <Tabs defaultValue="overview" className="w-full">
-              <TabsList className="grid grid-cols-4 w-full">
+              <TabsList className="grid grid-cols-5 w-full">
                 <TabsTrigger value="overview">Overview</TabsTrigger>
                 <TabsTrigger value="gallery">
                   Gallery{images.length > 0 ? ` (${images.length})` : ''}
@@ -478,6 +481,9 @@ function FallbackPopup({ pilot, open, onClose }: { pilot: any; open: boolean; on
                   Gaps{gaps.length > 0 ? ` (${gaps.length})` : ''}
                 </TabsTrigger>
                 <TabsTrigger value="partners">Partners</TabsTrigger>
+                <TabsTrigger value="references">
+                  References{references.length > 0 ? ` (${references.length})` : ''}
+                </TabsTrigger>
               </TabsList>
 
               {/* Overview */}
@@ -581,6 +587,39 @@ function FallbackPopup({ pilot, open, onClose }: { pilot: any; open: boolean; on
                 ) : (
                   <div className="p-6 rounded-lg border border-dashed bg-muted/30 text-sm text-muted-foreground text-center">
                     No partner list recorded for this pilot.
+                  </div>
+                )}
+              </TabsContent>
+
+              {/* References */}
+              <TabsContent value="references" className="mt-4">
+                {references.length > 0 ? (
+                  <ul className="space-y-2">
+                    {references.map((r, i) => (
+                      <li key={i} className="p-3 rounded-lg border bg-card">
+                        <a
+                          href={r.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-start gap-2 group"
+                        >
+                          <ExternalLink className="w-4 h-4 mt-0.5 shrink-0 text-primary" />
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">
+                              {r.title}
+                            </p>
+                            <p className="text-xs text-muted-foreground mt-0.5">
+                              {[r.source, r.date].filter(Boolean).join(' • ')}
+                            </p>
+                            <p className="text-[11px] text-muted-foreground/70 truncate mt-0.5">{r.url}</p>
+                          </div>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <div className="p-6 rounded-lg border border-dashed bg-muted/30 text-sm text-muted-foreground text-center">
+                    No references recorded for this pilot yet.
                   </div>
                 )}
               </TabsContent>

@@ -1,9 +1,18 @@
 // Additional images and detailed gap explanations per pilot (matched by lowercase name)
 
+export interface PilotReference {
+  title: string;
+  url: string;
+  source?: string;
+  date?: string;
+}
+
 export interface PilotMedia {
   images?: { url: string; caption?: string; credit?: string }[];
   gapExplanations?: Record<string, string>;
+  references?: PilotReference[];
 }
+
 
 // Generic explanations reused across pilots when a specific one isn't provided
 export const GENERIC_GAP_EXPLANATIONS: Record<string, string> = {
@@ -38,13 +47,58 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
     images: [
       {
         url: '/__l5e/assets-v1/910e578b-8e35-4efd-a97e-31a646a157c6/bdl-next-bmw-ix3.jpg',
-        caption: 'BMW iX3 at E.ON TestingLab — BDL Next handover, Munich',
+        caption: 'BMW iX3 handover at BMW Welt, Munich — pilot launch May 2026',
         credit: 'E.ON / BMW',
       },
       {
+        url: '/__l5e/assets-v1/1d5ba294-cc6f-4f54-b6c5-e87c089f10a5/bdl-next-household.jpg',
+        caption: 'Household participant: BMW iX3 + wallbox + rooftop PV — bidirectional home setup',
+        credit: 'Illustrative',
+      },
+      {
         url: '/__l5e/assets-v1/417e4559-0791-45a2-a83c-29bbf7493b17/bdl-next-eon-charging.jpg',
-        caption: 'Bidirectional charging setup at a household participant',
+        caption: 'Bidirectional AC charging test bench — E.ON TestingLab',
         credit: 'E.ON via Vision Mobility',
+      },
+    ],
+    references: [
+      {
+        title: 'More flexibility for the energy system — BDL Next launch',
+        url: 'https://www.eon.com/en/about-us/media/press-release/2026/more-flexibility-for-the-energy-system.html',
+        source: 'E.ON press release',
+        date: 'May 2026',
+      },
+      {
+        title: 'E.ON accelerates bidirectional charging',
+        url: 'https://vision-mobility.de/en/news/e-on-accelerates-bidirectional-charging-391770.html',
+        source: 'Vision Mobility',
+      },
+      {
+        title: 'Bidirektional laden — VDE Dialog',
+        url: 'https://dialog.vde.com/en/vde-dialog-editions/2025-03-vde-weltweit/2025-03-bidirektional-laden',
+        source: 'VDE Dialog',
+        date: '2025',
+      },
+      {
+        title: 'E.ON wants to put bidirectional charging on a broad footing',
+        url: 'https://www.bayern-innovativ.de/en/emagazine/detail/eon-wants-to-put-bidirectional-charging-on-a-broad-footing',
+        source: 'Bayern Innovativ',
+      },
+      {
+        title: 'Electric cars as batteries',
+        url: 'https://building-technologies.messefrankfurt.com/frankfurt/en/media-library/specialized-articles/electric-cars-as-batteries.html',
+        source: 'Messe Frankfurt — Building Technologies',
+      },
+      {
+        title: 'Introducing bidirectional charging in the European energy system — LCA',
+        url: 'https://www.ffe.de/en/publications/introducing-bidirectional-charging-in-the-european-energy-system-a-life-cycle-analysis/',
+        source: 'FfE (Forschungsstelle für Energiewirtschaft)',
+      },
+      {
+        title: 'Polestar and Clever test bidirectional charging',
+        url: 'https://www.electrive.com/2026/06/01/polestar-and-clever-test-bidirectional-charging/',
+        source: 'electrive.com',
+        date: 'Jun 2026',
       },
     ],
     gapExplanations: {
@@ -57,6 +111,7 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
       'TSO–DSO–household signalling':
         'Activation signals travel TenneT → Bayernwerk Netz → aggregator → HEMS → wallbox → vehicle in <15 min. The pilot is measuring end-to-end latency and failure modes of this chain.',
     },
+
   },
 };
 
