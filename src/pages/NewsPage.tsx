@@ -93,22 +93,26 @@ export default function NewsPage() {
       'V2G investment', 'bidirectional EV', 'V2G fleet',
     ];
     let fetched = 0, upserted = 0, rateLimited = 0;
-    for (const q of queries) {
-      try {
-        const { data, error } = await supabase.functions.invoke('import-gdelt', {
-          body: { query: q, timespan: '12months', maxrecords: 250 },
-        });
-        if (error) { rateLimited++; continue; }
-        fetched += data?.fetched ?? 0;
-        upserted += data?.upserted ?? 0;
-      } catch { rateLimited++; }
-      // GDELT allows ~1 req per 5s. Pace client-side too.
-      await new Promise((r) => setTimeout(r, 6000));
+    try {
+      for (const q of queries) {
+        try {
+          const { data, error } = await supabase.functions.invoke('import-gdelt', {
+            body: { query: q, timespan: '12months', maxrecords: 250 },
+          });
+          if (error || data?.rateLimited) { rateLimited++; continue; }
+          fetched += data?.fetched ?? 0;
+          upserted += data?.upserted ?? 0;
+        } catch { rateLimited++; }
+        // GDELT allows ~1 req per 5s. Pace client-side too.
+        await new Promise((r) => setTimeout(r, 7000));
+      }
+    } finally {
+      setRefreshing(false);
     }
     if (upserted > 0) toast.success(`Fetched ${fetched} articles, stored ${upserted} new${rateLimited ? ` (${rateLimited} queries rate-limited)` : ''}`);
-    else toast.error(`GDELT rate-limited every query. Try again in a minute.`);
+    else if (rateLimited > 0) toast.warning(`GDELT is temporarily rate-limiting requests. Existing news remains available; try again in a few minutes.`);
+    else toast.info(`No new GDELT articles found for the selected queries.`);
     await refetch();
-    setRefreshing(false);
   };
 
   const stats = useMemo(() => {
