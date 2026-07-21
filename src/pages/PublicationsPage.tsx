@@ -1,9 +1,8 @@
-import { useQuery } from '@tanstack/react-query';
-import { BookOpen, FileText, TrendingUp, Calendar, Globe, Building2, Quote, ExternalLink, Sparkles } from 'lucide-react';
+import { BookOpen, FileText, TrendingUp, Calendar, Globe, Building2, Sparkles } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { ModuleHeader } from '@/components/ui/module-header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { supabase } from '@/integrations/supabase/client';
+import { publicationsSummary } from '@/data/publicationsSummary';
 import {
   ResponsiveContainer,
   AreaChart,
@@ -16,199 +15,6 @@ import {
   CartesianGrid,
 } from 'recharts';
 
-type Pub = {
-  id: string;
-  title: string | null;
-  abstract: string | null;
-  year: number | null;
-  citations: number | null;
-  orgs: string[] | null;
-  countries: string[] | null;
-  url: string | null;
-};
-
-async function fetchAllPublications(): Promise<{ pubs: Pub[]; pages: number[] }> {
-  const pageSize = 1000;
-
-  // Get total count first so we can parallelize the page requests.
-  const { count, error: countError } = await supabase
-    .from('documents')
-    .select('id', { count: 'exact', head: true })
-    .eq('doc_type', 'publication');
-  if (countError) {
-    console.error('[Publications] count error', countError);
-    throw countError;
-  }
-  const total = count ?? 0;
-  console.log('[Publications] total count', total);
-
-  const offsets: number[] = [];
-  for (let from = 0; from < total; from += pageSize) offsets.push(from);
-
-  const results = await Promise.all(
-    offsets.map(async (from) => {
-      const { data, error } = await supabase
-        .from('documents')
-        .select('id,title,abstract,year,citations,orgs,countries,url')
-        .eq('doc_type', 'publication')
-        .range(from, from + pageSize - 1);
-      if (error) {
-        console.error('[Publications] fetch error at offset', from, error);
-        throw error;
-      }
-      const rows = (data ?? []) as Pub[];
-      console.log('[Publications] fetched offset', from, 'rows', rows.length);
-      return rows;
-    }),
-  );
-
-  const pubs = results.flat();
-  const pages = results.map((r) => r.length);
-  console.log('[Publications] total fetched', pubs.length);
-  return { pubs, pages };
-}
-
-// Topic taxonomy for V2X / bidirectional charging literature.
-// Each topic is matched against title + abstract with case-insensitive regex.
-const TOPIC_PATTERNS: { topic: string; pattern: RegExp }[] = [
-  // V2G is too broad on its own — split into specific sub-angles.
-  // Each requires a V2G/vehicle-to-grid mention plus a sub-topic keyword.
-  { topic: 'V2G Economics & Business Models', pattern: /(?=.*\b(vehicle[- ]to[- ]grid|v2g)\b)(?=.*\b(econom|revenue|profit|business model|cost[- ]benefit|feasibility|monetiz|willingness[- ]to[- ]pay)\b)/is },
-  { topic: 'V2G Control & Dispatch Algorithms', pattern: /(?=.*\b(vehicle[- ]to[- ]grid|v2g)\b)(?=.*\b(control (strateg|scheme|algorithm)|dispatch|model predictive|mpc|droop control|hierarchical control)\b)/is },
-  { topic: 'V2G Optimal Scheduling & Bidding', pattern: /(?=.*\b(vehicle[- ]to[- ]grid|v2g)\b)(?=.*\b(schedul|optimi[sz]ation|bidding|stochastic|robust optimization|mixed[- ]integer)\b)/is },
-  { topic: 'V2G with Renewables & Solar', pattern: /(?=.*\b(vehicle[- ]to[- ]grid|v2g)\b)(?=.*\b(photovoltaic|solar|wind|renewable)\b)/is },
-  { topic: 'V2G Environmental & LCA', pattern: /(?=.*\b(vehicle[- ]to[- ]grid|v2g)\b)(?=.*\b(life[- ]cycle|\blca\b|emission|carbon|environmental|sustainab)\b)/is },
-  { topic: 'V2G User Behavior & Adoption', pattern: /(?=.*\b(vehicle[- ]to[- ]grid|v2g)\b)(?=.*\b(user (behavior|acceptance|preference)|adoption|survey|willingness|consumer)\b)/is },
-  { topic: 'V2G Field Trials & Pilots', pattern: /(?=.*\b(vehicle[- ]to[- ]grid|v2g)\b)(?=.*\b(pilot|demonstrat|field (trial|test)|case study|real[- ]world)\b)/is },
-  { topic: 'V2G Policy & Regulation', pattern: /(?=.*\b(vehicle[- ]to[- ]grid|v2g)\b)(?=.*\b(polic|regulat|tariff|incentive|subsid|framework)\b)/is },
-  { topic: 'V2G Battery Degradation', pattern: /(?=.*\b(vehicle[- ]to[- ]grid|v2g)\b)(?=.*\b(degradation|aging|ageing|state[- ]of[- ]health|\bsoh\b|lifetime|capacity fade)\b)/is },
-  { topic: 'V2G Simulation & Modeling', pattern: /(?=.*\b(vehicle[- ]to[- ]grid|v2g)\b)(?=.*\b(simulation|co[- ]simulation|matlab|digital twin|monte carlo|agent[- ]based)\b)/is },
-  { topic: 'Vehicle-to-Home / Building', pattern: /\b(vehicle[- ]to[- ](home|building|house|load|everything)|v2h|v2b|v2l|v2x)\b/i },
-  { topic: 'Bidirectional Chargers & Power Electronics', pattern: /\b(bidirectional (charger|converter|inverter|dc[- ]dc)|dual[- ]active[- ]bridge|dab converter)\b/i },
-  { topic: 'Wide-Bandgap Semiconductors (SiC/GaN)', pattern: /\b(silicon carbide|\bsic\b|gallium nitride|\bgan\b|wide[- ]bandgap)\b/i },
-  { topic: 'Battery Degradation & SOH', pattern: /\b(battery (degradation|aging|ageing|health|lifetime)|state[- ]of[- ]health|\bsoh\b|calendar aging|cycle aging)\b/i },
-  { topic: 'Smart / Optimal Charging Scheduling', pattern: /\b(smart charging|charging (schedul|strateg|optimi[sz]ation|coordination)|optimal charging)\b/i },
-  { topic: 'Renewable Integration & Solar+EV', pattern: /\b(renewable (energy|integration)|photovoltaic|solar (pv|panel|energy)|wind (power|energy))\b/i },
-  { topic: 'Microgrids & Islanded Operation', pattern: /\b(microgrid|islanded|island mode|nanogrid)\b/i },
-  { topic: 'Frequency & Ancillary Services', pattern: /\b(frequency regulation|ancillary service|primary reserve|secondary reserve|grid support|frequency response)\b/i },
-  { topic: 'Peak Shaving & Demand Response', pattern: /\b(peak shaving|peak load|demand response|load shifting|load leveling|valley filling)\b/i },
-  { topic: 'Energy / Aggregator Markets', pattern: /\b(aggregator|energy market|electricity market|wholesale market|balancing market|day[- ]ahead)\b/i },
-  { topic: 'Machine Learning & Forecasting', pattern: /\b(machine learning|deep learning|neural network|reinforcement learning|lstm|forecast(ing)?)\b/i },
-  { topic: 'Energy Management Systems (EMS/HEMS)', pattern: /\b(energy management (system|strateg)|\bems\b|home energy management|\bhems\b|bems)\b/i },
-  { topic: 'Wireless / Inductive Bidirectional Charging', pattern: /\b(wireless (power|charging)|inductive (power|charging)|resonant (coupling|charging))\b/i },
-  { topic: 'Fleet & Commercial EV Charging', pattern: /\b(fleet|bus depot|electric bus|heavy[- ]duty|truck|logistics)\b/i },
-  { topic: 'Second-Life & Repurposed Batteries', pattern: /\b(second[- ]life|repurposed batter|reuse.{0,15}batter)\b/i },
-  { topic: 'EV Charging Infrastructure', pattern: /\b(charging (station|infrastructure|point)|\bevse\b|fast charg|dc fast)\b/i },
-  { topic: 'Cybersecurity of Charging', pattern: /\b(cybersecurity|cyber[- ]?attack|cyber[- ]?security|intrusion detection)\b/i },
-  { topic: 'Standards & Communication (ISO 15118, OCPP)', pattern: /\b(iso[ -]?15118|ocpp|chademo|\bccs\b|combined charging system|iec 61851)\b/i },
-  { topic: 'Grid Impact & Distribution Networks', pattern: /\b(distribution (network|grid|system)|grid impact|voltage (regulation|control)|hosting capacity|transformer aging)\b/i },
-];
-
-function classifyPublication(p: Pub): string[] {
-  const hay = `${p.title ?? ''} ${p.abstract ?? ''}`;
-  if (!hay.trim()) return [];
-  const hits: string[] = [];
-  for (const { topic, pattern } of TOPIC_PATTERNS) {
-    if (pattern.test(hay)) hits.push(topic);
-  }
-  return hits;
-}
-
-function useSummary() {
-  return useQuery({
-    queryKey: ['publications-summary'],
-    queryFn: async () => {
-      const { pubs, pages: fetchPages } = await fetchAllPublications();
-
-      const yearCounts = new Map<number, number>();
-      const instCounts = new Map<string, number>();
-      const countryCounts = new Map<string, number>();
-      let minYear = Infinity;
-      let maxYear = -Infinity;
-      let peakYear = 0;
-      let peakCount = 0;
-
-      for (const p of pubs) {
-        if (p.year) {
-          yearCounts.set(p.year, (yearCounts.get(p.year) ?? 0) + 1);
-          if (p.year < minYear) minYear = p.year;
-          if (p.year > maxYear) maxYear = p.year;
-        }
-        (p.orgs ?? []).forEach((o) => {
-          if (o) instCounts.set(o, (instCounts.get(o) ?? 0) + 1);
-        });
-        (p.countries ?? []).forEach((c) => {
-          if (c) countryCounts.set(c, (countryCounts.get(c) ?? 0) + 1);
-        });
-      }
-
-      for (const [y, c] of yearCounts) {
-        if (c > peakCount) {
-          peakCount = c;
-          peakYear = y;
-        }
-      }
-
-      const perYear = Array.from(yearCounts.entries())
-        .sort((a, b) => a[0] - b[0])
-        .map(([year, count]) => ({ year, count }));
-
-      const topInstitutions = Array.from(instCounts.entries())
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 8)
-        .map(([name, count]) => ({ name, count }));
-
-      const topCountries = Array.from(countryCounts.entries())
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 8)
-        .map(([name, count]) => ({ name, count }));
-
-      const mostCited = [...pubs]
-        .filter((p) => (p.citations ?? 0) > 0)
-        .sort((a, b) => (b.citations ?? 0) - (a.citations ?? 0))
-        .slice(0, 10);
-
-      // Topic growth 2020 -> 2025 (only classify pubs from those years — regex is expensive)
-      const topicCounts = new Map<string, { y2020: number; y2025: number }>();
-      for (const p of pubs) {
-        if (p.year !== 2020 && p.year !== 2025) continue;
-        const topics = classifyPublication(p);
-        for (const t of topics) {
-          const rec = topicCounts.get(t) ?? { y2020: 0, y2025: 0 };
-          if (p.year === 2020) rec.y2020 += 1;
-          else rec.y2025 += 1;
-          topicCounts.set(t, rec);
-        }
-      }
-      const growingTopics = Array.from(topicCounts.entries())
-        .map(([topic, r]) => {
-          const growthAbs = r.y2025 - r.y2020;
-          const growthPct = r.y2020 > 0 ? ((r.y2025 - r.y2020) / r.y2020) * 100 : r.y2025 > 0 ? 100 : 0;
-          return { topic, y2020: r.y2020, y2025: r.y2025, growthAbs, growthPct, total: r.y2020 + r.y2025 };
-        })
-        .filter((t) => t.growthAbs > 0 && t.y2025 >= 3) // require meaningful volume
-        .sort((a, b) => b.growthAbs - a.growthAbs)
-        .slice(0, 10);
-
-      return {
-        total: pubs.length,
-        fetchPages,
-        minYear: isFinite(minYear) ? minYear : null,
-        maxYear: isFinite(maxYear) ? maxYear : null,
-        peakYear,
-        countries: countryCounts.size,
-        institutions: instCounts.size,
-        themes: growingTopics.length,
-        perYear,
-        topInstitutions,
-        topCountries,
-        mostCited,
-        growingTopics,
-      };
-    },
-  });
-}
-
 const StatCard = ({ icon: Icon, value, label }: { icon: any; value: string | number; label: string }) => (
   <div className="p-4 rounded-xl bg-card border flex flex-col gap-2">
     <Icon className="w-5 h-5 text-primary" />
@@ -218,8 +24,8 @@ const StatCard = ({ icon: Icon, value, label }: { icon: any; value: string | num
 );
 
 export default function PublicationsPage() {
-  const { data, isLoading, error } = useSummary();
-  const err = error as { message?: string; code?: string; details?: string; hint?: string } | null;
+  const data = publicationsSummary;
+  const isLoading = false;
 
   return (
     <MainLayout>
@@ -231,26 +37,6 @@ export default function PublicationsPage() {
           badge="OpenAlex"
         />
 
-        <div className="mb-4 rounded-lg border bg-card p-3 text-xs font-mono">
-          <div>
-            <span className="text-muted-foreground">Status:</span>{' '}
-            {isLoading ? 'loading…' : err ? <span className="text-destructive">error</span> : 'loaded'}
-          </div>
-          <div>
-            <span className="text-muted-foreground">Rows fetched:</span> {data?.total ?? 0}
-            {data?.fetchPages && data.fetchPages.length > 0 && (
-              <> — pages: [{data.fetchPages.join(', ')}]</>
-            )}
-          </div>
-          {err && (
-            <div className="mt-1 text-destructive whitespace-pre-wrap">
-              {err.code ? `[${err.code}] ` : ''}
-              {err.message ?? String(error)}
-              {err.details ? `\ndetails: ${err.details}` : ''}
-              {err.hint ? `\nhint: ${err.hint}` : ''}
-            </div>
-          )}
-        </div>
 
         <section className="mb-8">
           <div className="flex items-center gap-2 mb-4">
