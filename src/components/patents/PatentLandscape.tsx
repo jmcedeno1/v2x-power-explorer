@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { FileText, TrendingUp, Calendar, Globe, Building2, Quote, ExternalLink, Sparkles, Award, ScrollText } from 'lucide-react';
+import { FileText, TrendingUp, Calendar, Building2, Sparkles, Award, ScrollText } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
 import {
