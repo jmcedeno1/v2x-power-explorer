@@ -13,6 +13,7 @@ import {
   Bar,
   CartesianGrid,
 } from 'recharts';
+import { GrowingTopicPopup } from './GrowingTopicPopup';
 
 type Pat = {
   id: string;
@@ -281,21 +282,31 @@ export function PatentLandscape() {
                 </div>
                 <ul className="divide-y divide-border border-l border-border">
                   {data.growingTopics.map((t, i) => (
-                    <li key={t.topic} className="p-3 flex items-center gap-3 hover:bg-muted/30">
-                      <div className="text-lg font-bold text-muted-foreground w-6 shrink-0 tabular-nums">{i + 1}</div>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-sm font-medium text-foreground truncate">{t.topic}</div>
-                        <div className="text-[11px] text-muted-foreground mt-0.5">
-                          {t.y2020} in 2020 &rarr; {t.y2025} in 2025 &middot; {t.total.toLocaleString()} total
+                    <GrowingTopicPopup
+                      key={t.topic}
+                      topic={t.topic}
+                      y2020={t.y2020}
+                      y2025={t.y2025}
+                      growthAbs={t.growthAbs}
+                      growthPct={t.growthPct}
+                      total={t.total}
+                    >
+                      <li className="p-3 flex items-center gap-3 hover:bg-muted/30 cursor-pointer transition-colors">
+                        <div className="text-lg font-bold text-muted-foreground w-6 shrink-0 tabular-nums">{i + 1}</div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-sm font-medium text-foreground truncate">{t.topic}</div>
+                          <div className="text-[11px] text-muted-foreground mt-0.5">
+                            {t.y2020} in 2020 &rarr; {t.y2025} in 2025 &middot; {t.total.toLocaleString()} total
+                          </div>
                         </div>
-                      </div>
-                      <div className="text-right shrink-0">
-                        <div className="text-sm font-bold text-primary tabular-nums">+{t.growthAbs}</div>
-                        <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
-                          {t.y2020 > 0 ? `+${Math.round(t.growthPct)}%` : 'new'}
+                        <div className="text-right shrink-0">
+                          <div className="text-sm font-bold text-primary tabular-nums">+{t.growthAbs}</div>
+                          <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                            {t.y2020 > 0 ? `+${Math.round(t.growthPct)}%` : 'new'}
+                          </div>
                         </div>
-                      </div>
-                    </li>
+                      </li>
+                    </GrowingTopicPopup>
                   ))}
                 </ul>
               </div>
