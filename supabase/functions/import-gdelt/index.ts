@@ -22,11 +22,22 @@ Deno.serve(async (req) => {
     url.searchParams.set("maxrecords", String(maxrecords));
     url.searchParams.set("sort", "DateDesc");
 
-    const res = await fetch(url.toString(), { headers: { "User-Agent": "Mozilla/5.0 (compatible; BidirectionalResearchBot/1.0)" } });
-    const text = await res.text();
+    // Retry with exponential backoff on 429 (GDELT rate limit: 1 req / 5s)
+    let res!: Response;
+    let text = "";
+    const delays = [0, 6000, 12000, 20000];
+    for (let attempt = 0; attempt < delays.length; attempt++) {
+      if (delays[attempt] > 0) await new Promise((r) => setTimeout(r, delays[attempt]));
+      res = await fetch(url.toString(), { headers: { "User-Agent": "Mozilla/5.0 (compatible; BidirectionalResearchBot/1.0)" } });
+      text = await res.text();
+      if (res.status !== 429) break;
+    }
     if (!res.ok) {
       await logQA({ level: "error", category: "api_error", section: "gdelt", message: `GDELT ${res.status}`, details: { body: text.slice(0, 500) } });
-      return new Response(JSON.stringify({ error: "GDELT request failed", status: res.status, details: text.slice(0, 500) }), { status: res.status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      const friendly = res.status === 429
+        ? "GDELT is rate-limiting our IP (max 1 request per 5 seconds). Please wait a minute and try again."
+        : "GDELT request failed";
+      return new Response(JSON.stringify({ error: friendly, status: res.status, details: text.slice(0, 500) }), { status: res.status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
     let json: any = {};
     try { json = JSON.parse(text); } catch { json = { articles: [] }; }
