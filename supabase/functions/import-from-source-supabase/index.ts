@@ -11,10 +11,14 @@ const PAGE_SIZE = 500;
 
 type Row = Record<string, unknown>;
 
-const COLS = [
-  "uid","source","doc_type","title","abstract","year","date","url","doi",
+const COMMON_COLS = [
+  "uid","source","doc_type","title","abstract","year","date","url",
   "lens_id","orgs","countries","citations","taxonomy_tags","standards_mentions","fetched_at",
 ];
+const TABLE_COLS: Record<string, string[]> = {
+  publications: [...COMMON_COLS, "doi"],
+  patents: COMMON_COLS,
+};
 
 function normalize(row: Row): Row {
   const out: Row = {};
