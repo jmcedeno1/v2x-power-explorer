@@ -28,28 +28,44 @@ type Pub = {
 };
 
 async function fetchAllPublications(): Promise<{ pubs: Pub[]; pages: number[] }> {
-  const all: Pub[] = [];
-  const pages: number[] = [];
   const pageSize = 1000;
-  for (let from = 0; from < 20000; from += pageSize) {
-    const { data, error } = await supabase
-      .from('documents')
-      .select('id,title,abstract,year,citations,orgs,countries,url')
-      .eq('doc_type', 'publication')
-      .range(from, from + pageSize - 1);
-    if (error) {
-      console.error('[Publications] fetch error at offset', from, error);
-      throw error;
-    }
-    const n = data?.length ?? 0;
-    pages.push(n);
-    console.log('[Publications] fetched page offset', from, 'rows', n);
-    if (!data || n === 0) break;
-    all.push(...(data as Pub[]));
-    if (n < pageSize) break;
+
+  // Get total count first so we can parallelize the page requests.
+  const { count, error: countError } = await supabase
+    .from('documents')
+    .select('id', { count: 'exact', head: true })
+    .eq('doc_type', 'publication');
+  if (countError) {
+    console.error('[Publications] count error', countError);
+    throw countError;
   }
-  console.log('[Publications] total fetched', all.length, 'pages', pages);
-  return { pubs: all, pages };
+  const total = count ?? 0;
+  console.log('[Publications] total count', total);
+
+  const offsets: number[] = [];
+  for (let from = 0; from < total; from += pageSize) offsets.push(from);
+
+  const results = await Promise.all(
+    offsets.map(async (from) => {
+      const { data, error } = await supabase
+        .from('documents')
+        .select('id,title,abstract,year,citations,orgs,countries,url')
+        .eq('doc_type', 'publication')
+        .range(from, from + pageSize - 1);
+      if (error) {
+        console.error('[Publications] fetch error at offset', from, error);
+        throw error;
+      }
+      const rows = (data ?? []) as Pub[];
+      console.log('[Publications] fetched offset', from, 'rows', rows.length);
+      return rows;
+    }),
+  );
+
+  const pubs = results.flat();
+  const pages = results.map((r) => r.length);
+  console.log('[Publications] total fetched', pubs.length);
+  return { pubs, pages };
 }
 
 // Topic taxonomy for V2X / bidirectional charging literature.
@@ -152,26 +168,15 @@ function useSummary() {
         .sort((a, b) => (b.citations ?? 0) - (a.citations ?? 0))
         .slice(0, 10);
 
-      // Topic growth 2020 -> 2025
-      const topicCounts = new Map<string, { y2020: number; y2025: number; total: number }>();
+      // Topic growth 2020 -> 2025 (only classify pubs from those years — regex is expensive)
+      const topicCounts = new Map<string, { y2020: number; y2025: number }>();
       for (const p of pubs) {
-        if (!p.year) continue;
-        if (p.year !== 2020 && p.year !== 2025) {
-          // still count for total to gauge topic size
-          const topics = classifyPublication(p);
-          for (const t of topics) {
-            const rec = topicCounts.get(t) ?? { y2020: 0, y2025: 0, total: 0 };
-            rec.total += 1;
-            topicCounts.set(t, rec);
-          }
-          continue;
-        }
+        if (p.year !== 2020 && p.year !== 2025) continue;
         const topics = classifyPublication(p);
         for (const t of topics) {
-          const rec = topicCounts.get(t) ?? { y2020: 0, y2025: 0, total: 0 };
+          const rec = topicCounts.get(t) ?? { y2020: 0, y2025: 0 };
           if (p.year === 2020) rec.y2020 += 1;
-          if (p.year === 2025) rec.y2025 += 1;
-          rec.total += 1;
+          else rec.y2025 += 1;
           topicCounts.set(t, rec);
         }
       }
@@ -179,7 +184,7 @@ function useSummary() {
         .map(([topic, r]) => {
           const growthAbs = r.y2025 - r.y2020;
           const growthPct = r.y2020 > 0 ? ((r.y2025 - r.y2020) / r.y2020) * 100 : r.y2025 > 0 ? 100 : 0;
-          return { topic, y2020: r.y2020, y2025: r.y2025, growthAbs, growthPct, total: r.total };
+          return { topic, y2020: r.y2020, y2025: r.y2025, growthAbs, growthPct, total: r.y2020 + r.y2025 };
         })
         .filter((t) => t.growthAbs > 0 && t.y2025 >= 3) // require meaningful volume
         .sort((a, b) => b.growthAbs - a.growthAbs)
