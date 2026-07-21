@@ -13,6 +13,7 @@ import {
   Bar,
   CartesianGrid,
 } from 'recharts';
+import { GrowingTopicPopup } from './GrowingTopicPopup';
 
 type Pat = {
   id: string;
