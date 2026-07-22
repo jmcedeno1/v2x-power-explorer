@@ -328,9 +328,33 @@ export default function NewsPage() {
               })}
             </div>
 
+            {/* Hacker News discussion */}
+            {stats.hnStories.length > 0 && (
+              <Card className="mb-6">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0">
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <Radio className="w-4 h-4 text-primary" />
+                    Hacker News discussion
+                  </CardTitle>
+                  <Badge variant="secondary">{stats.hnStories.length} stories</Badge>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  {stats.hnStories.slice(0, 10).map((s) => (
+                    <a key={s.id} href={s.url} target="_blank" rel="noreferrer noopener"
+                       className="block hover:bg-muted/40 rounded px-2 py-1.5">
+                      <div className="text-sm font-medium line-clamp-2">{s.title}</div>
+                      <div className="text-[11px] text-muted-foreground">
+                        {s.points} pts · {s.num_comments} comments{s.date ? ` · ${s.date}` : ''}
+                      </div>
+                    </a>
+                  ))}
+                </CardContent>
+              </Card>
+            )}
 
             {/* Latest articles */}
             <ArticlesList news={news} />
+
 
           </>
         )}
