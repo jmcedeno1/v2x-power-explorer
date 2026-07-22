@@ -9,7 +9,7 @@ const BodySchema = z.object({
   maxrecords: z.number().int().min(1).max(250).optional(),
 });
 
-const TAXONOMY_QUERY = '(V2G OR V2H OR V2B OR V2L OR V2X OR "vehicle-to-grid" OR "vehicle to grid" OR "vehicle-to-home" OR "vehicle to home" OR "vehicle-to-building" OR "vehicle to building" OR "vehicle-to-load" OR "vehicle to load" OR "vehicle-to-everything" OR "bidirectional charging" OR "bidirectional charger" OR "two-way charging" OR "reverse charging")';
+const DEFAULT_QUERY = "V2G";
 
 // Strict bidirectional-charging taxonomy. GDELT matches against article text,
 // but ArtList only returns title/metadata, so keep articles from taxonomy-only
@@ -33,7 +33,7 @@ Deno.serve(async (req) => {
     if (!profile) throw new Error("No active profile configured");
 
     const cfg = (profile.queries as any)?.gdelt ?? {};
-    const query: string = body.query ?? TAXONOMY_QUERY;
+    const query: string = body.query ?? DEFAULT_QUERY;
     const timespan: string = body.timespan ?? cfg.timespan ?? "12months";
     const maxrecords: number = body.maxrecords ?? cfg.maxrecords ?? 250;
 
