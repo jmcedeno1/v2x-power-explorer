@@ -4,13 +4,13 @@ import { TrendingUp, DollarSign, PieChart, Layers, Zap, Activity, ArrowUpDown, S
 import { MainLayout } from '@/components/layout/MainLayout';
 import { ModuleHeader } from '@/components/ui/module-header';
 import { EmptyModuleState } from '@/components/ui/empty-module-state';
-import { useModuleContent } from '@/hooks/useGeneratedContent';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { PieChart as RechartsPie, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
+import { marketsContent } from '@/data/moduleContent';
 
 export default function MarketsPage() {
-  const { data: content, isLoading } = useModuleContent('markets');
-  
+  const content: any = marketsContent;
+  const isLoading = false;
   const hasContent = true;
 
   const iconMap: Record<string, any> = { 
