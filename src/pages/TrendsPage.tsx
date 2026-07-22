@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
-  Activity, Search, MessageSquare, Globe2, TrendingUp, ExternalLink,
+  Activity, Search, MessageSquare, TrendingUp, ExternalLink,
   Sparkles, HelpCircle, RefreshCw,
 } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
