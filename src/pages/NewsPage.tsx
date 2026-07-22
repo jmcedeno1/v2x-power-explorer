@@ -185,7 +185,19 @@ export default function NewsPage() {
     const uniqueDomains = new Set(news.map(extractDomain)).size;
     const uniqueCountries = new Set(news.map(extractCountry).filter(Boolean) as string[]).size;
 
-    return { total, topics, last30, uniqueDomains, uniqueCountries };
+    const hnStories = news
+      .filter((n) => (n.raw as any)?.provider === 'hn')
+      .map((n) => ({
+        id: n.id,
+        title: n.title ?? '',
+        url: n.url ?? '#',
+        date: n.date,
+        points: Number((n.raw as any)?.points ?? 0),
+        num_comments: Number((n.raw as any)?.num_comments ?? 0),
+      }))
+      .sort((a, b) => b.points - a.points);
+
+    return { total, topics, last30, uniqueDomains, uniqueCountries, hnStories };
   }, [news]);
 
   return (
