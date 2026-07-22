@@ -4,10 +4,38 @@ import { z } from "npm:zod@3.25.76";
 import { corsHeaders, getActiveProfile, upsertDocuments, logQA, sha1Hex, type Doc } from "../_shared/corpus.ts";
 
 const BodySchema = z.object({
-  query: z.string().trim().min(1).max(200).optional(),
+  query: z.string().trim().min(1).max(800).optional(),
   timespan: z.string().trim().regex(/^\d+\s*(minute|minutes|hour|hours|day|days|week|weeks|month|months)$/i).optional(),
   maxrecords: z.number().int().min(1).max(250).optional(),
 });
+
+const DEFAULT_QUERY = "V2G";
+
+// Strict bidirectional-charging taxonomy. GDELT matches against article text,
+// but ArtList only returns title/metadata, so keep articles from taxonomy-only
+// queries while still rejecting obvious non-energy false positives.
+const RELEVANCE_RE = /\b(v2g|v2h|v2b|v2l|v2x|vehicle[- ]to[- ](grid|home|building|load|everything|x)|bidirectional (charg|ev|inverter|power)|two[- ]way charg|reverse charg)\b/i;
+const ENERGY_CONTEXT_RE = /\b(ev|electric vehicle|charging|charger|battery|grid|utility|energy|power|renewable|vehicle-to|fleet|bidirectional)\b/i;
+const OFF_TOPIC_RE = /\b(business jet|private jet|bombardier|saudi contract|aviation|airline|aircraft|football|soccer|basketball|baseball|celebrity|movie|film festival)\b/i;
+
+async function fetchPageSnippet(url: string): Promise<string> {
+  try {
+    const res = await fetch(url, {
+      headers: { "User-Agent": "Mozilla/5.0 (compatible; BidirectionalResearchBot/1.0)" },
+      signal: AbortSignal.timeout(4000),
+    });
+    if (!res.ok) return "";
+    const html = await res.text();
+    return html
+      .replace(/<script[\s\S]*?<\/script>/gi, " ")
+      .replace(/<style[\s\S]*?<\/style>/gi, " ")
+      .replace(/<[^>]+>/g, " ")
+      .replace(/\s+/g, " ")
+      .slice(0, 12000);
+  } catch {
+    return "";
+  }
+}
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
@@ -25,8 +53,8 @@ Deno.serve(async (req) => {
     if (!profile) throw new Error("No active profile configured");
 
     const cfg = (profile.queries as any)?.gdelt ?? {};
-    const query: string = body.query ?? cfg.query ?? profile.aliases?.[0] ?? "vehicle-to-grid";
-    const timespan: string = body.timespan ?? cfg.timespan ?? "1month";
+    const query: string = body.query ?? DEFAULT_QUERY;
+    const timespan: string = body.timespan ?? cfg.timespan ?? "12months";
     const maxrecords: number = body.maxrecords ?? cfg.maxrecords ?? 250;
 
     const url = new URL("https://api.gdeltproject.org/api/v2/doc/doc");
@@ -42,7 +70,7 @@ Deno.serve(async (req) => {
     let res!: Response;
     let text = "";
     let rateLimited = false;
-    const delays = [0, 6000, 10000, 15000];
+    const delays = [0, 6000];
     for (let attempt = 0; attempt < delays.length; attempt++) {
       if (delays[attempt] > 0) await new Promise((r) => setTimeout(r, delays[attempt]));
       res = await fetch(url.toString(), { headers: { "User-Agent": "Mozilla/5.0 (compatible; BidirectionalResearchBot/1.0)" } });
@@ -69,16 +97,21 @@ Deno.serve(async (req) => {
     try { json = JSON.parse(text); } catch { json = { articles: [] }; }
     const articles: any[] = json.articles ?? [];
 
-    // Strict bidirectional-charging taxonomy filter. Article title MUST match
-    // one of these patterns; GDELT frequently returns loosely-related noise
-    // (e.g. business jets, unrelated "V2" mentions) that we must reject.
-    const RELEVANCE_RE = /\b(v2g|v2h|v2b|v2l|v2x|vehicle[- ]to[- ](grid|home|building|load|everything|x)|bidirectional (charg|ev|inverter|power)|two[- ]way charg|reverse charg)\b/i;
-
     const docs: Doc[] = [];
     let filtered = 0;
     for (const a of articles) {
       if (!a?.url || !a?.title) continue;
-      if (!RELEVANCE_RE.test(a.title)) { filtered++; continue; }
+      const titleText = `${a.title ?? ""} ${a.url ?? ""} ${a.domain ?? ""}`;
+      let relevanceBasis = "title";
+      let pageSnippet = "";
+      let isRelevant = RELEVANCE_RE.test(titleText) && ENERGY_CONTEXT_RE.test(titleText);
+      if (!isRelevant) {
+        pageSnippet = await fetchPageSnippet(a.url);
+        const pageText = `${a.title ?? ""} ${pageSnippet}`;
+        isRelevant = RELEVANCE_RE.test(pageText) && ENERGY_CONTEXT_RE.test(pageText);
+        relevanceBasis = "article_text";
+      }
+      if (OFF_TOPIC_RE.test(titleText) || !isRelevant) { filtered++; continue; }
       const uidHash = await sha1Hex(a.url);
       const sd: string | undefined = a.seendate;
       const iso = sd && sd.length >= 15
@@ -94,7 +127,8 @@ Deno.serve(async (req) => {
         year: iso ? parseInt(iso.slice(0, 4)) : null,
         orgs: a.domain ? [a.domain] : [],
         countries: a.sourcecountry ? [a.sourcecountry] : [],
-        raw: a,
+        abstract: pageSnippet ? pageSnippet.slice(0, 500) : null,
+        raw: { ...a, gdelt_query: query, relevance_basis: relevanceBasis },
       });
     }
     const result = await upsertDocuments(docs);
