@@ -139,45 +139,47 @@ export default function NewsPage() {
 
   const stats = useMemo(() => {
     const total = news.length;
-    const domains = new Map<string, number>();
-    const countries = new Map<string, number>();
     const byMonth = new Map<string, number>();
     const topicCounts = new Map<string, number>();
-    const companyCounts = new Map<string, number>();
-    const pilotByMonth = new Map<string, number>();
-    const investmentByMonth = new Map<string, number>();
-
-    const pilotRe = TOPIC_PATTERNS.find((t) => t.name.startsWith('V2G Pilots'))!.re;
-    const investRe = TOPIC_PATTERNS.find((t) => t.name.startsWith('Investment'))!.re;
+    const topicMonths = new Map<string, Map<string, number>>();
+    const topicSources = new Map<string, Map<string, number>>();
+    const topicArticles = new Map<string, NewsDoc[]>();
 
     for (const n of news) {
-      const dom = extractDomain(n);
-      domains.set(dom, (domains.get(dom) ?? 0) + 1);
-      const c = extractCountry(n);
-      if (c) countries.set(c, (countries.get(c) ?? 0) + 1);
       const month = n.date ? n.date.slice(0, 7) : null;
       if (month) byMonth.set(month, (byMonth.get(month) ?? 0) + 1);
       const title = n.title ?? '';
+      const dom = extractDomain(n);
       for (const t of TOPIC_PATTERNS) {
-        if (t.re.test(title)) topicCounts.set(t.name, (topicCounts.get(t.name) ?? 0) + 1);
-      }
-      for (const co of COMPANIES) {
-        if (new RegExp(`\\b${co}\\b`, 'i').test(title)) {
-          companyCounts.set(co, (companyCounts.get(co) ?? 0) + 1);
+        if (!t.re.test(title)) continue;
+        topicCounts.set(t.name, (topicCounts.get(t.name) ?? 0) + 1);
+        if (month) {
+          const m = topicMonths.get(t.name) ?? new Map<string, number>();
+          m.set(month, (m.get(month) ?? 0) + 1);
+          topicMonths.set(t.name, m);
         }
+        const s = topicSources.get(t.name) ?? new Map<string, number>();
+        s.set(dom, (s.get(dom) ?? 0) + 1);
+        topicSources.set(t.name, s);
+        const arr = topicArticles.get(t.name) ?? [];
+        if (arr.length < 3) arr.push(n);
+        topicArticles.set(t.name, arr);
       }
-      if (month && pilotRe.test(title)) pilotByMonth.set(month, (pilotByMonth.get(month) ?? 0) + 1);
-      if (month && investRe.test(title)) investmentByMonth.set(month, (investmentByMonth.get(month) ?? 0) + 1);
     }
 
-    const sortedMonths = [...new Set([...byMonth.keys(), ...pilotByMonth.keys(), ...investmentByMonth.keys()])].sort();
-    const pilotsTimeline = sortedMonths.map((m) => ({ month: m, count: pilotByMonth.get(m) ?? 0 }));
-    const investmentTimeline = sortedMonths.map((m) => ({ month: m, count: investmentByMonth.get(m) ?? 0 }));
-
-    const topDomains = [...domains.entries()].sort((a, b) => b[1] - a[1]).slice(0, 12).map(([name, count]) => ({ name, count }));
-    const topCountries = [...countries.entries()].sort((a, b) => b[1] - a[1]).slice(0, 12).map(([name, count]) => ({ name, count }));
-    const topics = [...topicCounts.entries()].sort((a, b) => b[1] - a[1]).map(([name, count]) => ({ name, count }));
-    const companies = [...companyCounts.entries()].sort((a, b) => b[1] - a[1]).map(([name, count]) => ({ name, count }));
+    const allMonths = [...byMonth.keys()].sort();
+    const topics = [...topicCounts.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .map(([name, count]) => {
+        const monthMap = topicMonths.get(name) ?? new Map<string, number>();
+        const trend = allMonths.map((m) => ({ month: m, count: monthMap.get(m) ?? 0 }));
+        const sources = [...(topicSources.get(name) ?? new Map<string, number>()).entries()]
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 3)
+          .map(([n, c]) => ({ name: n, count: c as number }));
+        const articles = topicArticles.get(name) ?? [];
+        return { name, count, trend, sources, articles };
+      });
 
     const last30 = news.filter((n) => {
       if (!n.date) return false;
@@ -185,7 +187,10 @@ export default function NewsPage() {
       return Date.now() - dt < 30 * 24 * 3600 * 1000;
     }).length;
 
-    return { total, topDomains, topCountries, topics, companies, pilotsTimeline, investmentTimeline, last30, uniqueDomains: domains.size, uniqueCountries: countries.size };
+    const uniqueDomains = new Set(news.map(extractDomain)).size;
+    const uniqueCountries = new Set(news.map(extractCountry).filter(Boolean) as string[]).size;
+
+    return { total, topics, last30, uniqueDomains, uniqueCountries };
   }, [news]);
 
   return (
