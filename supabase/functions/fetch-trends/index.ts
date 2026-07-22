@@ -33,9 +33,15 @@ async function semrushCall(path: string, params: Record<string, string>): Promis
   const url = `${GATEWAY}${path}?${qs}`;
   const r = await fetch(url, { headers: gatewayHeaders() });
   const text = await r.text();
+  if (text.includes("ERROR 134") || text.includes("TOTAL LIMIT EXCEEDED")) {
+    throw new Error("Semrush API quota exhausted (ERROR 134). Live autocomplete remains available; Semrush metrics require quota reset or a higher Semrush API allowance.");
+  }
   if (!r.ok) throw new Error(`Semrush ${path} ${r.status}: ${text.slice(0, 200)}`);
   let json: any;
   try { json = JSON.parse(text); } catch { throw new Error(`Semrush ${path}: non-JSON response`); }
+  if (json?.error && String(json.error).includes("ERROR 134")) {
+    throw new Error("Semrush API quota exhausted (ERROR 134). Live autocomplete remains available; Semrush metrics require quota reset or a higher Semrush API allowance.");
+  }
   const columnNames: string[] = json?.data?.columnNames ?? [];
   const rows: string[][] = json?.data?.rows ?? [];
   if (json?.error) throw new Error(`Semrush: ${json.error}`);
