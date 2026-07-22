@@ -383,7 +383,60 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
     ],
     partnerLead: 'TenneT (TSO), Nissan (OEM), The Mobility House (aggregator), IBM (blockchain settlement)',
   },
+  'project sciurus': {
+    references: [
+      { title: 'Sciurus - project page', url: 'https://www.cenex.co.uk/projects-case-studies/sciurus/', source: 'Cenex' },
+      { title: 'OVO Energy V2G Project Sciurus', url: 'https://www.v2g-hub.com/projects/ovo-energy-v2g-project-sciurus/', source: 'V2G Hub' },
+      { title: 'Sciurus V2G trial - A. Ireland presentation (PDF)', url: 'https://www.chademo.com/wp2016/wp-content/uploads/2021/07/A._Ireland_V2G.pdf', source: 'CHAdeMO Association', date: '2021' },
+      { title: 'Sciurus - UKRI Gateway to Research', url: 'https://gtr.ukri.org/projects?ref=104248', source: 'UKRI / Innovate UK' },
+      { title: 'Project Sciurus - video overview', url: 'https://www.youtube.com/watch?v=hXaLCf4TcVM', source: 'YouTube' },
+      { title: 'Project Sciurus - trial report', url: 'https://www.scribd.com/document/702149344/PROJECT-SCIURUS', source: 'Scribd (OVO/Cenex report)' },
+    ],
+    gapExplanations: {
+      'Â£3,700 hardware premium':
+        'The Indra V2G unit cost around £3,700 more than a comparable unidirectional home charger at deployment. Without subsidy, payback on customer revenue alone (~£420/year average) exceeded 8 years - a key barrier to unsubsidised residential V2G roll-out.',
+      '£3,700 hardware premium':
+        'The Indra V2G unit cost around £3,700 more than a comparable unidirectional home charger at deployment. Without subsidy, payback on customer revenue alone (~£420/year average) exceeded 8 years - a key barrier to unsubsidised residential V2G roll-out.',
+      'G98/G99 certification bureaucracy':
+        'Every V2G install required Distribution Network Operator (DNO) approval under G98/G99 export rules. In practice this added weeks of paperwork per site and blocked some three-phase / high-import households entirely - a process designed for solar PV, not consumer EV chargers.',
+      'Warranty':
+        'Nissan LEAF batteries were covered for capacity loss but not explicitly for V2G cycling. Cenex battery-health analysis found no accelerated degradation, but the absence of an OEM warranty statement remained a commercial blocker for scaling.',
+      'Standards':
+        'Sciurus ran on CHAdeMO bidirectional DC. The UK and EU market has since shifted toward CCS + ISO 15118-20, so hardware from the trial is not directly reusable for new CCS-only vehicles - a stranded-asset risk flagged in the final report.',
+      'User acceptance':
+        'Customer research showed strong appetite for automated V2G once minimum state-of-charge and departure guarantees were in place. Drop-out was low, but onboarding UX (installer visit + app + tariff switch) took ~4 weeks and needs simplification for mass market.',
+    },
+    businessModel: {
+      type: 'Residential V2G aggregator',
+      description:
+        'Fully residential. OVO/Kaluza aggregated 320+ home chargers to offer flexibility to National Grid ESO (balancing, frequency response) and optimise against wholesale prices. Customers were paid via bill credits: ~£420/year average, up to £725/year for high-availability users.',
+    },
+    standardization: {
+      standard: 'CHAdeMO bidirectional DC + G98/G99',
+      status: 'Full compliance. Delivered evidence base for Ofgem/BEIS smart-tariff and G98/G99 treatment of bidirectional home chargers; input to UK Smart Systems and Flexibility Plan.',
+    },
+    technology: {
+      overview: 'Distributed residential DC V2G under a single aggregator platform',
+      hardware: [
+        { name: 'Indra V2G Charger', details: ['6 kW bidirectional DC', 'CHAdeMO V2G connector', 'G98/G99 certified'] },
+        { name: 'Nissan LEAF / e-NV200', details: ['CHAdeMO bidirectional', '24-62 kWh battery', '320+ vehicles across GB'] },
+      ],
+      software: [
+        { name: 'Kaluza Platform', details: ['Cloud dispatch of every charger', 'Day-ahead + imbalance optimisation', 'Customer app with min-SoC guarantee'] },
+        { name: 'Grid Services Interface', details: ['National Grid ESO balancing', 'Firm Frequency Response (FFR)', 'DNO export management'] },
+      ],
+    },
+    timeline: [
+      { phase: 'Project award', year: '2018', description: 'OZEV / Innovate UK £9.8M grant; consortium formed with OVO, Cenex, Indra, Nissan.' },
+      { phase: 'Charger rollout', year: '2018-2020', description: '320+ Indra V2G units installed in customer homes across GB.' },
+      { phase: 'Operational trial', year: '2019-2021', description: 'Kaluza dispatches fleet for grid services; battery-health monitoring by Cenex.' },
+      { phase: 'Final report', year: '2021', description: 'Published customer savings (~£420/yr avg, up to £725), no accelerated battery degradation, £3,700 hardware premium as key barrier.' },
+      { phase: 'Legacy', year: '2022+', description: 'Findings feed OVO/Kaluza commercial V2G offer and UK smart-tariff / G98-G99 policy evolution.' },
+    ],
+    partnerLead: 'OVO Energy, Kaluza, Cenex, Indra, Nissan, National Grid ESO, Western Power Distribution, OZEV, Innovate UK',
+  },
 };
+
 
 
 export function getPilotMedia(name?: string | null): PilotMedia | null {
