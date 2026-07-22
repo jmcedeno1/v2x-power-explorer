@@ -3,12 +3,12 @@ import { ShieldAlert, AlertTriangle, Lock, Zap, Users, Scale } from 'lucide-reac
 import { MainLayout } from '@/components/layout/MainLayout';
 import { ModuleHeader } from '@/components/ui/module-header';
 import { EmptyModuleState } from '@/components/ui/empty-module-state';
-import { useModuleContent } from '@/hooks/useGeneratedContent';
+import { risksContent } from '@/data/moduleContent';
 import { cn } from '@/lib/utils';
 
 export default function RisksPage() {
-  const { data: content, isLoading } = useModuleContent('risks');
-  
+  const content: any = risksContent;
+  const isLoading = false;
   const hasContent = true;
 
   const iconMap: Record<string, any> = { Zap, Lock, Scale, Users, ShieldAlert, AlertTriangle };

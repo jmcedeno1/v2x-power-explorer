@@ -4,11 +4,11 @@ import { Cpu, Thermometer, Gauge, Battery, Zap } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { ModuleHeader } from '@/components/ui/module-header';
 import { EmptyModuleState } from '@/components/ui/empty-module-state';
-import { useModuleContent } from '@/hooks/useGeneratedContent';
+import { engineeringContent } from '@/data/moduleContent';
 
 export default function EngineeringPage() {
-  const { data: content, isLoading } = useModuleContent('engineering');
-  
+  const content: any = engineeringContent;
+  const isLoading = false;
   const hasContent = true;
 
   const iconMap: Record<string, any> = { Gauge, Thermometer, Battery, Zap, Cpu };

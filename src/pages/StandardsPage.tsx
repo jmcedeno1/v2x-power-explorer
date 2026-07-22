@@ -4,12 +4,12 @@ import { Scale, FileCheck, Shield } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { ModuleHeader } from '@/components/ui/module-header';
 import { EmptyModuleState } from '@/components/ui/empty-module-state';
-import { useModuleContent } from '@/hooks/useGeneratedContent';
+import { standardsContent } from '@/data/moduleContent';
 import { cn } from '@/lib/utils';
 
 export default function StandardsPage() {
-  const { data: content, isLoading } = useModuleContent('standards');
-  
+  const content: any = standardsContent;
+  const isLoading = false;
   const hasContent = true;
 
   return (
