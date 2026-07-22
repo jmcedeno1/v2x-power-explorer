@@ -232,133 +232,95 @@ export default function NewsPage() {
           </Card>
         ) : (
           <>
-            {/* Most frequent topics — full width */}
-            <Card className="mb-6">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-base">
-                  <TrendingUp className="w-4 h-4 text-primary" /> Most frequent topics in coverage
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={Math.max(260, stats.topics.length * 30)}>
-                  <BarChart data={stats.topics} layout="vertical" margin={{ left: 20, right: 40 }}>
-                    <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
-                    <XAxis type="number" fontSize={11} allowDecimals={false} />
-                    <YAxis type="category" dataKey="name" width={230} fontSize={11} />
-                    <Tooltip />
-                    <Bar dataKey="count" fill="hsl(var(--accent))" radius={[0, 4, 4, 0]}>
-                      <LabelList dataKey="count" position="right" fontSize={11} />
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
-                <p className="text-xs text-muted-foreground mt-2">Count of ingested article titles matching each topic pattern. Articles can match multiple topics.</p>
-              </CardContent>
-            </Card>
+            {/* Topic breakdown cards */}
+            <div className="mb-4 flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-primary" />
+              <h2 className="text-base font-semibold">Most frequent topics in coverage</h2>
+              <span className="text-xs text-muted-foreground">
+                — one visual per topic, built from ingested article titles
+              </span>
+            </div>
+            <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4 mb-6">
+              {stats.topics.map((t) => {
+                const share = stats.total ? Math.round((t.count / stats.total) * 100) : 0;
+                const peak = t.trend.reduce((a, b) => (b.count > a.count ? b : a), { month: '', count: 0 });
+                return (
+                  <Card key={t.name} className="flex flex-col">
+                    <CardHeader className="pb-2">
+                      <div className="flex items-start justify-between gap-2">
+                        <CardTitle className="text-sm leading-snug">{t.name}</CardTitle>
+                        <Badge variant="secondary" className="shrink-0">{t.count}</Badge>
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        {share}% of coverage{peak.month ? ` · peak ${peak.month}` : ''}
+                      </div>
+                    </CardHeader>
+                    <CardContent className="pt-0 space-y-3">
+                      <ResponsiveContainer width="100%" height={80}>
+                        <AreaChart data={t.trend} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
+                          <XAxis dataKey="month" hide />
+                          <YAxis hide allowDecimals={false} />
+                          <Tooltip
+                            contentStyle={{ fontSize: 11 }}
+                            formatter={(v: number) => [v, 'articles']}
+                            labelFormatter={(l) => String(l)}
+                          />
+                          <Area
+                            type="monotone"
+                            dataKey="count"
+                            stroke="hsl(var(--primary))"
+                            fill="hsl(var(--primary))"
+                            fillOpacity={0.2}
+                            strokeWidth={1.5}
+                          />
+                        </AreaChart>
+                      </ResponsiveContainer>
 
-            {/* Pilots and Investment mentions over time */}
-            <div className="grid lg:grid-cols-2 gap-6 mb-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base">Articles about new pilots / deployments (per month)</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ResponsiveContainer width="100%" height={260}>
-                    <AreaChart data={stats.pilotsTimeline}>
-                      <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
-                      <XAxis dataKey="month" fontSize={11} />
-                      <YAxis fontSize={11} allowDecimals={false} />
-                      <Tooltip />
-                      <Area type="monotone" dataKey="count" stroke="hsl(var(--primary))" fill="hsl(var(--primary))" fillOpacity={0.25} />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                  <p className="text-xs text-muted-foreground mt-2">Titles containing "pilot", "trial", "deploy", "launch", "rollout" or "demonstrat".</p>
-                </CardContent>
-              </Card>
+                      {t.sources.length > 0 && (
+                        <div>
+                          <div className="text-[11px] uppercase tracking-wide text-muted-foreground mb-1">
+                            Top sources
+                          </div>
+                          <div className="flex flex-wrap gap-1">
+                            {t.sources.map((s) => (
+                              <Badge key={s.name} variant="outline" className="text-[11px] font-normal">
+                                {s.name} <span className="ml-1 text-muted-foreground">{s.count}</span>
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      )}
 
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base">Articles about investment / funding (per month)</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ResponsiveContainer width="100%" height={260}>
-                    <AreaChart data={stats.investmentTimeline}>
-                      <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
-                      <XAxis dataKey="month" fontSize={11} />
-                      <YAxis fontSize={11} allowDecimals={false} />
-                      <Tooltip />
-                      <Area type="monotone" dataKey="count" stroke="hsl(var(--accent))" fill="hsl(var(--accent))" fillOpacity={0.25} />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                  <p className="text-xs text-muted-foreground mt-2">Titles mentioning "invest", "funding", "raise", "round", "series A-E" or a dollar amount.</p>
-                </CardContent>
-              </Card>
+                      {t.articles.length > 0 && (
+                        <div>
+                          <div className="text-[11px] uppercase tracking-wide text-muted-foreground mb-1">
+                            Example headlines
+                          </div>
+                          <ul className="space-y-1">
+                            {t.articles.map((a) => (
+                              <li key={a.id} className="text-xs leading-snug">
+                                <a
+                                  href={a.url ?? '#'}
+                                  target="_blank"
+                                  rel="noreferrer noopener"
+                                  className="text-foreground hover:text-primary line-clamp-2"
+                                >
+                                  {a.title}
+                                </a>
+                                <div className="text-[10px] text-muted-foreground">
+                                  {extractDomain(a)}{a.date ? ` · ${a.date}` : ''}
+                                </div>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
 
-            {/* Companies mentions */}
-            <Card className="mb-6">
-              <CardHeader>
-                <CardTitle className="text-base">V2G companies mentioned in coverage</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {stats.companies.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">No tracked company names detected in current article titles.</p>
-                ) : (
-                  <ResponsiveContainer width="100%" height={Math.max(220, stats.companies.length * 32)}>
-                    <BarChart data={stats.companies} layout="vertical" margin={{ left: 20, right: 40 }}>
-                      <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
-                      <XAxis type="number" fontSize={11} allowDecimals={false} />
-                      <YAxis type="category" dataKey="name" width={170} fontSize={11} />
-                      <Tooltip />
-                      <Bar dataKey="count" fill="hsl(var(--primary))" radius={[0, 4, 4, 0]}>
-                        <LabelList dataKey="count" position="right" fontSize={11} />
-                      </Bar>
-                    </BarChart>
-                  </ResponsiveContainer>
-                )}
-                <p className="text-xs text-muted-foreground mt-2">Article titles matching Nuvve, Wallbox, Fermata, The Mobility House, dcbel, Enphase, ChargePoint, Emporia, Indra.</p>
-              </CardContent>
-            </Card>
-
-            {/* Top domains + Top countries */}
-            <div className="grid lg:grid-cols-2 gap-6 mb-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base">Top media sources</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ResponsiveContainer width="100%" height={Math.max(280, stats.topDomains.length * 30)}>
-                    <BarChart data={stats.topDomains} layout="vertical" margin={{ left: 20, right: 40 }}>
-                      <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
-                      <XAxis type="number" fontSize={11} allowDecimals={false} />
-                      <YAxis type="category" dataKey="name" width={170} fontSize={11} />
-                      <Tooltip />
-                      <Bar dataKey="count" fill="hsl(var(--primary))" radius={[0, 4, 4, 0]}>
-                        <LabelList dataKey="count" position="right" fontSize={11} />
-                      </Bar>
-                    </BarChart>
-                  </ResponsiveContainer>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base">Top countries by coverage</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ResponsiveContainer width="100%" height={Math.max(280, stats.topCountries.length * 30)}>
-                    <BarChart data={stats.topCountries} layout="vertical" margin={{ left: 20, right: 40 }}>
-                      <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
-                      <XAxis type="number" fontSize={11} allowDecimals={false} />
-                      <YAxis type="category" dataKey="name" width={150} fontSize={11} />
-                      <Tooltip />
-                      <Bar dataKey="count" fill="hsl(var(--accent))" radius={[0, 4, 4, 0]}>
-                        <LabelList dataKey="count" position="right" fontSize={11} />
-                      </Bar>
-                    </BarChart>
-                  </ResponsiveContainer>
-                </CardContent>
-              </Card>
-            </div>
 
             {/* Latest articles */}
             <ArticlesList news={news} />
