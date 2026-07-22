@@ -96,34 +96,37 @@ export default function NewsPage() {
 
   const refresh = async () => {
     setRefreshing(true);
-    // Bidirectional charging taxonomy only. Keep queries broad enough for
-    // GDELT full-text matching, while the backend rejects non-energy noise.
+    // Bidirectional charging taxonomy — Google News RSS handles quoted phrases and OR.
     const queries = [
-      '(V2G OR V2H OR V2B OR V2L OR V2X OR "vehicle-to-grid" OR "vehicle to grid" OR "vehicle-to-home" OR "vehicle to home" OR "vehicle-to-building" OR "vehicle to building" OR "vehicle-to-load" OR "vehicle to load" OR "vehicle-to-everything" OR "bidirectional charging" OR "bidirectional charger" OR "two-way charging" OR "reverse charging")',
-      '("bidirectional EV" OR "bidirectional electric vehicle" OR "bidirectional inverter" OR "bidirectional power")',
-      '("vehicle-to-grid" OR V2G) (pilot OR trial OR project OR deployment OR fleet)',
-      '("vehicle-to-home" OR V2H OR "vehicle-to-load" OR V2L OR "vehicle-to-building" OR V2B)',
+      '"vehicle-to-grid" OR V2G',
+      '"vehicle-to-home" OR V2H',
+      '"vehicle-to-building" OR V2B',
+      '"vehicle-to-load" OR V2L',
+      '"vehicle-to-everything" OR V2X',
+      '"bidirectional charging"',
+      '"bidirectional charger" OR "bidirectional EV charger"',
+      '"bidirectional inverter" electric vehicle',
+      '"two-way charging" EV',
+      '"reverse charging" electric vehicle',
     ];
-    let fetched = 0, upserted = 0, rateLimited = 0;
+    let fetched = 0, upserted = 0, failed = 0;
     try {
       for (const q of queries) {
         try {
-          const { data, error } = await supabase.functions.invoke('import-gdelt', {
-            body: { query: q, timespan: '12months', maxrecords: 250 },
+          const { data, error } = await supabase.functions.invoke('import-google-news', {
+            body: { query: q, when: '12m' },
           });
-          if (error || data?.rateLimited) { rateLimited++; continue; }
+          if (error) { failed++; continue; }
           fetched += data?.fetched ?? 0;
           upserted += data?.upserted ?? 0;
-        } catch { rateLimited++; }
-        // GDELT allows ~1 req per 5s. Pace client-side too.
-        await new Promise((r) => setTimeout(r, 7000));
+        } catch { failed++; }
       }
     } finally {
       setRefreshing(false);
     }
-    if (upserted > 0) toast.success(`Fetched ${fetched} articles, stored ${upserted} new${rateLimited ? ` (${rateLimited} queries rate-limited)` : ''}`);
-    else if (rateLimited > 0) toast.warning(`GDELT is temporarily rate-limiting requests. Existing news remains available; try again in a few minutes.`);
-    else toast.info(`No new GDELT articles found for the selected queries.`);
+    if (upserted > 0) toast.success(`Fetched ${fetched} articles, stored ${upserted} new${failed ? ` (${failed} queries failed)` : ''}`);
+    else if (failed > 0) toast.warning(`Some queries failed. Existing news remains available.`);
+    else toast.info(`No new articles found (all already stored).`);
     await refetch();
   };
 
