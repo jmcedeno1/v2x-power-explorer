@@ -96,15 +96,22 @@ export default function NewsPage() {
 
   const refresh = async () => {
     setRefreshing(true);
-    // Bidirectional charging taxonomy — Google News RSS handles quoted phrases and OR.
+    // Bidirectional charging taxonomy — Bing News RSS. Uses individual terms
+    // (Bing's OR/quotes handling is weaker than Google's).
     const queries = [
-      '"vehicle-to-grid" OR V2G',
-      '"vehicle-to-home" OR V2H',
-      '"vehicle-to-building" OR V2B',
-      '"vehicle-to-load" OR V2L',
-      '"vehicle-to-everything" OR V2X',
+      'V2G',
+      'V2H',
+      'V2B',
+      'V2L',
+      'V2X charging',
+      '"vehicle-to-grid"',
+      '"vehicle-to-home"',
+      '"vehicle-to-building"',
+      '"vehicle-to-load"',
+      '"vehicle-to-everything"',
       '"bidirectional charging"',
-      '"bidirectional charger" OR "bidirectional EV charger"',
+      '"bidirectional charger"',
+      '"bidirectional EV charger"',
       '"bidirectional inverter" electric vehicle',
       '"two-way charging" EV',
       '"reverse charging" electric vehicle',
