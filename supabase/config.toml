@@ -8,3 +8,6 @@ verify_jwt = false
 
 [functions.fetch-trends]
 verify_jwt = false
+
+[functions.import-hn]
+verify_jwt = false
