@@ -356,32 +356,8 @@ export default function NewsPage() {
             </div>
 
             {/* Latest articles */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">Latest articles</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {news.slice(0, 50).map((n) => (
-                  <a
-                    key={n.id}
-                    href={n.url ?? '#'}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="flex items-start justify-between gap-4 py-2 border-b border-border last:border-0 hover:bg-muted/40 rounded px-2"
-                  >
-                    <div className="flex-1">
-                      <div className="font-medium text-sm text-foreground line-clamp-2">{n.title}</div>
-                      <div className="text-xs text-muted-foreground mt-1 flex items-center gap-3 flex-wrap">
-                        <span>{extractDomain(n)}</span>
-                        {extractCountry(n) && <span>· {extractCountry(n)}</span>}
-                        {n.date && <span>· {n.date}</span>}
-                      </div>
-                    </div>
-                    <ExternalLink className="w-4 h-4 text-muted-foreground shrink-0 mt-1" />
-                  </a>
-                ))}
-              </CardContent>
-            </Card>
+            <ArticlesList news={news} />
+
           </>
         )}
       </div>
