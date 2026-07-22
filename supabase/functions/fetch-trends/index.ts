@@ -96,19 +96,34 @@ async function autocomplete(keyword: string) {
 }
 
 async function reddit(keyword: string) {
-  const url = `https://www.reddit.com/search.json?q=${encodeURIComponent(keyword)}&sort=new&t=year&limit=100`;
-  const r = await fetch(url, { headers: { "User-Agent": UA } });
-  if (!r.ok) throw new Error(`reddit ${r.status}`);
-  const j = await r.json();
-  const posts = (j?.data?.children ?? []).map((c: any) => ({
-    title: c.data.title,
-    subreddit: c.data.subreddit,
-    score: c.data.score,
-    num_comments: c.data.num_comments,
-    created_utc: c.data.created_utc,
-    permalink: `https://reddit.com${c.data.permalink}`,
-  }));
-  return { keyword, count: posts.length, posts };
+  // Reddit blocks generic browser UAs and default Deno UA on data-center IPs.
+  // Use an app-style UA and fall back to old.reddit.com if the primary host 403s.
+  const headers = {
+    "User-Agent": "web:bidirectional-charging-monitor:1.0 (research aggregator; contact via app owner)",
+    "Accept": "application/json",
+  };
+  const paths = [
+    `https://www.reddit.com/search.json?q=${encodeURIComponent(keyword)}&sort=new&t=year&limit=100`,
+    `https://old.reddit.com/search.json?q=${encodeURIComponent(keyword)}&sort=new&t=year&limit=100`,
+  ];
+  let lastStatus = 0;
+  for (const url of paths) {
+    const r = await fetch(url, { headers });
+    if (r.ok) {
+      const j = await r.json();
+      const posts = (j?.data?.children ?? []).map((c: any) => ({
+        title: c.data.title,
+        subreddit: c.data.subreddit,
+        score: c.data.score,
+        num_comments: c.data.num_comments,
+        created_utc: c.data.created_utc,
+        permalink: `https://reddit.com${c.data.permalink}`,
+      }));
+      return { keyword, count: posts.length, posts };
+    }
+    lastStatus = r.status;
+  }
+  throw new Error(`reddit ${lastStatus} (Reddit is blocking server-side requests from this IP; this is a Reddit-side limitation, not a bug in the app).`);
 }
 
 async function hn(keyword: string) {
