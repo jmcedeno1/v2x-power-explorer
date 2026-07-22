@@ -45,24 +45,6 @@ type GTrends = {
 
 type AutoRes = { keyword: string; suggestions: string[]; questions: string[] };
 type RedditRes = { keyword: string; count: number; posts: { title: string; subreddit: string; score: number; num_comments: number; created_utc: number; permalink: string }[] };
-type HnRes = { keyword: string; count: number; stories: { title: string; url: string; points: number; num_comments: number; created_at: string; author: string; objectID: string }[] };
-
-type BingPoint = { month: string; count: number };
-
-async function fetchBingCoverage(): Promise<BingPoint[]> {
-  const { data } = await supabase
-    .from('documents')
-    .select('date')
-    .eq('source', 'gdelt')
-    .not('date', 'is', null)
-    .limit(5000);
-  const map = new Map<string, number>();
-  for (const d of data ?? []) {
-    const m = (d as any).date?.slice(0, 7);
-    if (m) map.set(m, (map.get(m) ?? 0) + 1);
-  }
-  return [...map.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([month, count]) => ({ month, count }));
-}
 
 export default function TrendsPage() {
   const [keyword, setKeyword] = useState('bidirectional charging');
