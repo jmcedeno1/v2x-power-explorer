@@ -313,8 +313,8 @@ function KeywordTable({ rows }: { rows: { phrase: string; volume: number; cpc: n
         <div className="text-right">CPC</div>
         <div className="text-right">KD</div>
       </div>
-      {rows.map((r) => (
-        <div key={r.phrase} className="grid grid-cols-[1fr_120px_80px_80px] gap-3 items-center text-sm py-1.5 border-b border-border/40">
+      {rows.map((r, i) => (
+        <div key={`${r.phrase}-${i}`} className="grid grid-cols-[1fr_120px_80px_80px] gap-3 items-center text-sm py-1.5 border-b border-border/40">
           <div className="truncate">{r.phrase}</div>
           <div className="flex items-center gap-2 justify-end">
             <div className="w-16 h-1.5 bg-muted rounded overflow-hidden">

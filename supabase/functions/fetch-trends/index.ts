@@ -53,8 +53,23 @@ function parseTrend(td: string | undefined): { month: number; value: number }[] 
   return vals.map((value, i) => ({ month: i + 1, value: Math.round(value * 100) }));
 }
 
+// The gateway returns human-readable column names, not codes. Map both.
+const COL = {
+  phrase: ["Keyword", "Ph"],
+  volume: ["Search Volume", "Nq"],
+  cpc: ["CPC", "Cp"],
+  competition: ["Competition", "Co"],
+  results: ["Number of Results", "Nr"],
+  trend: ["Trends", "Td"],
+  difficulty: ["Keyword Difficulty Index", "Keyword Difficulty", "Kd"],
+};
+function pick(row: SemrushRow, keys: string[]): string | undefined {
+  for (const k of keys) if (row[k] !== undefined) return row[k];
+  return undefined;
+}
+const num = (v: string | undefined) => Number(v ?? 0) || 0;
+
 async function semrushOverview(keyword: string, database = "us") {
-  // phrase_this = keyword overview (volume, CPC, competition, trend)
   const rows = await semrushCall("/keywords/phrase_this", {
     phrase: keyword,
     database,
@@ -64,11 +79,11 @@ async function semrushOverview(keyword: string, database = "us") {
   return {
     keyword,
     database,
-    volume: Number(row["Nq"] ?? 0),
-    cpc: Number(row["Cp"] ?? 0),
-    competition: Number(row["Co"] ?? 0),
-    results: Number(row["Nr"] ?? 0),
-    trend: parseTrend(row["Td"]),
+    volume: num(pick(row, COL.volume)),
+    cpc: num(pick(row, COL.cpc)),
+    competition: num(pick(row, COL.competition)),
+    results: num(pick(row, COL.results)),
+    trend: parseTrend(pick(row, COL.trend)),
   };
 }
 
@@ -83,11 +98,11 @@ async function semrushRelated(keyword: string, database = "us", limit = 25) {
     keyword,
     database,
     items: rows.map((r) => ({
-      phrase: r["Ph"],
-      volume: Number(r["Nq"] ?? 0),
-      cpc: Number(r["Cp"] ?? 0),
-      competition: Number(r["Co"] ?? 0),
-      difficulty: Number(r["Kd"] ?? 0),
+      phrase: pick(r, COL.phrase) ?? "",
+      volume: num(pick(r, COL.volume)),
+      cpc: num(pick(r, COL.cpc)),
+      competition: num(pick(r, COL.competition)),
+      difficulty: num(pick(r, COL.difficulty)),
     })),
   };
 }
@@ -103,10 +118,10 @@ async function semrushQuestions(keyword: string, database = "us", limit = 30) {
     keyword,
     database,
     items: rows.map((r) => ({
-      phrase: r["Ph"],
-      volume: Number(r["Nq"] ?? 0),
-      cpc: Number(r["Cp"] ?? 0),
-      difficulty: Number(r["Kd"] ?? 0),
+      phrase: pick(r, COL.phrase) ?? "",
+      volume: num(pick(r, COL.volume)),
+      cpc: num(pick(r, COL.cpc)),
+      difficulty: num(pick(r, COL.difficulty)),
     })),
   };
 }
