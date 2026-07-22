@@ -7,6 +7,7 @@ import { EmptyModuleState } from '@/components/ui/empty-module-state';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { PieChart as RechartsPie, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { marketsContent } from '@/data/moduleContent';
+import { MarketSizeChart } from '@/components/dashboard/MarketSizeChart';
 
 export default function MarketsPage() {
   const content: any = marketsContent;
@@ -57,6 +58,12 @@ export default function MarketsPage() {
                   );
                 })}
               </div>
+            </section>
+
+            {/* Global V2X Market growth */}
+            <section className="mb-10">
+              <h3 className="text-lg font-semibold text-foreground mb-4">Global V2X Market Growth</h3>
+              <MarketSizeChart />
             </section>
 
             {/* Market Players & Revenue Stacking Section */}
