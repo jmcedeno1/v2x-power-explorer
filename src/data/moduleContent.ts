@@ -7,7 +7,7 @@
 export const marketsContent = {
   metrics: [
     { title: 'Global V2X Market (2025)', value: '$5.75B', subtitle: '→ $19.5B by 2030 (CAGR 27.6%)', icon: 'DollarSign', color: 'from-primary to-accent' },
-    { title: 'DC Fast Charging Market', value: '$4.6B', subtitle: '→ $121.5B by 2035 (CAGR 36.3%)', icon: 'TrendingUp', color: 'from-energy-blue to-energy-teal' },
+    { title: 'Bidirectional Charger SW', value: '$0.6B', subtitle: '→ $8.2B by 2035 (CAGR 29.8%)', icon: 'TrendingUp', color: 'from-energy-blue to-energy-teal' },
     { title: 'Bidirectional Charger HW', value: '$1.4B', subtitle: '→ $14.5B by 2035 (CAGR 21.3%)', icon: 'BarChart3', color: 'from-energy-teal to-energy-green' },
     { title: 'US V2X Capacity', value: '20 MW', subtitle: '2024, doubling to 40 MW in 2025', icon: 'Zap', color: 'from-energy-amber to-primary' },
   ],
