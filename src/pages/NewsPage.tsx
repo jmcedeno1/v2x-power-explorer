@@ -24,6 +24,7 @@ import {
 type NewsDoc = {
   id: string;
   title: string | null;
+  abstract: string | null;
   url: string | null;
   date: string | null;
   year: number | null;
@@ -59,7 +60,7 @@ const OFF_TOPIC_RE = /\b(business jet|private jet|bombardier|saudi contract|avia
 async function fetchNews(): Promise<NewsDoc[]> {
   const { data, error } = await supabase
     .from('documents')
-    .select('id,title,url,date,year,orgs,countries,raw')
+    .select('id,title,abstract,url,date,year,orgs,countries,raw')
     .eq('source', 'gdelt')
     .order('date', { ascending: false })
     .limit(2000);
@@ -67,7 +68,7 @@ async function fetchNews(): Promise<NewsDoc[]> {
   return ((data ?? []) as NewsDoc[]).filter((d) => {
     if (!d.title) return false;
     const raw = d.raw as any;
-    const textForFilter = `${d.title} ${d.url ?? ''} ${raw?.gdelt_query ?? ''}`;
+    const textForFilter = `${d.title} ${d.abstract ?? ''} ${d.url ?? ''} ${raw?.gdelt_query ?? ''}`;
     return RELEVANCE_RE.test(textForFilter) && !OFF_TOPIC_RE.test(textForFilter);
   });
 }
