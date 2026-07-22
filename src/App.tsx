@@ -45,6 +45,7 @@ const App = () => (
           <Route path="/corpus" element={<CorpusPage />} />
           <Route path="/publications" element={<PublicationsPage />} />
           <Route path="/news" element={<NewsPage />} />
+          <Route path="/trends" element={<TrendsPage />} />
           <Route path="/notes" element={<NotesPage />} />
           <Route path="/recommendations" element={<RecommendationsPage />} />
           <Route path="*" element={<NotFound />} />
