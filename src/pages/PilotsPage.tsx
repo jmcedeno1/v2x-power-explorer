@@ -108,6 +108,8 @@ export default function PilotsPage() {
                 ))}
               </div>
             </section>
+            <PilotTimelines pilots={pilots} />
+
 
             {/* Toolbar */}
             <div className="flex items-center justify-between mb-6">
