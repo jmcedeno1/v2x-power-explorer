@@ -60,6 +60,12 @@ export default function MarketsPage() {
               </div>
             </section>
 
+            {/* Global V2X Market growth */}
+            <section className="mb-10">
+              <h3 className="text-lg font-semibold text-foreground mb-4">Global V2X Market Growth</h3>
+              <MarketSizeChart />
+            </section>
+
             {/* Market Players & Revenue Stacking Section */}
             <section className="mb-10">
               <div className="grid lg:grid-cols-2 gap-6">
