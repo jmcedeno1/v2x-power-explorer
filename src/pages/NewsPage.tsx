@@ -356,32 +356,8 @@ export default function NewsPage() {
             </div>
 
             {/* Latest articles */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">Latest articles</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {news.slice(0, 50).map((n) => (
-                  <a
-                    key={n.id}
-                    href={n.url ?? '#'}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="flex items-start justify-between gap-4 py-2 border-b border-border last:border-0 hover:bg-muted/40 rounded px-2"
-                  >
-                    <div className="flex-1">
-                      <div className="font-medium text-sm text-foreground line-clamp-2">{n.title}</div>
-                      <div className="text-xs text-muted-foreground mt-1 flex items-center gap-3 flex-wrap">
-                        <span>{extractDomain(n)}</span>
-                        {extractCountry(n) && <span>· {extractCountry(n)}</span>}
-                        {n.date && <span>· {n.date}</span>}
-                      </div>
-                    </div>
-                    <ExternalLink className="w-4 h-4 text-muted-foreground shrink-0 mt-1" />
-                  </a>
-                ))}
-              </CardContent>
-            </Card>
+            <ArticlesList news={news} />
+
           </>
         )}
       </div>
@@ -395,6 +371,58 @@ function MetricTile({ icon, label, value }: { icon: React.ReactNode; label: stri
       <CardContent className="p-4">
         <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">{icon}{label}</div>
         <div className="text-2xl font-bold text-foreground">{value}</div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function ArticlesList({ news }: { news: NewsDoc[] }) {
+  const PAGE_SIZE = 10;
+  const [page, setPage] = useState(1);
+  const totalPages = Math.max(1, Math.ceil(news.length / PAGE_SIZE));
+  const current = Math.min(page, totalPages);
+  const start = (current - 1) * PAGE_SIZE;
+  const items = news.slice(start, start + PAGE_SIZE);
+
+  return (
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0">
+        <CardTitle className="text-base">Latest articles</CardTitle>
+        <div className="text-xs text-muted-foreground">
+          {news.length === 0 ? '0 articles' : `${start + 1}–${start + items.length} of ${news.length}`}
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        {items.map((n) => (
+          <a
+            key={n.id}
+            href={n.url ?? '#'}
+            target="_blank"
+            rel="noreferrer noopener"
+            className="flex items-start justify-between gap-4 py-2 border-b border-border last:border-0 hover:bg-muted/40 rounded px-2"
+          >
+            <div className="flex-1">
+              <div className="font-medium text-sm text-foreground line-clamp-2">{n.title}</div>
+              <div className="text-xs text-muted-foreground mt-1 flex items-center gap-3 flex-wrap">
+                <span>{extractDomain(n)}</span>
+                {extractCountry(n) && <span>· {extractCountry(n)}</span>}
+                {n.date && <span>· {n.date}</span>}
+              </div>
+            </div>
+            <ExternalLink className="w-4 h-4 text-muted-foreground shrink-0 mt-1" />
+          </a>
+        ))}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between pt-2">
+            <Button variant="outline" size="sm" disabled={current === 1} onClick={() => setPage(current - 1)}>
+              Previous
+            </Button>
+            <div className="text-xs text-muted-foreground">Page {current} of {totalPages}</div>
+            <Button variant="outline" size="sm" disabled={current === totalPages} onClick={() => setPage(current + 1)}>
+              Next
+            </Button>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
