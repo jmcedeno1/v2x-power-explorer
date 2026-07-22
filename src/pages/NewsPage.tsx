@@ -187,8 +187,8 @@ export default function NewsPage() {
         <ModuleHeader
           icon={<Newspaper className="w-7 h-7 text-white" />}
           title="News & Media Landscape"
-          description="Bidirectional charging news aggregated from GDELT global media monitoring — all charts derived from ingested articles"
-          badge={<Badge variant="outline">GDELT 2.0</Badge>}
+          description="Bidirectional charging news aggregated from Google News — all charts derived from ingested articles"
+          badge={<Badge variant="outline">Google News</Badge>}
         />
 
         <div className="flex justify-end mb-6">
