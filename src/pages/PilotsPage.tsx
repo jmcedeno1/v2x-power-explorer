@@ -7,6 +7,7 @@ import { ModuleHeader } from '@/components/ui/module-header';
 import { EmptyModuleState } from '@/components/ui/empty-module-state';
 import { useModuleContent } from '@/hooks/useGeneratedContent';
 import { PilotCard } from '@/components/pilots/PilotCard';
+import { PilotTimelines } from '@/components/pilots/PilotTimelines';
 import { PilotPopup } from '@/components/pilots/PilotPopup';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -107,6 +108,8 @@ export default function PilotsPage() {
                 ))}
               </div>
             </section>
+            <PilotTimelines pilots={pilots} />
+
 
             {/* Toolbar */}
             <div className="flex items-center justify-between mb-6">
