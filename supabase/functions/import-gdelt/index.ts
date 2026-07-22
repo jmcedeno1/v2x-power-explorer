@@ -15,7 +15,27 @@ const DEFAULT_QUERY = "V2G";
 // but ArtList only returns title/metadata, so keep articles from taxonomy-only
 // queries while still rejecting obvious non-energy false positives.
 const RELEVANCE_RE = /\b(v2g|v2h|v2b|v2l|v2x|vehicle[- ]to[- ](grid|home|building|load|everything|x)|bidirectional (charg|ev|inverter|power)|two[- ]way charg|reverse charg)\b/i;
+const ENERGY_CONTEXT_RE = /\b(ev|electric vehicle|charging|charger|battery|grid|utility|energy|power|renewable|vehicle-to|fleet|bidirectional)\b/i;
 const OFF_TOPIC_RE = /\b(business jet|private jet|bombardier|saudi contract|aviation|airline|aircraft|football|soccer|basketball|baseball|celebrity|movie|film festival)\b/i;
+
+async function fetchPageSnippet(url: string): Promise<string> {
+  try {
+    const res = await fetch(url, {
+      headers: { "User-Agent": "Mozilla/5.0 (compatible; BidirectionalResearchBot/1.0)" },
+      signal: AbortSignal.timeout(4000),
+    });
+    if (!res.ok) return "";
+    const html = await res.text();
+    return html
+      .replace(/<script[\s\S]*?<\/script>/gi, " ")
+      .replace(/<style[\s\S]*?<\/style>/gi, " ")
+      .replace(/<[^>]+>/g, " ")
+      .replace(/\s+/g, " ")
+      .slice(0, 12000);
+  } catch {
+    return "";
+  }
+}
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
@@ -81,8 +101,17 @@ Deno.serve(async (req) => {
     let filtered = 0;
     for (const a of articles) {
       if (!a?.url || !a?.title) continue;
-      const textForFilter = `${a.title ?? ""} ${a.url ?? ""} ${a.domain ?? ""} ${query}`;
-      if (OFF_TOPIC_RE.test(textForFilter) || !RELEVANCE_RE.test(textForFilter)) { filtered++; continue; }
+      const titleText = `${a.title ?? ""} ${a.url ?? ""} ${a.domain ?? ""}`;
+      let relevanceBasis = "title";
+      let pageSnippet = "";
+      let isRelevant = RELEVANCE_RE.test(titleText) && ENERGY_CONTEXT_RE.test(titleText);
+      if (!isRelevant) {
+        pageSnippet = await fetchPageSnippet(a.url);
+        const pageText = `${a.title ?? ""} ${pageSnippet}`;
+        isRelevant = RELEVANCE_RE.test(pageText) && ENERGY_CONTEXT_RE.test(pageText);
+        relevanceBasis = "article_text";
+      }
+      if (OFF_TOPIC_RE.test(titleText) || !isRelevant) { filtered++; continue; }
       const uidHash = await sha1Hex(a.url);
       const sd: string | undefined = a.seendate;
       const iso = sd && sd.length >= 15
@@ -98,7 +127,8 @@ Deno.serve(async (req) => {
         year: iso ? parseInt(iso.slice(0, 4)) : null,
         orgs: a.domain ? [a.domain] : [],
         countries: a.sourcecountry ? [a.sourcecountry] : [],
-        raw: { ...a, gdelt_query: query, relevance_basis: RELEVANCE_RE.test(a.title ?? "") ? "title" : "query" },
+        abstract: pageSnippet ? pageSnippet.slice(0, 500) : null,
+        raw: { ...a, gdelt_query: query, relevance_basis: relevanceBasis },
       });
     }
     const result = await upsertDocuments(docs);
