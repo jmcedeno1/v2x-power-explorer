@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
   Activity, Search, TrendingUp, Sparkles, HelpCircle, RefreshCw, DollarSign, Target, BarChart3,
@@ -69,6 +69,7 @@ export default function TrendsPage() {
   const [keyword, setKeyword] = useState('bidirectional charging');
   const [submitted, setSubmitted] = useState('bidirectional charging');
   const [database, setDatabase] = useState('us');
+  const [activeTab, setActiveTab] = useState('related');
 
   const ov = useQuery({
     queryKey: ['trends', 'overview', submitted, database],
@@ -92,6 +93,12 @@ export default function TrendsPage() {
   });
 
   const refetchAll = () => { ov.refetch(); rel.refetch(); qs.refetch(); ac.refetch(); };
+
+  const semrushQuotaError = [ov.data?.error, rel.data?.error, qs.data?.error].some(isSemrushQuotaError);
+
+  useEffect(() => {
+    if (semrushQuotaError) setActiveTab('autocomplete');
+  }, [semrushQuotaError]);
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -143,7 +150,9 @@ export default function TrendsPage() {
 
         {/* Overview metrics */}
         {ov.isLoading && <SkeletonBlock label="Fetching Semrush data…" />}
-        {ov.data?.error && <ErrorBlock label="Semrush overview" msg={ov.data.error} />}
+        {ov.data?.error && (isSemrushQuotaError(ov.data.error)
+          ? <SemrushQuotaBlock />
+          : <ErrorBlock label="Semrush overview" msg={ov.data.error} />)}
         {ov.data?.ok && ov.data.data && (
           <>
             <div className="grid md:grid-cols-4 gap-4 mb-6">
@@ -195,7 +204,7 @@ export default function TrendsPage() {
           </>
         )}
 
-        <Tabs defaultValue="related" className="space-y-4">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
           <TabsList>
             <TabsTrigger value="related"><Sparkles className="w-4 h-4 mr-2" />Related keywords</TabsTrigger>
             <TabsTrigger value="questions"><HelpCircle className="w-4 h-4 mr-2" />Questions people ask</TabsTrigger>
@@ -204,7 +213,8 @@ export default function TrendsPage() {
 
           <TabsContent value="related" className="space-y-4">
             {rel.isLoading && <SkeletonBlock label="Fetching related keywords…" />}
-            {rel.data?.error && <ErrorBlock label="Related keywords" msg={rel.data.error} />}
+            {rel.data?.error && !isSemrushQuotaError(rel.data.error) && <ErrorBlock label="Related keywords" msg={rel.data.error} />}
+            {rel.data?.error && isSemrushQuotaError(rel.data.error) && <SemrushQuotaBlock compact />}
             {rel.data?.ok && rel.data.data && (
               <Card>
                 <CardHeader>
@@ -226,7 +236,8 @@ export default function TrendsPage() {
 
           <TabsContent value="questions" className="space-y-4">
             {qs.isLoading && <SkeletonBlock label="Fetching questions…" />}
-            {qs.data?.error && <ErrorBlock label="Questions" msg={qs.data.error} />}
+            {qs.data?.error && !isSemrushQuotaError(qs.data.error) && <ErrorBlock label="Questions" msg={qs.data.error} />}
+            {qs.data?.error && isSemrushQuotaError(qs.data.error) && <SemrushQuotaBlock compact />}
             {qs.data?.ok && qs.data.data && (
               <Card>
                 <CardHeader>
@@ -359,6 +370,25 @@ function ErrorBlock({ label, msg }: { label: string; msg: string }) {
       </CardContent>
     </Card>
   );
+}
+
+function SemrushQuotaBlock({ compact = false }: { compact?: boolean }) {
+  return (
+    <Card>
+      <CardContent className={compact ? 'py-5 text-sm' : 'py-6 text-sm'}>
+        <div className="font-medium mb-1">Semrush quota exhausted</div>
+        <div className="text-xs text-muted-foreground max-w-3xl">
+          The connected Semrush account returned ERROR 134: TOTAL LIMIT EXCEEDED. Search volume,
+          CPC, difficulty, and Semrush question data will populate again after the quota resets or the
+          account allowance is increased. Live Google Autocomplete remains available in the active tab.
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function isSemrushQuotaError(msg?: string) {
+  return Boolean(msg && (msg.includes('ERROR 134') || msg.includes('TOTAL LIMIT EXCEEDED') || msg.includes('quota exhausted')));
 }
 
 function interestBand(v: number) {
