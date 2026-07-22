@@ -117,6 +117,12 @@ export default function NewsPage() {
           upserted += data?.upserted ?? 0;
         } catch { failed++; }
       }
+      // Hacker News (Algolia) — one call sweeps the taxonomy internally.
+      try {
+        const { data } = await supabase.functions.invoke('import-hn', { body: {} });
+        fetched += data?.fetched ?? 0;
+        upserted += data?.upserted ?? 0;
+      } catch { failed++; }
     } finally {
       setRefreshing(false);
     }
