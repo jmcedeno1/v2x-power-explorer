@@ -118,8 +118,6 @@ export default function TrendsPage() {
             <TabsTrigger value="google"><TrendingUp className="w-4 h-4 mr-2" />Google Trends</TabsTrigger>
             <TabsTrigger value="autocomplete"><Sparkles className="w-4 h-4 mr-2" />Autocomplete & PAA</TabsTrigger>
             <TabsTrigger value="reddit"><MessageSquare className="w-4 h-4 mr-2" />Reddit</TabsTrigger>
-            <TabsTrigger value="hn"><MessageSquare className="w-4 h-4 mr-2" />Hacker News</TabsTrigger>
-            <TabsTrigger value="bing"><Globe2 className="w-4 h-4 mr-2" />News Coverage</TabsTrigger>
           </TabsList>
 
           {/* Google Trends */}
