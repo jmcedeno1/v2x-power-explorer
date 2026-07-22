@@ -33,8 +33,8 @@ Deno.serve(async (req) => {
     if (!profile) throw new Error("No active profile configured");
 
     const cfg = (profile.queries as any)?.gdelt ?? {};
-    const query: string = body.query ?? cfg.query ?? TAXONOMY_QUERY;
-    const timespan: string = body.timespan ?? cfg.timespan ?? "1month";
+    const query: string = body.query ?? TAXONOMY_QUERY;
+    const timespan: string = body.timespan ?? cfg.timespan ?? "12months";
     const maxrecords: number = body.maxrecords ?? cfg.maxrecords ?? 250;
 
     const url = new URL("https://api.gdeltproject.org/api/v2/doc/doc");
@@ -50,7 +50,7 @@ Deno.serve(async (req) => {
     let res!: Response;
     let text = "";
     let rateLimited = false;
-    const delays = [0, 6000, 10000, 15000];
+    const delays = [0, 6000];
     for (let attempt = 0; attempt < delays.length; attempt++) {
       if (delays[attempt] > 0) await new Promise((r) => setTimeout(r, delays[attempt]));
       res = await fetch(url.toString(), { headers: { "User-Agent": "Mozilla/5.0 (compatible; BidirectionalResearchBot/1.0)" } });
