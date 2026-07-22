@@ -427,8 +427,3 @@ function ArticlesList({ news }: { news: NewsDoc[] }) {
     </Card>
   );
 }
-
-      </CardContent>
-    </Card>
-  );
-}
