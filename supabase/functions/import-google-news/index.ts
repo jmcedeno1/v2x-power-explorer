@@ -1,14 +1,12 @@
-// Google News RSS importer. No API key, no rate limits in practice.
-// URL: https://news.google.com/rss/search?q=<query>&hl=en-US&gl=US&ceid=US:en
+// Bing News RSS importer. No API key required, no per-IP rate limits like Google/GDELT.
+// URL: https://www.bing.com/news/search?q=<query>&format=rss&setmkt=en-US
 import { z } from "npm:zod@3.25.76";
 import { corsHeaders, upsertDocuments, logQA, sha1Hex, type Doc } from "../_shared/corpus.ts";
 
 const BodySchema = z.object({
   query: z.string().trim().min(1).max(800),
-  hl: z.string().trim().max(10).optional(),
-  gl: z.string().trim().max(5).optional(),
-  ceid: z.string().trim().max(20).optional(),
-  when: z.string().trim().regex(/^\d+[hdmy]$/i).optional(), // e.g. 12m, 30d, 24h
+  setmkt: z.string().trim().max(10).optional(),
+  count: z.number().int().min(1).max(100).optional(),
 });
 
 const RELEVANCE_RE = /\b(v2g|v2h|v2b|v2l|v2x|vehicle[- ]to[- ](grid|home|building|load|everything|x)|bidirectional (charg|ev|inverter|power)|two[- ]way charg|reverse charg)\b/i;
@@ -36,26 +34,29 @@ function pick(item: string, tag: string): string | null {
   return m ? decodeEntities(stripCdata(m[1])) : null;
 }
 
+function stripHtml(s: string | null): string | null {
+  if (!s) return null;
+  return s.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim() || null;
+}
+
 type ParsedItem = { title: string; link: string; pubDate: string | null; source: string | null; description: string | null };
 
 function parseRss(xml: string): ParsedItem[] {
   const items: ParsedItem[] = [];
-  const itemRe = /<item\b[\s\S]*?<\/item>/gi;
-  const matches = xml.match(itemRe) ?? [];
+  const matches = xml.match(/<item\b[\s\S]*?<\/item>/gi) ?? [];
   for (const raw of matches) {
     const title = pick(raw, "title");
     const link = pick(raw, "link");
     const pubDate = pick(raw, "pubDate");
-    const source = pick(raw, "source");
+    const source = pick(raw, "source") ?? pick(raw, "News:Source");
     const description = pick(raw, "description");
     if (title && link) items.push({ title, link, pubDate, source, description });
   }
   return items;
 }
 
-function stripHtml(s: string | null): string | null {
-  if (!s) return null;
-  return s.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim() || null;
+function domainFrom(link: string): string | null {
+  try { return new URL(link).hostname.replace(/^www\./, ""); } catch { return null; }
 }
 
 Deno.serve(async (req) => {
@@ -69,23 +70,24 @@ Deno.serve(async (req) => {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-    const { query, hl = "en-US", gl = "US", ceid = "US:en", when = "12m" } = parsed.data;
+    const { query, setmkt = "en-US", count = 50 } = parsed.data;
 
-    // Google News supports `when:` operator inside the query for time filter.
-    const q = `${query} when:${when}`;
-    const url = new URL("https://news.google.com/rss/search");
-    url.searchParams.set("q", q);
-    url.searchParams.set("hl", hl);
-    url.searchParams.set("gl", gl);
-    url.searchParams.set("ceid", ceid);
+    const url = new URL("https://www.bing.com/news/search");
+    url.searchParams.set("q", query);
+    url.searchParams.set("format", "rss");
+    url.searchParams.set("setmkt", setmkt);
+    url.searchParams.set("count", String(count));
 
     const res = await fetch(url.toString(), {
-      headers: { "User-Agent": "Mozilla/5.0 (compatible; BidirectionalResearchBot/1.0)" },
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36",
+        "Accept": "application/rss+xml, application/xml, text/xml, */*",
+      },
     });
     if (!res.ok) {
       const text = await res.text();
-      await logQA({ level: "error", category: "api_error", section: "google_news", message: `Google News ${res.status}`, details: { body: text.slice(0, 500) } });
-      return new Response(JSON.stringify({ error: "Google News request failed", status: res.status }), {
+      await logQA({ level: "error", category: "api_error", section: "bing_news", message: `Bing News ${res.status}`, details: { body: text.slice(0, 500) } });
+      return new Response(JSON.stringify({ error: "Bing News request failed", status: res.status }), {
         status: res.status,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -102,23 +104,27 @@ Deno.serve(async (req) => {
       if (!relevant || OFF_TOPIC_RE.test(haystack)) { filtered++; continue; }
 
       const uidHash = await sha1Hex(it.link);
-      const iso = it.pubDate ? new Date(it.pubDate).toISOString().slice(0, 10) : null;
+      let iso: string | null = null;
+      if (it.pubDate) {
+        const d = new Date(it.pubDate);
+        if (!isNaN(d.getTime())) iso = d.toISOString().slice(0, 10);
+      }
+      const dom = it.source || domainFrom(it.link) || null;
       docs.push({
-        uid: `gnews:${uidHash}`,
-        source: "gdelt", // reuse existing enum/source key so NewsPage picks it up
+        uid: `bnews:${uidHash}`,
+        source: "gdelt", // reuse existing enum key so NewsPage picks it up
         doc_type: "news",
         title: it.title,
         url: it.link,
         date: iso,
         year: iso ? parseInt(iso.slice(0, 4)) : null,
-        orgs: it.source ? [it.source] : [],
+        orgs: dom ? [dom] : [],
         countries: [],
         abstract: cleanDesc,
         raw: {
-          provider: "google_news",
+          provider: "bing_news",
           gdelt_query: query,
-          when,
-          hl, gl, ceid,
+          setmkt,
           source_name: it.source,
           pubDate: it.pubDate,
         },
@@ -126,13 +132,13 @@ Deno.serve(async (req) => {
     }
 
     const result = await upsertDocuments(docs);
-    await logQA({ level: "info", category: "ingest", section: "google_news", message: `Ingested ${docs.length} Google News articles (filtered ${filtered})`, details: { query, when } });
-    return new Response(JSON.stringify({ source: "google_news", fetched: items.length, kept: docs.length, filtered, upserted: result.inserted, query, when }), {
+    await logQA({ level: "info", category: "ingest", section: "bing_news", message: `Ingested ${docs.length} Bing News articles (filtered ${filtered})`, details: { query } });
+    return new Response(JSON.stringify({ source: "bing_news", fetched: items.length, kept: docs.length, filtered, upserted: result.inserted, query }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
-    await logQA({ level: "error", category: "api_error", section: "google_news", message: msg });
+    await logQA({ level: "error", category: "api_error", section: "bing_news", message: msg });
     return new Response(JSON.stringify({ error: msg }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
   }
 });
