@@ -7,6 +7,7 @@ import { EmptyModuleState } from '@/components/ui/empty-module-state';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { PieChart as RechartsPie, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { marketsContent } from '@/data/moduleContent';
+import { MarketSizeChart } from '@/components/dashboard/MarketSizeChart';
 
 export default function MarketsPage() {
   const content: any = marketsContent;
