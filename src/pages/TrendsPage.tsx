@@ -1,8 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
-  Activity, Search, MessageSquare, TrendingUp, ExternalLink,
-  Sparkles, HelpCircle, RefreshCw,
+  Activity, Search, TrendingUp, Sparkles, HelpCircle, RefreshCw, DollarSign, Target, BarChart3,
 } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { ModuleHeader } from '@/components/ui/module-header';
@@ -11,10 +10,10 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { supabase } from '@/integrations/supabase/client';
 import {
   ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid,
-  BarChart, Bar,
 } from 'recharts';
 
 const DEFAULT_KEYWORDS = [
@@ -22,64 +21,87 @@ const DEFAULT_KEYWORDS = [
   'V2G',
   'vehicle-to-grid',
   'vehicle-to-home',
+  'V2H',
+  'V2L',
+];
+
+const DATABASES = [
+  { code: 'us', label: 'United States' },
+  { code: 'uk', label: 'United Kingdom' },
+  { code: 'de', label: 'Germany' },
+  { code: 'fr', label: 'France' },
+  { code: 'es', label: 'Spain' },
+  { code: 'jp', label: 'Japan' },
+  { code: 'au', label: 'Australia' },
+  { code: 'ca', label: 'Canada' },
 ];
 
 type FetchResult<T> = { ok: boolean; data?: T; error?: string };
 
-async function callTrends<T>(source: string, keyword: string, extra?: Record<string, string>): Promise<FetchResult<T>> {
+async function callTrends<T>(source: string, keyword: string, database: string): Promise<FetchResult<T>> {
   const { data, error } = await supabase.functions.invoke('fetch-trends', {
-    body: { source, keyword, ...(extra ?? {}) },
+    body: { source, keyword, database },
   });
   if (error) return { ok: false, error: error.message };
   if (!data?.ok) return { ok: false, error: data?.error ?? 'unknown' };
   return { ok: true, data: data.data as T };
 }
 
-type GTrends = {
-  keyword: string;
-  series: { date: string; value: number }[];
-  top: { query: string; value: number }[];
-  rising: { query: string; value: number; formattedValue?: string }[];
-  geo: { name: string; value: number }[];
+type Overview = {
+  keyword: string; database: string;
+  volume: number; cpc: number; competition: number; results: number;
+  trend: { month: number; value: number }[];
 };
-
+type Related = { keyword: string; items: { phrase: string; volume: number; cpc: number; competition: number; difficulty: number }[] };
+type Questions = { keyword: string; items: { phrase: string; volume: number; cpc: number; difficulty: number }[] };
 type AutoRes = { keyword: string; suggestions: string[]; questions: string[] };
-type RedditRes = { keyword: string; count: number; posts: { title: string; subreddit: string; score: number; num_comments: number; created_utc: number; permalink: string }[] };
+
+const MONTH_LABELS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+function difficultyColor(kd: number) {
+  if (kd < 30) return 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400';
+  if (kd < 50) return 'bg-amber-500/15 text-amber-700 dark:text-amber-400';
+  if (kd < 70) return 'bg-orange-500/15 text-orange-700 dark:text-orange-400';
+  return 'bg-red-500/15 text-red-700 dark:text-red-400';
+}
 
 export default function TrendsPage() {
   const [keyword, setKeyword] = useState('bidirectional charging');
   const [submitted, setSubmitted] = useState('bidirectional charging');
+  const [database, setDatabase] = useState('us');
 
-  const gt = useQuery({
-    queryKey: ['trends', 'google', submitted],
-    queryFn: () => callTrends<GTrends>('google_trends', submitted),
-    staleTime: 60_000,
+  const ov = useQuery({
+    queryKey: ['trends', 'overview', submitted, database],
+    queryFn: () => callTrends<Overview>('semrush_overview', submitted, database),
+    staleTime: 5 * 60_000,
+  });
+  const rel = useQuery({
+    queryKey: ['trends', 'related', submitted, database],
+    queryFn: () => callTrends<Related>('semrush_related', submitted, database),
+    staleTime: 5 * 60_000,
+  });
+  const qs = useQuery({
+    queryKey: ['trends', 'questions', submitted, database],
+    queryFn: () => callTrends<Questions>('semrush_questions', submitted, database),
+    staleTime: 5 * 60_000,
   });
   const ac = useQuery({
     queryKey: ['trends', 'autocomplete', submitted],
-    queryFn: () => callTrends<AutoRes>('autocomplete', submitted),
-    staleTime: 60_000,
-  });
-  const rd = useQuery({
-    queryKey: ['trends', 'reddit', submitted],
-    queryFn: () => callTrends<RedditRes>('reddit', submitted),
-    staleTime: 60_000,
+    queryFn: () => callTrends<AutoRes>('autocomplete', submitted, database),
+    staleTime: 5 * 60_000,
   });
 
-  const redditBySub = useMemo(() => {
-    const posts = rd.data?.data?.posts ?? [];
-    const map = new Map<string, number>();
-    for (const p of posts) map.set(p.subreddit, (map.get(p.subreddit) ?? 0) + 1);
-    return [...map.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10)
-      .map(([name, count]) => ({ name, count }));
-  }, [rd.data]);
-
-  const refetchAll = () => { gt.refetch(); ac.refetch(); rd.refetch(); };
+  const refetchAll = () => { ov.refetch(); rel.refetch(); qs.refetch(); ac.refetch(); };
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(keyword.trim() || 'bidirectional charging');
   };
+
+  const trendSeries = useMemo(() => {
+    const t = ov.data?.data?.trend ?? [];
+    return t.map((p) => ({ month: MONTH_LABELS[(p.month - 1) % 12], value: p.value }));
+  }, [ov.data]);
 
   return (
     <MainLayout>
@@ -87,8 +109,8 @@ export default function TrendsPage() {
         <ModuleHeader
           icon={<Activity className="w-7 h-7 text-white" />}
           title="Search & Interest Trends"
-          description="User interest in bidirectional charging across Google Search, autocomplete queries, Reddit and Hacker News discussion, plus Bing News coverage."
-          badge={<Badge variant="outline">Live sources</Badge>}
+          description="User interest in bidirectional charging: search volume, cost-per-click, competition, related keywords and questions. Powered by Semrush."
+          badge={<Badge variant="outline">Semrush · Google Autocomplete</Badge>}
         />
 
         <form onSubmit={onSubmit} className="flex flex-wrap items-center gap-2 mb-6">
@@ -98,6 +120,12 @@ export default function TrendsPage() {
             placeholder="Keyword (e.g. bidirectional charging)"
             className="max-w-xs"
           />
+          <Select value={database} onValueChange={(v) => setDatabase(v)}>
+            <SelectTrigger className="w-[180px]"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              {DATABASES.map((d) => <SelectItem key={d.code} value={d.code}>{d.label}</SelectItem>)}
+            </SelectContent>
+          </Select>
           <Button type="submit" size="sm"><Search className="w-4 h-4 mr-2" />Analyze</Button>
           <Button type="button" size="sm" variant="outline" onClick={refetchAll}>
             <RefreshCw className="w-4 h-4 mr-2" />Refresh
@@ -113,91 +141,111 @@ export default function TrendsPage() {
           </div>
         </form>
 
-        <Tabs defaultValue="google" className="space-y-4">
+        {/* Overview metrics */}
+        {ov.isLoading && <SkeletonBlock label="Fetching Semrush data…" />}
+        {ov.data?.error && <ErrorBlock label="Semrush overview" msg={ov.data.error} />}
+        {ov.data?.ok && ov.data.data && (
+          <>
+            <div className="grid md:grid-cols-4 gap-4 mb-6">
+              <MetricTile
+                icon={<BarChart3 className="w-4 h-4" />}
+                label="Monthly search volume"
+                value={ov.data.data.volume.toLocaleString()}
+                hint={interestBand(ov.data.data.volume)}
+              />
+              <MetricTile
+                icon={<DollarSign className="w-4 h-4" />}
+                label="Avg. cost-per-click"
+                value={`$${ov.data.data.cpc.toFixed(2)}`}
+                hint={ov.data.data.cpc > 1 ? 'High commercial intent' : 'Informational intent'}
+              />
+              <MetricTile
+                icon={<Target className="w-4 h-4" />}
+                label="Ads competition"
+                value={`${Math.round(ov.data.data.competition * 100)}%`}
+                hint={competitionBand(ov.data.data.competition)}
+              />
+              <MetricTile
+                icon={<TrendingUp className="w-4 h-4" />}
+                label="SERP results"
+                value={compactNumber(ov.data.data.results)}
+                hint="Pages indexed for this term"
+              />
+            </div>
+
+            <Card className="mb-6">
+              <CardHeader>
+                <CardTitle className="text-base">12-month interest trend — "{ov.data.data.keyword}"</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-xs text-muted-foreground mb-2">
+                  Relative search interest (0-100), Semrush {ov.data.data.database.toUpperCase()} database, last 12 months.
+                </div>
+                <ResponsiveContainer width="100%" height={260}>
+                  <LineChart data={trendSeries}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                    <XAxis dataKey="month" fontSize={11} />
+                    <YAxis fontSize={11} domain={[0, 100]} />
+                    <Tooltip />
+                    <Line type="monotone" dataKey="value" stroke="hsl(var(--primary))" strokeWidth={2} dot={{ r: 3 }} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          </>
+        )}
+
+        <Tabs defaultValue="related" className="space-y-4">
           <TabsList>
-            <TabsTrigger value="google"><TrendingUp className="w-4 h-4 mr-2" />Google Trends</TabsTrigger>
-            <TabsTrigger value="autocomplete"><Sparkles className="w-4 h-4 mr-2" />Autocomplete & PAA</TabsTrigger>
-            <TabsTrigger value="reddit"><MessageSquare className="w-4 h-4 mr-2" />Reddit</TabsTrigger>
+            <TabsTrigger value="related"><Sparkles className="w-4 h-4 mr-2" />Related keywords</TabsTrigger>
+            <TabsTrigger value="questions"><HelpCircle className="w-4 h-4 mr-2" />Questions people ask</TabsTrigger>
+            <TabsTrigger value="autocomplete"><Search className="w-4 h-4 mr-2" />Live autocomplete</TabsTrigger>
           </TabsList>
 
-          {/* Google Trends */}
-          <TabsContent value="google" className="space-y-4">
-            {gt.isLoading && <SkeletonBlock label="Fetching Google Trends…" />}
-            {gt.data?.error && <ErrorBlock label="Google Trends" msg={gt.data.error} />}
-            {gt.data?.ok && gt.data.data && (
-              <>
-                <Card>
-                  <CardHeader><CardTitle className="text-base">Interest over time — "{gt.data.data.keyword}"</CardTitle></CardHeader>
-                  <CardContent>
-                    <div className="text-xs text-muted-foreground mb-2">
-                      Relative search interest (0-100). Source: Google Trends, last 12 months.
-                    </div>
-                    <ResponsiveContainer width="100%" height={260}>
-                      <LineChart data={gt.data.data.series}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                        <XAxis dataKey="date" fontSize={11} />
-                        <YAxis fontSize={11} domain={[0, 100]} />
-                        <Tooltip />
-                        <Line type="monotone" dataKey="value" stroke="hsl(var(--primary))" strokeWidth={2} dot={false} />
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </CardContent>
-                </Card>
-
-                <div className="grid md:grid-cols-2 gap-4">
-                  <Card>
-                    <CardHeader><CardTitle className="text-base">Top related queries</CardTitle></CardHeader>
-                    <CardContent>
-                      <div className="space-y-1.5">
-                        {gt.data.data.top.slice(0, 15).map((q) => (
-                          <div key={q.query} className="flex items-center gap-2 text-sm">
-                            <div className="flex-1 truncate">{q.query}</div>
-                            <div className="w-24 h-1.5 bg-muted rounded overflow-hidden">
-                              <div className="h-full bg-primary" style={{ width: `${q.value}%` }} />
-                            </div>
-                            <div className="w-8 text-right text-xs text-muted-foreground">{q.value}</div>
-                          </div>
-                        ))}
-                        {gt.data.data.top.length === 0 && <div className="text-sm text-muted-foreground">No related queries.</div>}
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader><CardTitle className="text-base">Rising queries</CardTitle></CardHeader>
-                    <CardContent>
-                      <div className="space-y-1.5">
-                        {gt.data.data.rising.slice(0, 15).map((q) => (
-                          <div key={q.query} className="flex items-center gap-2 text-sm">
-                            <div className="flex-1 truncate">{q.query}</div>
-                            <Badge variant="secondary" className="text-[11px]">{q.formattedValue ?? `+${q.value}%`}</Badge>
-                          </div>
-                        ))}
-                        {gt.data.data.rising.length === 0 && <div className="text-sm text-muted-foreground">No rising queries.</div>}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                <Card>
-                  <CardHeader><CardTitle className="text-base">Top countries by interest</CardTitle></CardHeader>
-                  <CardContent>
-                    <ResponsiveContainer width="100%" height={280}>
-                      <BarChart data={gt.data.data.geo} layout="vertical" margin={{ left: 40 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                        <XAxis type="number" fontSize={11} domain={[0, 100]} />
-                        <YAxis type="category" dataKey="name" fontSize={11} width={120} />
-                        <Tooltip />
-                        <Bar dataKey="value" fill="hsl(var(--primary))" />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </CardContent>
-                </Card>
-              </>
+          <TabsContent value="related" className="space-y-4">
+            {rel.isLoading && <SkeletonBlock label="Fetching related keywords…" />}
+            {rel.data?.error && <ErrorBlock label="Related keywords" msg={rel.data.error} />}
+            {rel.data?.ok && rel.data.data && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">Related keywords by search volume</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-xs text-muted-foreground mb-3">
+                    Semantically related terms with their monthly volume, CPC and keyword difficulty (KD).
+                  </div>
+                  <KeywordTable
+                    rows={rel.data.data.items.map((k) => ({
+                      phrase: k.phrase, volume: k.volume, cpc: k.cpc, difficulty: k.difficulty,
+                    }))}
+                  />
+                </CardContent>
+              </Card>
             )}
           </TabsContent>
 
-          {/* Autocomplete */}
+          <TabsContent value="questions" className="space-y-4">
+            {qs.isLoading && <SkeletonBlock label="Fetching questions…" />}
+            {qs.data?.error && <ErrorBlock label="Questions" msg={qs.data.error} />}
+            {qs.data?.ok && qs.data.data && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">Questions people ask about "{qs.data.data.keyword}"</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-xs text-muted-foreground mb-3">
+                    Question-style queries with real monthly search volume — high-intent content opportunities.
+                  </div>
+                  <KeywordTable
+                    rows={qs.data.data.items.map((k) => ({
+                      phrase: k.phrase, volume: k.volume, cpc: k.cpc, difficulty: k.difficulty,
+                    }))}
+                  />
+                </CardContent>
+              </Card>
+            )}
+          </TabsContent>
+
           <TabsContent value="autocomplete" className="space-y-4">
             {ac.isLoading && <SkeletonBlock label="Fetching Google autocomplete…" />}
             {ac.data?.error && <ErrorBlock label="Autocomplete" msg={ac.data.error} />}
@@ -206,23 +254,22 @@ export default function TrendsPage() {
                 <Card>
                   <CardHeader>
                     <CardTitle className="text-base flex items-center gap-2">
-                      <Sparkles className="w-4 h-4" />What people search
+                      <Sparkles className="w-4 h-4" />Live Google autocomplete
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-xs text-muted-foreground mb-2">Live Google autocomplete for "{ac.data.data.keyword}".</div>
+                    <div className="text-xs text-muted-foreground mb-2">What users type after "{ac.data.data.keyword}" in Google.</div>
                     <div className="flex flex-wrap gap-1.5">
                       {ac.data.data.suggestions.map((s) => (
                         <Badge key={s} variant="outline" className="font-normal">{s}</Badge>
                       ))}
-                      {ac.data.data.suggestions.length === 0 && <div className="text-sm text-muted-foreground">No suggestions.</div>}
                     </div>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardHeader>
                     <CardTitle className="text-base flex items-center gap-2">
-                      <HelpCircle className="w-4 h-4" />What people ask
+                      <HelpCircle className="w-4 h-4" />Question completions
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
@@ -234,85 +281,66 @@ export default function TrendsPage() {
                           <span>{q}</span>
                         </li>
                       ))}
-                      {ac.data.data.questions.length === 0 && <div className="text-sm text-muted-foreground">No questions found.</div>}
                     </ul>
                   </CardContent>
                 </Card>
               </div>
             )}
           </TabsContent>
-
-          {/* Reddit */}
-          <TabsContent value="reddit" className="space-y-4">
-            {rd.isLoading && <SkeletonBlock label="Fetching Reddit…" />}
-            {rd.data?.error && <ErrorBlock label="Reddit" msg={rd.data.error} />}
-            {rd.data?.ok && rd.data.data && (
-              <>
-                <div className="grid md:grid-cols-3 gap-4">
-                  <MetricTile label="Posts (last year)" value={rd.data.data.count} />
-                  <MetricTile label="Subreddits" value={redditBySub.length} />
-                  <MetricTile
-                    label="Avg. score"
-                    value={rd.data.data.posts.length
-                      ? Math.round(rd.data.data.posts.reduce((s, p) => s + (p.score ?? 0), 0) / rd.data.data.posts.length)
-                      : 0}
-                  />
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-4">
-                  <Card>
-                    <CardHeader><CardTitle className="text-base">Top subreddits</CardTitle></CardHeader>
-                    <CardContent>
-                      <ResponsiveContainer width="100%" height={280}>
-                        <BarChart data={redditBySub} layout="vertical" margin={{ left: 40 }}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                          <XAxis type="number" fontSize={11} allowDecimals={false} />
-                          <YAxis type="category" dataKey="name" fontSize={11} width={120} />
-                          <Tooltip />
-                          <Bar dataKey="count" fill="hsl(var(--primary))" />
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader><CardTitle className="text-base">Top posts by score</CardTitle></CardHeader>
-                    <CardContent className="space-y-2">
-                      {[...rd.data.data.posts].sort((a, b) => b.score - a.score).slice(0, 8).map((p) => (
-                        <a key={p.permalink} href={p.permalink} target="_blank" rel="noreferrer noopener"
-                           className="block text-sm hover:bg-muted/50 rounded px-2 py-1">
-                          <div className="flex items-start justify-between gap-2">
-                            <span className="line-clamp-2 flex-1">{p.title}</span>
-                            <ExternalLink className="w-3.5 h-3.5 text-muted-foreground shrink-0 mt-0.5" />
-                          </div>
-                          <div className="text-[11px] text-muted-foreground">
-                            r/{p.subreddit} · {p.score} pts · {p.num_comments} comments
-                          </div>
-                        </a>
-                      ))}
-                    </CardContent>
-                  </Card>
-                </div>
-              </>
-            )}
-          </TabsContent>
-
         </Tabs>
 
-        <div className="mt-8 text-xs text-muted-foreground">
-          Note: ChatGPT, Gemini and Claude do not publish "what users ask" data — we use Google autocomplete + question-prefix completions as the closest public proxy for AI-assistant user interest.
+        <div className="mt-8 text-xs text-muted-foreground space-y-1">
+          <div>
+            <strong>Sources:</strong> Semrush (search volume, CPC, competition, keyword difficulty, related terms, questions) and Google Autocomplete (live suggestions).
+          </div>
+          <div>
+            <strong>On AI-assistant usage:</strong> ChatGPT, Gemini and Claude do not publish end-user query data. Google Autocomplete + Semrush's question keywords are the closest public proxies for what users are asking AI tools about bidirectional charging.
+          </div>
         </div>
       </div>
     </MainLayout>
   );
 }
 
-function MetricTile({ label, value }: { label: string; value: number | string }) {
+function KeywordTable({ rows }: { rows: { phrase: string; volume: number; cpc: number; difficulty: number }[] }) {
+  if (rows.length === 0) return <div className="text-sm text-muted-foreground">No keywords returned.</div>;
+  const max = Math.max(...rows.map((r) => r.volume), 1);
+  return (
+    <div className="space-y-1">
+      <div className="grid grid-cols-[1fr_120px_80px_80px] gap-3 text-[11px] uppercase tracking-wide text-muted-foreground pb-2 border-b">
+        <div>Keyword</div>
+        <div className="text-right">Volume / mo</div>
+        <div className="text-right">CPC</div>
+        <div className="text-right">KD</div>
+      </div>
+      {rows.map((r) => (
+        <div key={r.phrase} className="grid grid-cols-[1fr_120px_80px_80px] gap-3 items-center text-sm py-1.5 border-b border-border/40">
+          <div className="truncate">{r.phrase}</div>
+          <div className="flex items-center gap-2 justify-end">
+            <div className="w-16 h-1.5 bg-muted rounded overflow-hidden">
+              <div className="h-full bg-primary" style={{ width: `${(r.volume / max) * 100}%` }} />
+            </div>
+            <span className="tabular-nums text-xs w-14 text-right">{r.volume.toLocaleString()}</span>
+          </div>
+          <div className="text-right tabular-nums text-xs">${r.cpc.toFixed(2)}</div>
+          <div className="text-right">
+            <span className={`inline-block px-1.5 py-0.5 rounded text-[11px] font-medium tabular-nums ${difficultyColor(r.difficulty)}`}>
+              {Math.round(r.difficulty)}
+            </span>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function MetricTile({ icon, label, value, hint }: { icon?: React.ReactNode; label: string; value: number | string; hint?: string }) {
   return (
     <Card>
       <CardContent className="p-4">
-        <div className="text-xs text-muted-foreground mb-1">{label}</div>
+        <div className="text-xs text-muted-foreground mb-1 flex items-center gap-1.5">{icon}{label}</div>
         <div className="text-2xl font-bold text-foreground">{value}</div>
+        {hint && <div className="text-[11px] text-muted-foreground mt-1">{hint}</div>}
       </CardContent>
     </Card>
   );
@@ -331,4 +359,23 @@ function ErrorBlock({ label, msg }: { label: string; msg: string }) {
       </CardContent>
     </Card>
   );
+}
+
+function interestBand(v: number) {
+  if (v < 100) return 'Niche audience';
+  if (v < 1000) return 'Small but engaged';
+  if (v < 10_000) return 'Solid mainstream demand';
+  if (v < 100_000) return 'High demand';
+  return 'Massive demand';
+}
+function competitionBand(c: number) {
+  if (c < 0.33) return 'Low ad competition';
+  if (c < 0.66) return 'Medium ad competition';
+  return 'High ad competition';
+}
+function compactNumber(n: number) {
+  if (n >= 1e9) return `${(n / 1e9).toFixed(1)}B`;
+  if (n >= 1e6) return `${(n / 1e6).toFixed(1)}M`;
+  if (n >= 1e3) return `${(n / 1e3).toFixed(1)}K`;
+  return String(n);
 }
