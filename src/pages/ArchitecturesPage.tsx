@@ -3,12 +3,12 @@ import { Network, Cpu, Battery, Zap, Building2 } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { ModuleHeader } from '@/components/ui/module-header';
 import { EmptyModuleState } from '@/components/ui/empty-module-state';
-import { useModuleContent } from '@/hooks/useGeneratedContent';
+import { architecturesContent } from '@/data/moduleContent';
 import { cn } from '@/lib/utils';
 
 export default function ArchitecturesPage() {
-  const { data: content, isLoading } = useModuleContent('architectures');
-  
+  const content: any = architecturesContent;
+  const isLoading = false;
   const hasContent = true;
 
   const iconMap: Record<string, any> = { Cpu, Zap, Battery, Building2, Network };
