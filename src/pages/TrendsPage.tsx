@@ -1,114 +1,92 @@
-import { useEffect, useMemo, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import {
-  Activity, Search, TrendingUp, Sparkles, HelpCircle, RefreshCw, DollarSign, Target, BarChart3,
-} from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { Activity, TrendingUp, TrendingDown, Minus, Info } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { ModuleHeader } from '@/components/ui/module-header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { supabase } from '@/integrations/supabase/client';
+import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import {
-  ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid,
+  ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, Legend,
+  BarChart, Bar, LabelList,
 } from 'recharts';
+import raw from '@/data/googleTrendsData.json';
 
-const DEFAULT_KEYWORDS = [
-  'bidirectional charging',
-  'V2G',
-  'vehicle-to-grid',
-  'vehicle-to-home',
-  'V2H',
-  'V2L',
-];
-
-const DATABASES = [
-  { code: 'us', label: 'United States' },
-  { code: 'uk', label: 'United Kingdom' },
-  { code: 'de', label: 'Germany' },
-  { code: 'fr', label: 'France' },
-  { code: 'es', label: 'Spain' },
-  { code: 'jp', label: 'Japan' },
-  { code: 'au', label: 'Australia' },
-  { code: 'ca', label: 'Canada' },
-];
-
-type FetchResult<T> = { ok: boolean; data?: T; error?: string };
-
-async function callTrends<T>(source: string, keyword: string, database: string): Promise<FetchResult<T>> {
-  const { data, error } = await supabase.functions.invoke('fetch-trends', {
-    body: { source, keyword, database },
-  });
-  if (error) return { ok: false, error: error.message };
-  if (!data?.ok) return { ok: false, error: data?.error ?? 'unknown' };
-  return { ok: true, data: data.data as T };
-}
-
-type Overview = {
-  keyword: string; database: string;
-  volume: number; cpc: number; competition: number; results: number;
-  trend: { month: number; value: number }[];
+type Row = { rank: number; query: string; interest: number; change: string };
+type TS = { date: string; value: number };
+type Dataset = {
+  terms: string[];
+  timeSeries: Record<string, TS[]>;
+  top: Record<string, Row[]>;
+  rising: Record<string, Row[]>;
 };
-type Related = { keyword: string; items: { phrase: string; volume: number; cpc: number; competition: number; difficulty: number }[] };
-type Questions = { keyword: string; items: { phrase: string; volume: number; cpc: number; difficulty: number }[] };
-type AutoRes = { keyword: string; suggestions: string[]; questions: string[] };
+const data = raw as Dataset;
 
-const MONTH_LABELS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+// Google Trends palette
+const COLORS = ['#4285F4', '#EA4335', '#FBBC04', '#34A853', '#FF6D01', '#9C27B0', '#00ACC1'];
 
-function difficultyColor(kd: number) {
-  if (kd < 30) return 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400';
-  if (kd < 50) return 'bg-amber-500/15 text-amber-700 dark:text-amber-400';
-  if (kd < 70) return 'bg-orange-500/15 text-orange-700 dark:text-orange-400';
-  return 'bg-red-500/15 text-red-700 dark:text-red-400';
-}
+const LOCATIONS = [
+  { code: 'WW', label: 'Worldwide', available: true },
+  { code: 'US', label: 'United States', available: false },
+  { code: 'GB', label: 'United Kingdom', available: false },
+  { code: 'DE', label: 'Germany', available: false },
+  { code: 'JP', label: 'Japan', available: false },
+];
+const TIMES = [
+  { code: '12m', label: 'Past 12 months', available: true },
+  { code: '1h', label: 'Past hour', available: false },
+  { code: '4h', label: 'Past 4 hours', available: false },
+  { code: '1d', label: 'Past day', available: false },
+  { code: '7d', label: 'Past 7 days', available: false },
+  { code: '30d', label: 'Past 30 days', available: false },
+  { code: '90d', label: 'Past 90 days', available: false },
+  { code: '5y', label: 'Past 5 years', available: false },
+];
+const SOURCES = [
+  { code: 'web', label: 'Web Search', available: true },
+  { code: 'image', label: 'Image Search', available: false },
+  { code: 'news', label: 'News Search', available: false },
+  { code: 'shopping', label: 'Google Shopping', available: false },
+  { code: 'youtube', label: 'YouTube Search', available: false },
+];
 
 export default function TrendsPage() {
-  const [keyword, setKeyword] = useState('bidirectional charging');
-  const [submitted, setSubmitted] = useState('bidirectional charging');
-  const [database, setDatabase] = useState('us');
-  const [activeTab, setActiveTab] = useState('related');
+  const [location, setLocation] = useState('WW');
+  const [time, setTime] = useState('12m');
+  const [source, setSource] = useState('web');
+  const [activeTerm, setActiveTerm] = useState(data.terms[0]);
+  const [queryType, setQueryType] = useState<'top' | 'rising'>('top');
 
-  const ov = useQuery({
-    queryKey: ['trends', 'overview', submitted, database],
-    queryFn: () => callTrends<Overview>('semrush_overview', submitted, database),
-    staleTime: 5 * 60_000,
-  });
-  const rel = useQuery({
-    queryKey: ['trends', 'related', submitted, database],
-    queryFn: () => callTrends<Related>('semrush_related', submitted, database),
-    staleTime: 5 * 60_000,
-  });
-  const qs = useQuery({
-    queryKey: ['trends', 'questions', submitted, database],
-    queryFn: () => callTrends<Questions>('semrush_questions', submitted, database),
-    staleTime: 5 * 60_000,
-  });
-  const ac = useQuery({
-    queryKey: ['trends', 'autocomplete', submitted],
-    queryFn: () => callTrends<AutoRes>('autocomplete', submitted, database),
-    staleTime: 5 * 60_000,
-  });
+  const termColor = useMemo(
+    () => Object.fromEntries(data.terms.map((t, i) => [t, COLORS[i % COLORS.length]])),
+    [],
+  );
 
-  const refetchAll = () => { ov.refetch(); rel.refetch(); qs.refetch(); ac.refetch(); };
+  // Merge all term series onto shared date axis
+  const chartData = useMemo(() => {
+    const dates = data.timeSeries[data.terms[0]].map((p) => p.date);
+    return dates.map((d, i) => {
+      const row: Record<string, string | number> = { date: d };
+      for (const term of data.terms) row[term] = data.timeSeries[term][i]?.value ?? 0;
+      return row;
+    });
+  }, []);
 
-  const semrushQuotaError = [ov.data?.error, rel.data?.error, qs.data?.error].some(isSemrushQuotaError);
+  const avgInterest = useMemo(() => {
+    return data.terms
+      .map((term) => {
+        const s = data.timeSeries[term];
+        const avg = s.reduce((a, b) => a + b.value, 0) / s.length;
+        return { term, avg: Math.round(avg), fill: termColor[term] };
+      })
+      .sort((a, b) => b.avg - a.avg);
+  }, [termColor]);
 
-  useEffect(() => {
-    if (semrushQuotaError) setActiveTab('autocomplete');
-  }, [semrushQuotaError]);
+  const rows = queryType === 'top' ? data.top[activeTerm] : data.rising[activeTerm];
 
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitted(keyword.trim() || 'bidirectional charging');
-  };
-
-  const trendSeries = useMemo(() => {
-    const t = ov.data?.data?.trend ?? [];
-    return t.map((p) => ({ month: MONTH_LABELS[(p.month - 1) % 12], value: p.value }));
-  }, [ov.data]);
+  const timeLabel = TIMES.find((t) => t.code === time)?.label ?? '';
+  const locLabel = LOCATIONS.find((l) => l.code === location)?.label ?? '';
 
   return (
     <MainLayout>
@@ -116,228 +94,235 @@ export default function TrendsPage() {
         <ModuleHeader
           icon={<Activity className="w-7 h-7 text-white" />}
           title="Search & Interest Trends"
-          description="User interest in bidirectional charging: search volume, cost-per-click, competition, related keywords and questions. Powered by Semrush."
-          badge={<Badge variant="outline">Semrush · Google Autocomplete</Badge>}
+          description="Google Trends analysis of bidirectional charging terminology: interest over time, average interest, and commonly searched queries (top and rising) per term."
+          badge={<Badge variant="outline">Google Trends · Jul 2025 - Jul 2026</Badge>}
         />
 
-        <form onSubmit={onSubmit} className="flex flex-wrap items-center gap-2 mb-6">
-          <Input
-            value={keyword}
-            onChange={(e) => setKeyword(e.target.value)}
-            placeholder="Keyword (e.g. bidirectional charging)"
-            className="max-w-xs"
-          />
-          <Select value={database} onValueChange={(v) => setDatabase(v)}>
-            <SelectTrigger className="w-[180px]"><SelectValue /></SelectTrigger>
-            <SelectContent>
-              {DATABASES.map((d) => <SelectItem key={d.code} value={d.code}>{d.label}</SelectItem>)}
-            </SelectContent>
-          </Select>
-          <Button type="submit" size="sm"><Search className="w-4 h-4 mr-2" />Analyze</Button>
-          <Button type="button" size="sm" variant="outline" onClick={refetchAll}>
-            <RefreshCw className="w-4 h-4 mr-2" />Refresh
-          </Button>
-          <div className="flex flex-wrap gap-1 ml-2">
-            {DEFAULT_KEYWORDS.map((k) => (
-              <Button
-                key={k} type="button" variant="ghost" size="sm"
-                className="h-7 text-xs"
-                onClick={() => { setKeyword(k); setSubmitted(k); }}
-              >{k}</Button>
-            ))}
-          </div>
-        </form>
-
-        {/* Overview metrics */}
-        {ov.isLoading && <SkeletonBlock label="Fetching Semrush data…" />}
-        {ov.data?.error && (isSemrushQuotaError(ov.data.error)
-          ? <SemrushQuotaBlock />
-          : <ErrorBlock label="Semrush overview" msg={ov.data.error} />)}
-        {ov.data?.ok && ov.data.data && (
-          <>
-            <div className="grid md:grid-cols-4 gap-4 mb-6">
-              <MetricTile
-                icon={<BarChart3 className="w-4 h-4" />}
-                label="Monthly search volume"
-                value={ov.data.data.volume.toLocaleString()}
-                hint={interestBand(ov.data.data.volume)}
-              />
-              <MetricTile
-                icon={<DollarSign className="w-4 h-4" />}
-                label="Avg. cost-per-click"
-                value={`$${ov.data.data.cpc.toFixed(2)}`}
-                hint={ov.data.data.cpc > 1 ? 'High commercial intent' : 'Informational intent'}
-              />
-              <MetricTile
-                icon={<Target className="w-4 h-4" />}
-                label="Ads competition"
-                value={`${Math.round(ov.data.data.competition * 100)}%`}
-                hint={competitionBand(ov.data.data.competition)}
-              />
-              <MetricTile
-                icon={<TrendingUp className="w-4 h-4" />}
-                label="SERP results"
-                value={compactNumber(ov.data.data.results)}
-                hint="Pages indexed for this term"
-              />
-            </div>
-
-            <Card className="mb-6">
-              <CardHeader>
-                <CardTitle className="text-base">12-month interest trend — "{ov.data.data.keyword}"</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-xs text-muted-foreground mb-2">
-                  Relative search interest (0-100), Semrush {ov.data.data.database.toUpperCase()} database, last 12 months.
+        {/* Term chips */}
+        <Card className="mb-4">
+          <CardContent className="p-4">
+            <div className="text-xs text-muted-foreground mb-3">Compared search terms</div>
+            <div className="flex flex-wrap gap-2">
+              {data.terms.map((t) => (
+                <div
+                  key={t}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-full border bg-background text-sm"
+                  style={{ borderColor: `${termColor[t]}55` }}
+                >
+                  <span className="w-2.5 h-2.5 rounded-full" style={{ background: termColor[t] }} />
+                  <span className="font-medium">{t}</span>
                 </div>
-                <ResponsiveContainer width="100%" height={260}>
-                  <LineChart data={trendSeries}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                    <XAxis dataKey="month" fontSize={11} />
-                    <YAxis fontSize={11} domain={[0, 100]} />
-                    <Tooltip />
-                    <Line type="monotone" dataKey="value" stroke="hsl(var(--primary))" strokeWidth={2} dot={{ r: 3 }} />
-                  </LineChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-          </>
-        )}
+              ))}
+            </div>
+          </CardContent>
+        </Card>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-          <TabsList>
-            <TabsTrigger value="related"><Sparkles className="w-4 h-4 mr-2" />Related keywords</TabsTrigger>
-            <TabsTrigger value="questions"><HelpCircle className="w-4 h-4 mr-2" />Questions people ask</TabsTrigger>
-            <TabsTrigger value="autocomplete"><Search className="w-4 h-4 mr-2" />Live autocomplete</TabsTrigger>
-          </TabsList>
+        {/* Filters */}
+        <FilterRow
+          location={location} setLocation={setLocation}
+          time={time} setTime={setTime}
+          source={source} setSource={setSource}
+        />
 
-          <TabsContent value="related" className="space-y-4">
-            {rel.isLoading && <SkeletonBlock label="Fetching related keywords…" />}
-            {rel.data?.error && !isSemrushQuotaError(rel.data.error) && <ErrorBlock label="Related keywords" msg={rel.data.error} />}
-            {rel.data?.error && isSemrushQuotaError(rel.data.error) && <SemrushQuotaBlock compact />}
-            {rel.data?.ok && rel.data.data && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base">Related keywords by search volume</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-xs text-muted-foreground mb-3">
-                    Semantically related terms with their monthly volume, CPC and keyword difficulty (KD).
-                  </div>
-                  <KeywordTable
-                    rows={rel.data.data.items.map((k) => ({
-                      phrase: k.phrase, volume: k.volume, cpc: k.cpc, difficulty: k.difficulty,
-                    }))}
+        {/* Interest over time + Average interest */}
+        <div className="grid lg:grid-cols-[1fr_320px] gap-4 mb-6">
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base flex items-center gap-2">
+                Interest over time
+                <TooltipProvider>
+                  <UITooltip>
+                    <TooltipTrigger><Info className="w-3.5 h-3.5 text-muted-foreground" /></TooltipTrigger>
+                    <TooltipContent className="max-w-xs text-xs">
+                      Numbers represent search interest relative to the highest point on the chart for the
+                      given region and time. A value of 100 is peak popularity. 0 means insufficient data.
+                    </TooltipContent>
+                  </UITooltip>
+                </TooltipProvider>
+              </CardTitle>
+              <div className="text-xs text-muted-foreground">{locLabel} · {timeLabel} · Web Search</div>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={320}>
+                <LineChart data={chartData} margin={{ top: 8, right: 16, left: 0, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                  <XAxis
+                    dataKey="date" fontSize={10} tickMargin={6}
+                    tickFormatter={(d: string) => {
+                      const dt = new Date(d);
+                      return dt.toLocaleString('en', { month: 'short', year: '2-digit' });
+                    }}
+                    minTickGap={40}
                   />
-                </CardContent>
-              </Card>
-            )}
-          </TabsContent>
-
-          <TabsContent value="questions" className="space-y-4">
-            {qs.isLoading && <SkeletonBlock label="Fetching questions…" />}
-            {qs.data?.error && !isSemrushQuotaError(qs.data.error) && <ErrorBlock label="Questions" msg={qs.data.error} />}
-            {qs.data?.error && isSemrushQuotaError(qs.data.error) && <SemrushQuotaBlock compact />}
-            {qs.data?.ok && qs.data.data && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base">Questions people ask about "{qs.data.data.keyword}"</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-xs text-muted-foreground mb-3">
-                    Question-style queries with real monthly search volume — high-intent content opportunities.
-                  </div>
-                  <KeywordTable
-                    rows={qs.data.data.items.map((k) => ({
-                      phrase: k.phrase, volume: k.volume, cpc: k.cpc, difficulty: k.difficulty,
-                    }))}
+                  <YAxis fontSize={11} domain={[0, 100]} width={32} />
+                  <Tooltip
+                    labelFormatter={(d: string) => new Date(d).toLocaleDateString('en', { day:'numeric', month:'short', year:'numeric' })}
+                    contentStyle={{ fontSize: 12 }}
                   />
-                </CardContent>
-              </Card>
-            )}
-          </TabsContent>
+                  <Legend wrapperStyle={{ fontSize: 11 }} iconType="circle" />
+                  {data.terms.map((t) => (
+                    <Line
+                      key={t} type="monotone" dataKey={t}
+                      stroke={termColor[t]} strokeWidth={2}
+                      dot={false} activeDot={{ r: 4 }}
+                    />
+                  ))}
+                </LineChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
 
-          <TabsContent value="autocomplete" className="space-y-4">
-            {ac.isLoading && <SkeletonBlock label="Fetching Google autocomplete…" />}
-            {ac.data?.error && <ErrorBlock label="Autocomplete" msg={ac.data.error} />}
-            {ac.data?.ok && ac.data.data && (
-              <div className="grid md:grid-cols-2 gap-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-base flex items-center gap-2">
-                      <Sparkles className="w-4 h-4" />Live Google autocomplete
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-xs text-muted-foreground mb-2">What users type after "{ac.data.data.keyword}" in Google.</div>
-                    <div className="flex flex-wrap gap-1.5">
-                      {ac.data.data.suggestions.map((s) => (
-                        <Badge key={s} variant="outline" className="font-normal">{s}</Badge>
-                      ))}
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base">Average interest</CardTitle>
+              <div className="text-xs text-muted-foreground">{locLabel} · {timeLabel}</div>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={320}>
+                <BarChart data={avgInterest} margin={{ top: 20, right: 12, left: 0, bottom: 40 }}>
+                  <XAxis
+                    dataKey="term" fontSize={9} interval={0}
+                    angle={-30} textAnchor="end" height={60}
+                    tickFormatter={(t: string) => (t.length > 12 ? t.slice(0, 12) + '…' : t)}
+                  />
+                  <YAxis fontSize={11} width={28} />
+                  <Bar dataKey="avg" radius={[4, 4, 0, 0]}>
+                    <LabelList dataKey="avg" position="top" fontSize={11} />
+                    {avgInterest.map((entry, i) => (
+                      <Bar key={i} dataKey="avg" fill={entry.fill} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Commonly searched queries */}
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base">Commonly searched queries</CardTitle>
+            <div className="text-xs text-muted-foreground">
+              People who searched for the selected term also searched for these queries.
+            </div>
+          </CardHeader>
+          <CardContent>
+            <Tabs value={activeTerm} onValueChange={setActiveTerm}>
+              <TabsList className="flex flex-wrap h-auto gap-1 bg-transparent p-0 mb-4">
+                {data.terms.map((t) => (
+                  <TabsTrigger
+                    key={t} value={t}
+                    className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-full text-xs px-3 py-1.5 border"
+                    style={{
+                      borderColor: activeTerm === t ? termColor[t] : `${termColor[t]}55`,
+                      background: activeTerm === t ? termColor[t] : `${termColor[t]}18`,
+                      color: activeTerm === t ? '#fff' : undefined,
+                    }}
+                  >
+                    {t}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+
+              {data.terms.map((t) => (
+                <TabsContent key={t} value={t} className="mt-0">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="text-sm text-muted-foreground">
+                      People who searched for <span className="font-semibold text-foreground">{t}</span> also searched for these queries
                     </div>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-base flex items-center gap-2">
-                      <HelpCircle className="w-4 h-4" />Question completions
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-xs text-muted-foreground mb-2">Question-style completions (what / how / can / is / why + keyword).</div>
-                    <ul className="space-y-1 text-sm">
-                      {ac.data.data.questions.map((q) => (
-                        <li key={q} className="flex items-start gap-2">
-                          <HelpCircle className="w-3.5 h-3.5 mt-0.5 text-muted-foreground shrink-0" />
-                          <span>{q}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
-              </div>
-            )}
-          </TabsContent>
-        </Tabs>
+                    <Tabs value={queryType} onValueChange={(v) => setQueryType(v as 'top' | 'rising')}>
+                      <TabsList>
+                        <TabsTrigger value="top">Top queries</TabsTrigger>
+                        <TabsTrigger value="rising">Rising queries</TabsTrigger>
+                      </TabsList>
+                    </Tabs>
+                  </div>
+                  <QueryTable rows={rows} type={queryType} />
+                </TabsContent>
+              ))}
+            </Tabs>
+          </CardContent>
+        </Card>
 
-        <div className="mt-8 text-xs text-muted-foreground space-y-1">
-          <div>
-            <strong>Sources:</strong> Semrush (search volume, CPC, competition, keyword difficulty, related terms, questions) and Google Autocomplete (live suggestions).
-          </div>
-          <div>
-            <strong>On AI-assistant usage:</strong> ChatGPT, Gemini and Claude do not publish end-user query data. Google Autocomplete + Semrush's question keywords are the closest public proxies for what users are asking AI tools about bidirectional charging.
-          </div>
+        <div className="mt-6 text-xs text-muted-foreground">
+          <strong>Source:</strong> Google Trends export ({timeLabel.toLowerCase()}, {locLabel},
+          Web Search), integrated across 7 bidirectional charging search terms. Search interest is
+          Google's relative popularity index (0-100). Rising queries labelled <em>Breakout</em>
+          grew by more than 5,000% in the period.
         </div>
       </div>
     </MainLayout>
   );
 }
 
-function KeywordTable({ rows }: { rows: { phrase: string; volume: number; cpc: number; difficulty: number }[] }) {
-  if (rows.length === 0) return <div className="text-sm text-muted-foreground">No keywords returned.</div>;
-  const max = Math.max(...rows.map((r) => r.volume), 1);
+function FilterRow({
+  location, setLocation, time, setTime, source, setSource,
+}: {
+  location: string; setLocation: (v: string) => void;
+  time: string; setTime: (v: string) => void;
+  source: string; setSource: (v: string) => void;
+}) {
   return (
-    <div className="space-y-1">
-      <div className="grid grid-cols-[1fr_120px_80px_80px] gap-3 text-[11px] uppercase tracking-wide text-muted-foreground pb-2 border-b">
-        <div>Keyword</div>
-        <div className="text-right">Volume / mo</div>
-        <div className="text-right">CPC</div>
-        <div className="text-right">KD</div>
+    <div className="flex flex-wrap gap-2 mb-4">
+      <FilterSelect label="Location" value={location} onChange={setLocation} options={LOCATIONS} />
+      <FilterSelect label="Time range" value={time} onChange={setTime} options={TIMES} />
+      <FilterSelect label="Search source" value={source} onChange={setSource} options={SOURCES} />
+    </div>
+  );
+}
+
+function FilterSelect({
+  label, value, onChange, options,
+}: {
+  label: string; value: string; onChange: (v: string) => void;
+  options: { code: string; label: string; available: boolean }[];
+}) {
+  return (
+    <div className="flex flex-col gap-1">
+      <span className="text-[10px] uppercase tracking-wide text-muted-foreground pl-1">{label}</span>
+      <Select value={value} onValueChange={onChange}>
+        <SelectTrigger className="w-[200px] h-9"><SelectValue /></SelectTrigger>
+        <SelectContent>
+          {options.map((o) => (
+            <SelectItem key={o.code} value={o.code} disabled={!o.available}>
+              <span className="flex items-center gap-2">
+                {o.label}
+                {!o.available && <span className="text-[10px] text-muted-foreground">(no data)</span>}
+              </span>
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
+  );
+}
+
+function QueryTable({ rows, type }: { rows: Row[]; type: 'top' | 'rising' }) {
+  if (!rows?.length) return <div className="text-sm text-muted-foreground">No data.</div>;
+  const max = Math.max(...rows.map((r) => r.interest), 1);
+  return (
+    <div className="border rounded-lg overflow-hidden">
+      <div className="grid grid-cols-[40px_1fr_180px_120px] gap-3 px-4 py-2 bg-muted/40 text-[11px] uppercase tracking-wide text-muted-foreground">
+        <div>#</div>
+        <div>Query</div>
+        <div className="text-right">Search interest</div>
+        <div className="text-right">{type === 'top' ? 'Change (YoY)' : 'Growth'}</div>
       </div>
-      {rows.map((r, i) => (
-        <div key={`${r.phrase}-${i}`} className="grid grid-cols-[1fr_120px_80px_80px] gap-3 items-center text-sm py-1.5 border-b border-border/40">
-          <div className="truncate">{r.phrase}</div>
+      {rows.map((r) => (
+        <div
+          key={`${r.rank}-${r.query}`}
+          className="grid grid-cols-[40px_1fr_180px_120px] gap-3 px-4 py-2 items-center text-sm border-t"
+        >
+          <div className="text-muted-foreground tabular-nums">{r.rank}</div>
+          <div className="truncate">{r.query}</div>
           <div className="flex items-center gap-2 justify-end">
-            <div className="w-16 h-1.5 bg-muted rounded overflow-hidden">
-              <div className="h-full bg-primary" style={{ width: `${(r.volume / max) * 100}%` }} />
+            <div className="w-24 h-1.5 bg-muted rounded overflow-hidden">
+              <div className="h-full bg-primary" style={{ width: `${(r.interest / max) * 100}%` }} />
             </div>
-            <span className="tabular-nums text-xs w-14 text-right">{r.volume.toLocaleString()}</span>
+            <span className="tabular-nums text-xs w-8 text-right">{r.interest}</span>
           </div>
-          <div className="text-right tabular-nums text-xs">${r.cpc.toFixed(2)}</div>
           <div className="text-right">
-            <span className={`inline-block px-1.5 py-0.5 rounded text-[11px] font-medium tabular-nums ${difficultyColor(r.difficulty)}`}>
-              {Math.round(r.difficulty)}
-            </span>
+            <ChangeBadge value={r.change} />
           </div>
         </div>
       ))}
@@ -345,67 +330,22 @@ function KeywordTable({ rows }: { rows: { phrase: string; volume: number; cpc: n
   );
 }
 
-function MetricTile({ icon, label, value, hint }: { icon?: React.ReactNode; label: string; value: number | string; hint?: string }) {
+function ChangeBadge({ value }: { value: string }) {
+  const v = (value || '').trim();
+  if (!v) return <span className="text-xs text-muted-foreground">-</span>;
+  if (/breakout/i.test(v)) {
+    return <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-500/15 text-emerald-700 dark:text-emerald-400">BREAKOUT</span>;
+  }
+  const neg = v.startsWith('-');
+  const pos = !neg && /\d/.test(v);
+  const cls = neg
+    ? 'bg-red-500/10 text-red-700 dark:text-red-400'
+    : pos ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400'
+    : 'bg-muted text-muted-foreground';
+  const Icon = neg ? TrendingDown : pos ? TrendingUp : Minus;
   return (
-    <Card>
-      <CardContent className="p-4">
-        <div className="text-xs text-muted-foreground mb-1 flex items-center gap-1.5">{icon}{label}</div>
-        <div className="text-2xl font-bold text-foreground">{value}</div>
-        {hint && <div className="text-[11px] text-muted-foreground mt-1">{hint}</div>}
-      </CardContent>
-    </Card>
+    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium ${cls}`}>
+      <Icon className="w-3 h-3" />{v}
+    </span>
   );
-}
-
-function SkeletonBlock({ label }: { label: string }) {
-  return <div className="text-sm text-muted-foreground py-6">{label}</div>;
-}
-
-function ErrorBlock({ label, msg }: { label: string; msg: string }) {
-  return (
-    <Card>
-      <CardContent className="py-6 text-sm">
-        <div className="font-medium mb-1">{label} unavailable</div>
-        <div className="text-xs text-muted-foreground">{msg}</div>
-      </CardContent>
-    </Card>
-  );
-}
-
-function SemrushQuotaBlock({ compact = false }: { compact?: boolean }) {
-  return (
-    <Card>
-      <CardContent className={compact ? 'py-5 text-sm' : 'py-6 text-sm'}>
-        <div className="font-medium mb-1">Semrush quota exhausted</div>
-        <div className="text-xs text-muted-foreground max-w-3xl">
-          The connected Semrush account returned ERROR 134: TOTAL LIMIT EXCEEDED. Search volume,
-          CPC, difficulty, and Semrush question data will populate again after the quota resets or the
-          account allowance is increased. Live Google Autocomplete remains available in the active tab.
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
-
-function isSemrushQuotaError(msg?: string) {
-  return Boolean(msg && (msg.includes('ERROR 134') || msg.includes('TOTAL LIMIT EXCEEDED') || msg.includes('quota exhausted')));
-}
-
-function interestBand(v: number) {
-  if (v < 100) return 'Niche audience';
-  if (v < 1000) return 'Small but engaged';
-  if (v < 10_000) return 'Solid mainstream demand';
-  if (v < 100_000) return 'High demand';
-  return 'Massive demand';
-}
-function competitionBand(c: number) {
-  if (c < 0.33) return 'Low ad competition';
-  if (c < 0.66) return 'Medium ad competition';
-  return 'High ad competition';
-}
-function compactNumber(n: number) {
-  if (n >= 1e9) return `${(n / 1e9).toFixed(1)}B`;
-  if (n >= 1e6) return `${(n / 1e6).toFixed(1)}M`;
-  if (n >= 1e3) return `${(n / 1e3).toFixed(1)}K`;
-  return String(n);
 }
