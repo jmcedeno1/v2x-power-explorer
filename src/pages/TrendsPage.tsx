@@ -65,12 +65,6 @@ export default function TrendsPage() {
     queryFn: () => callTrends<RedditRes>('reddit', submitted),
     staleTime: 60_000,
   });
-  const hn = useQuery({
-    queryKey: ['trends', 'hn', submitted],
-    queryFn: () => callTrends<HnRes>('hn', submitted),
-    staleTime: 60_000,
-  });
-  const bing = useQuery({ queryKey: ['trends', 'bing'], queryFn: fetchBingCoverage, staleTime: 5 * 60_000 });
 
   const redditBySub = useMemo(() => {
     const posts = rd.data?.data?.posts ?? [];
@@ -80,18 +74,7 @@ export default function TrendsPage() {
       .map(([name, count]) => ({ name, count }));
   }, [rd.data]);
 
-  const hnByMonth = useMemo(() => {
-    const stories = hn.data?.data?.stories ?? [];
-    const map = new Map<string, number>();
-    for (const s of stories) {
-      const m = s.created_at?.slice(0, 7);
-      if (m) map.set(m, (map.get(m) ?? 0) + 1);
-    }
-    return [...map.entries()].sort(([a], [b]) => a.localeCompare(b))
-      .map(([month, count]) => ({ month, count }));
-  }, [hn.data]);
-
-  const refetchAll = () => { gt.refetch(); ac.refetch(); rd.refetch(); hn.refetch(); bing.refetch(); };
+  const refetchAll = () => { gt.refetch(); ac.refetch(); rd.refetch(); };
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
