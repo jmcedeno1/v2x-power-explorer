@@ -54,6 +54,7 @@ const TOPIC_PATTERNS: { name: string; re: RegExp }[] = [
 const COMPANIES = ['Nuvve', 'Wallbox', 'Fermata', 'The Mobility House', 'dcbel', 'Enphase', 'ChargePoint', 'Emporia', 'Indra'];
 
 const RELEVANCE_RE = /\b(v2g|v2h|v2b|v2l|v2x|vehicle[- ]to[- ](grid|home|building|load|everything|x)|bidirectional (charg|ev|inverter|power)|two[- ]way charg|reverse charg)\b/i;
+const OFF_TOPIC_RE = /\b(business jet|private jet|bombardier|saudi contract|aviation|airline|aircraft|football|soccer|basketball|baseball|celebrity|movie|film festival)\b/i;
 
 async function fetchNews(): Promise<NewsDoc[]> {
   const { data, error } = await supabase
@@ -63,7 +64,12 @@ async function fetchNews(): Promise<NewsDoc[]> {
     .order('date', { ascending: false })
     .limit(2000);
   if (error) throw error;
-  return ((data ?? []) as NewsDoc[]).filter((d) => d.title && RELEVANCE_RE.test(d.title));
+  return ((data ?? []) as NewsDoc[]).filter((d) => {
+    if (!d.title) return false;
+    const raw = d.raw as any;
+    const textForFilter = `${d.title} ${d.url ?? ''} ${raw?.gdelt_query ?? ''}`;
+    return RELEVANCE_RE.test(textForFilter) && !OFF_TOPIC_RE.test(textForFilter);
+  });
 }
 
 function extractCountry(d: NewsDoc): string | null {
@@ -89,36 +95,13 @@ export default function NewsPage() {
 
   const refresh = async () => {
     setRefreshing(true);
-    // Bidirectional charging taxonomy — broadened to maximise GDELT recall.
+    // Bidirectional charging taxonomy only. Keep queries broad enough for
+    // GDELT full-text matching, while the backend rejects non-energy noise.
     const queries = [
-      // Core concepts
-      'V2G', '"vehicle-to-grid"', '"vehicle to grid"', '"bidirectional charging"',
-      '"bidirectional EV charging"', '"bidirectional charger"', '"reverse charging"',
-      // Flow variants
-      'V2H', '"vehicle-to-home"', 'V2B', '"vehicle-to-building"',
-      'V2L', '"vehicle-to-load"', 'V2X', '"vehicle-to-everything"',
-      // Use cases & value stacks
-      '"V2G pilot"', '"V2G project"', '"V2G trial"', '"V2G deployment"',
-      '"V2G fleet"', '"school bus V2G"', '"electric school bus" grid',
-      '"V2G revenue"', '"V2G investment"', '"grid services" EV',
-      '"frequency regulation" EV', '"demand response" EV',
-      '"virtual power plant" EV', 'VPP "electric vehicle"',
-      '"peak shaving" EV', '"energy arbitrage" EV',
-      // Standards & tech
-      'CHAdeMO V2G', '"ISO 15118"', '"CCS bidirectional"', '"SAE J3072"',
-      'MID meter V2G', '"DC bidirectional"', '"AC bidirectional"',
-      // Players / OEMs
-      'Nuvve', '"Fermata Energy"', '"Wallbox" V2G', 'dcbel',
-      '"The Mobility House"', 'Nissan V2G', 'Ford "Intelligent Backup Power"',
-      'Hyundai V2L', 'Kia V2L', 'GM "PowerShift"', 'Volkswagen bidirectional',
-      'BMW bidirectional', 'Renault V2G', 'Polestar bidirectional',
-      'Tesla bidirectional', 'BYD V2G', 'Rivian bidirectional',
-      // Utilities & programs
-      '"PG&E" V2G', '"Con Edison" V2G', 'Octopus V2G', '"E.ON" V2G',
-      '"Enel" V2G', 'TEPCO V2G', 'EDF V2G',
-      // Regulation & markets
-      '"FERC 2222" EV', 'Ofgem V2G', '"bidirectional charging" policy',
-      '"V2G tariff"', '"vehicle-to-grid" regulation',
+      '(V2G OR V2H OR V2B OR V2L OR V2X OR "vehicle-to-grid" OR "vehicle to grid" OR "vehicle-to-home" OR "vehicle to home" OR "vehicle-to-building" OR "vehicle to building" OR "vehicle-to-load" OR "vehicle to load" OR "vehicle-to-everything" OR "bidirectional charging" OR "bidirectional charger" OR "two-way charging" OR "reverse charging")',
+      '("bidirectional EV" OR "bidirectional electric vehicle" OR "bidirectional inverter" OR "bidirectional power")',
+      '("vehicle-to-grid" OR V2G) (pilot OR trial OR project OR deployment OR fleet)',
+      '("vehicle-to-home" OR V2H OR "vehicle-to-load" OR V2L OR "vehicle-to-building" OR V2B)',
     ];
     let fetched = 0, upserted = 0, rateLimited = 0;
     try {
