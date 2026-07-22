@@ -117,6 +117,12 @@ export default function NewsPage() {
           upserted += data?.upserted ?? 0;
         } catch { failed++; }
       }
+      // Hacker News (Algolia) — one call sweeps the taxonomy internally.
+      try {
+        const { data } = await supabase.functions.invoke('import-hn', { body: {} });
+        fetched += data?.fetched ?? 0;
+        upserted += data?.upserted ?? 0;
+      } catch { failed++; }
     } finally {
       setRefreshing(false);
     }
@@ -179,7 +185,19 @@ export default function NewsPage() {
     const uniqueDomains = new Set(news.map(extractDomain)).size;
     const uniqueCountries = new Set(news.map(extractCountry).filter(Boolean) as string[]).size;
 
-    return { total, topics, last30, uniqueDomains, uniqueCountries };
+    const hnStories = news
+      .filter((n) => (n.raw as any)?.provider === 'hn')
+      .map((n) => ({
+        id: n.id,
+        title: n.title ?? '',
+        url: n.url ?? '#',
+        date: n.date,
+        points: Number((n.raw as any)?.points ?? 0),
+        num_comments: Number((n.raw as any)?.num_comments ?? 0),
+      }))
+      .sort((a, b) => b.points - a.points);
+
+    return { total, topics, last30, uniqueDomains, uniqueCountries, hnStories };
   }, [news]);
 
   return (
@@ -188,8 +206,8 @@ export default function NewsPage() {
         <ModuleHeader
           icon={<Newspaper className="w-7 h-7 text-white" />}
           title="News & Media Landscape"
-          description="Bidirectional charging news aggregated from Bing News — all charts derived from ingested articles"
-          badge={<Badge variant="outline">Bing News</Badge>}
+          description="Bidirectional charging news and discussion aggregated from Bing News and Hacker News - all charts derived from ingested items"
+          badge={<Badge variant="outline">Bing News + Hacker News</Badge>}
         />
 
         <div className="flex justify-end mb-6">
@@ -310,9 +328,33 @@ export default function NewsPage() {
               })}
             </div>
 
+            {/* Hacker News discussion */}
+            {stats.hnStories.length > 0 && (
+              <Card className="mb-6">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0">
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <Radio className="w-4 h-4 text-primary" />
+                    Hacker News discussion
+                  </CardTitle>
+                  <Badge variant="secondary">{stats.hnStories.length} stories</Badge>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  {stats.hnStories.slice(0, 10).map((s) => (
+                    <a key={s.id} href={s.url} target="_blank" rel="noreferrer noopener"
+                       className="block hover:bg-muted/40 rounded px-2 py-1.5">
+                      <div className="text-sm font-medium line-clamp-2">{s.title}</div>
+                      <div className="text-[11px] text-muted-foreground">
+                        {s.points} pts · {s.num_comments} comments{s.date ? ` · ${s.date}` : ''}
+                      </div>
+                    </a>
+                  ))}
+                </CardContent>
+              </Card>
+            )}
 
             {/* Latest articles */}
             <ArticlesList news={news} />
+
 
           </>
         )}

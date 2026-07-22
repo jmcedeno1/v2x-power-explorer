@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
-  Activity, Search, MessageSquare, Globe2, TrendingUp, ExternalLink,
+  Activity, Search, MessageSquare, TrendingUp, ExternalLink,
   Sparkles, HelpCircle, RefreshCw,
 } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
@@ -45,24 +45,6 @@ type GTrends = {
 
 type AutoRes = { keyword: string; suggestions: string[]; questions: string[] };
 type RedditRes = { keyword: string; count: number; posts: { title: string; subreddit: string; score: number; num_comments: number; created_utc: number; permalink: string }[] };
-type HnRes = { keyword: string; count: number; stories: { title: string; url: string; points: number; num_comments: number; created_at: string; author: string; objectID: string }[] };
-
-type BingPoint = { month: string; count: number };
-
-async function fetchBingCoverage(): Promise<BingPoint[]> {
-  const { data } = await supabase
-    .from('documents')
-    .select('date')
-    .eq('source', 'gdelt')
-    .not('date', 'is', null)
-    .limit(5000);
-  const map = new Map<string, number>();
-  for (const d of data ?? []) {
-    const m = (d as any).date?.slice(0, 7);
-    if (m) map.set(m, (map.get(m) ?? 0) + 1);
-  }
-  return [...map.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([month, count]) => ({ month, count }));
-}
 
 export default function TrendsPage() {
   const [keyword, setKeyword] = useState('bidirectional charging');
@@ -83,12 +65,6 @@ export default function TrendsPage() {
     queryFn: () => callTrends<RedditRes>('reddit', submitted),
     staleTime: 60_000,
   });
-  const hn = useQuery({
-    queryKey: ['trends', 'hn', submitted],
-    queryFn: () => callTrends<HnRes>('hn', submitted),
-    staleTime: 60_000,
-  });
-  const bing = useQuery({ queryKey: ['trends', 'bing'], queryFn: fetchBingCoverage, staleTime: 5 * 60_000 });
 
   const redditBySub = useMemo(() => {
     const posts = rd.data?.data?.posts ?? [];
@@ -98,18 +74,7 @@ export default function TrendsPage() {
       .map(([name, count]) => ({ name, count }));
   }, [rd.data]);
 
-  const hnByMonth = useMemo(() => {
-    const stories = hn.data?.data?.stories ?? [];
-    const map = new Map<string, number>();
-    for (const s of stories) {
-      const m = s.created_at?.slice(0, 7);
-      if (m) map.set(m, (map.get(m) ?? 0) + 1);
-    }
-    return [...map.entries()].sort(([a], [b]) => a.localeCompare(b))
-      .map(([month, count]) => ({ month, count }));
-  }, [hn.data]);
-
-  const refetchAll = () => { gt.refetch(); ac.refetch(); rd.refetch(); hn.refetch(); bing.refetch(); };
+  const refetchAll = () => { gt.refetch(); ac.refetch(); rd.refetch(); };
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -153,8 +118,6 @@ export default function TrendsPage() {
             <TabsTrigger value="google"><TrendingUp className="w-4 h-4 mr-2" />Google Trends</TabsTrigger>
             <TabsTrigger value="autocomplete"><Sparkles className="w-4 h-4 mr-2" />Autocomplete & PAA</TabsTrigger>
             <TabsTrigger value="reddit"><MessageSquare className="w-4 h-4 mr-2" />Reddit</TabsTrigger>
-            <TabsTrigger value="hn"><MessageSquare className="w-4 h-4 mr-2" />Hacker News</TabsTrigger>
-            <TabsTrigger value="bing"><Globe2 className="w-4 h-4 mr-2" />News Coverage</TabsTrigger>
           </TabsList>
 
           {/* Google Trends */}
@@ -334,81 +297,6 @@ export default function TrendsPage() {
             )}
           </TabsContent>
 
-          {/* Hacker News */}
-          <TabsContent value="hn" className="space-y-4">
-            {hn.isLoading && <SkeletonBlock label="Fetching Hacker News…" />}
-            {hn.data?.error && <ErrorBlock label="HN" msg={hn.data.error} />}
-            {hn.data?.ok && hn.data.data && (
-              <>
-                <div className="grid md:grid-cols-3 gap-4">
-                  <MetricTile label="Total stories matched" value={hn.data.data.count} />
-                  <MetricTile label="Stories fetched" value={hn.data.data.stories.length} />
-                  <MetricTile
-                    label="Avg. points"
-                    value={hn.data.data.stories.length
-                      ? Math.round(hn.data.data.stories.reduce((s, p) => s + (p.points ?? 0), 0) / hn.data.data.stories.length)
-                      : 0}
-                  />
-                </div>
-
-                <Card>
-                  <CardHeader><CardTitle className="text-base">Story volume over time</CardTitle></CardHeader>
-                  <CardContent>
-                    <ResponsiveContainer width="100%" height={240}>
-                      <BarChart data={hnByMonth}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                        <XAxis dataKey="month" fontSize={11} />
-                        <YAxis fontSize={11} allowDecimals={false} />
-                        <Tooltip />
-                        <Bar dataKey="count" fill="hsl(var(--primary))" />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader><CardTitle className="text-base">Top HN stories</CardTitle></CardHeader>
-                  <CardContent className="space-y-2">
-                    {[...hn.data.data.stories].sort((a, b) => (b.points ?? 0) - (a.points ?? 0)).slice(0, 10).map((s) => (
-                      <a key={s.objectID}
-                         href={s.url ?? `https://news.ycombinator.com/item?id=${s.objectID}`}
-                         target="_blank" rel="noreferrer noopener"
-                         className="block text-sm hover:bg-muted/50 rounded px-2 py-1">
-                        <div className="flex items-start justify-between gap-2">
-                          <span className="line-clamp-2 flex-1">{s.title}</span>
-                          <ExternalLink className="w-3.5 h-3.5 text-muted-foreground shrink-0 mt-0.5" />
-                        </div>
-                        <div className="text-[11px] text-muted-foreground">
-                          {s.points ?? 0} pts · {s.num_comments ?? 0} comments · {s.created_at?.slice(0, 10)}
-                        </div>
-                      </a>
-                    ))}
-                  </CardContent>
-                </Card>
-              </>
-            )}
-          </TabsContent>
-
-          {/* Bing News */}
-          <TabsContent value="bing" className="space-y-4">
-            <Card>
-              <CardHeader><CardTitle className="text-base">News coverage volume (Bing News)</CardTitle></CardHeader>
-              <CardContent>
-                <div className="text-xs text-muted-foreground mb-2">
-                  Monthly count of ingested bidirectional-charging news articles. Refresh from the News module to update.
-                </div>
-                <ResponsiveContainer width="100%" height={260}>
-                  <BarChart data={bing.data ?? []}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                    <XAxis dataKey="month" fontSize={11} />
-                    <YAxis fontSize={11} allowDecimals={false} />
-                    <Tooltip />
-                    <Bar dataKey="count" fill="hsl(var(--primary))" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-          </TabsContent>
         </Tabs>
 
         <div className="mt-8 text-xs text-muted-foreground">
