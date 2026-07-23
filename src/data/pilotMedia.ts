@@ -744,6 +744,87 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
     ],
     partnerLead: 'LUT University (coordinator, HEMS integration); University of Salford (smart charging algorithms); General Mechatronics LLC (bidirectional home charger hardware)',
   },
+
+  'mobilities for eu (ostra sport park, dresden)': {
+    references: [
+      { title: 'Enabling Intelligent Bidirectional Charging: A Real-World Communication Interface (arXiv preprint)', url: 'https://arxiv.org/abs/2605.15731', source: 'Wang et al., TU Dresden', date: 'May 2026' },
+      { title: 'Full HTML version of the arXiv paper', url: 'https://arxiv.org/html/2605.15731v1', source: 'arXiv' },
+      { title: 'Conference paper - 9th E-Mobility Power System Integration Symposium', url: 'https://digital-library.theiet.org/doi/10.1049/icp.2025.4166', source: 'IET / EMOB 2025', date: 'Oct 2025' },
+      { title: 'Smart City Dresden - project portfolio (Digital Sports Park / Ostra)', url: 'https://smartcity.dresden.de/en/projects', source: 'City of Dresden' },
+    ],
+    businessModel: {
+      type: 'Publicly funded research and demonstration',
+      description: 'EU / Horizon-funded demonstrator; value is proven through improved local load balancing and user-aware V2G rather than a direct revenue stream.',
+    },
+    standardization: {
+      standard: 'OCPP for EVSE-to-backend; OBD-II wireless for early state-of-charge; 5G campus network for low-latency control.',
+      status: 'Prototype implementation; interfaces tested against draft ISO 15118-20 workflows.',
+    },
+    technology: {
+      overview: 'Multi-level communication architecture linking EV, charging station, tablet-based user interface and grid control centre, driven by a central optimisation platform.',
+      hardware: [
+        { name: 'Bidirectional AC charging station', details: ['Deployed at Ostra Sport Park', 'Coupled to campus 5G radio'] },
+        { name: 'Wireless OBD-II dongle', details: ['Early access to vehicle state-of-charge before plug-in'] },
+        { name: 'Open middleware node', details: ['Aggregates vehicle telemetry over 5G'] },
+      ],
+      software: [
+        { name: 'Central optimisation platform', details: ['Uses user preferences (departure time, energy need) plus grid conditions to schedule charge/discharge'] },
+        { name: 'Tablet-based user interface', details: ['Captures driver constraints and shows session status'] },
+      ],
+    },
+    timeline: [
+      { phase: 'Project start', year: '2023', description: 'Mobilities for EU kicks off with TU Dresden and city partners.' },
+      { phase: 'Ostra Sport Park deployment', year: '2024-2025', description: 'Bidirectional charging hardware, 5G campus network and optimiser integrated on site.' },
+      { phase: 'Field validation', year: '2025', description: 'Results presented at the 9th E-Mobility Power System Integration Symposium (Berlin).' },
+      { phase: 'Project end', year: '2026', description: 'Final assessment as a benchmark for positive energy districts.' },
+    ],
+    partnerLead: 'TU Dresden - Deutsche Telekom Chair of Communication Networks (technical lead)',
+    gapExplanations: {
+      'user acceptance': 'Drivers must trust that departure times and minimum SoC are respected before allowing discharge.',
+      'standards': 'OBD-II and OCPP flows still need mapping to emerging ISO 15118-20 bidirectional profiles.',
+      'metering': 'Sub-metering at a shared sports-park connection point is not yet standardised for V2G settlement.',
+    },
+  },
+
+  'dymobat (ostra sport park, dresden)': {
+    references: [
+      { title: 'DymoBat project site', url: 'https://dymobat.de/', source: 'DymoBat consortium' },
+      { title: 'Shared Dresden demonstrator - arXiv paper', url: 'https://arxiv.org/abs/2605.15731', source: 'Wang et al., TU Dresden', date: 'May 2026' },
+      { title: 'Smart City Dresden - project portfolio', url: 'https://smartcity.dresden.de/en/projects', source: 'City of Dresden' },
+    ],
+    businessModel: {
+      type: 'BMWK-funded research consortium',
+      description: 'Public funding covers technology development; the target value stream is frequency-stabilisation services delivered by aggregated EV fleets and stationary batteries.',
+    },
+    standardization: {
+      standard: 'Resilient wireless mesh + 5G; AI-based forecasting and control; grid interface via SachsenNetze DSO.',
+      status: 'Under development within the five DymoBat work packages.',
+    },
+    technology: {
+      overview: 'AI-assisted communication and control stack that treats EV fleets and stationary storage as a single flexible resource for the distribution grid.',
+      hardware: [
+        { name: 'Bidirectional charging infrastructure', details: ['Deployed at Ostra Sport Park', 'Operated with Comfort Charge and SachsenEnergie'] },
+        { name: 'Stationary battery storage', details: ['Co-optimised with EV fleet for frequency response'] },
+        { name: 'Wireless mesh + 5G comms', details: ['Provided by Meshmerize and campus 5G'] },
+      ],
+      software: [
+        { name: 'AI forecasting and optimisation', details: ['Developed with SAP and TU Dresden', 'Predicts demand, PV and vehicle availability'] },
+        { name: 'DSO interface', details: ['Integration with SachsenNetze for grid signals'] },
+      ],
+    },
+    timeline: [
+      { phase: 'Project start', year: '2023', description: 'DymoBat consortium formed around TU Dresden.' },
+      { phase: 'Platform development', year: '2023-2024', description: 'Work packages on communication, AI optimisation and grid integration progress in parallel.' },
+      { phase: 'Field integration at Ostra', year: '2025', description: 'Bidirectional charging and storage integrated at the Dresden demo site.' },
+      { phase: 'Project end', year: '2026', description: 'Evaluation of frequency-stabilisation services from aggregated EV and battery flexibility.' },
+    ],
+    partnerLead: 'TU Dresden (coordinator); SAP, Meshmerize, CampusGenius, City of Dresden, SachsenEnergie, SachsenNetze, Comfort Charge',
+    gapExplanations: {
+      'tso-dso signalling': 'Frequency products from DSO-connected assets still lack standard activation and settlement paths.',
+      'standards': 'Aggregating EVs and stationary batteries for frequency response requires interfaces that are not yet harmonised.',
+      'cybersecurity': 'AI-driven control over 5G / mesh links raises new authentication and integrity requirements.',
+    },
+  },
 };
 
 
