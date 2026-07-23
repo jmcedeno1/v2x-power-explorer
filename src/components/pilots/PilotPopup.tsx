@@ -690,7 +690,7 @@ function FallbackPopup({ pilot, open, onClose }: { pilot: any; open: boolean; on
                           <h5 className="text-sm font-semibold text-foreground">{g}</h5>
                         </div>
                         <p className="text-sm text-muted-foreground leading-relaxed">
-                          {detail || 'Identified as an open technical or regulatory gap for this pilot. Additional context to be added as sources are collected.'}
+                          {detail || 'Open technical or regulatory gap for this pilot.'}
                         </p>
                       </div>
                     );
