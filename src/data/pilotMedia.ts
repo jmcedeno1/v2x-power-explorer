@@ -484,6 +484,60 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
     ],
     partnerLead: 'DTU (Technical University of Denmark), Nuvve (aggregator), Enel X (charger OEM), Nissan / Mitsubishi / PSA (vehicle OEMs), Frederiksberg Forsyning (fleet operator), Energinet (TSO), Insero',
   },
+  'shanghai district grid v2g pilot': {
+    references: [
+      { title: 'Shanghai starts V2G pilot', url: 'https://www.electrive.com/2025/04/05/shanghai-starts-v2g-pilot/', source: 'electrive', date: 'Apr 2025' },
+      { title: 'China sets up 30 large-scale V2G pilot projects', url: 'https://www.enlit.world/library/china-sets-up-30-large-scale-vehicle-to-grid-pilot-projects', source: 'Enlit World', date: 'Apr 2025' },
+      { title: 'China\'s electric vehicle bidirectional charging', url: 'https://restofworld.org/2025/china-electric-vehicle-bidirectional-charging/', source: 'Rest of World', date: '2025' },
+      { title: 'V2G in Shanghai - technical study', url: 'https://www.mdpi.com/1996-1073/19/8/1986', source: 'Energies (MDPI)' },
+      { title: 'Shanghai V2G research article', url: 'https://base4zgdl.xml-journal.net/en/article/doi/10.11930/j.issn.1004-9649.2012.4.92.3', source: 'Power System Technology' },
+      { title: 'IEEE paper on Shanghai V2G integration', url: 'https://ieeexplore.ieee.org/document/10991793', source: 'IEEE Xplore' },
+    ],
+    gapExplanations: {
+      'Equipment compatibility':
+        'The pilot deliberately mixes 19 EVs from 10 automakers with 13 chargers from 9 manufacturers to stress-test interoperability of bidirectional handshakes, SoC reporting and safe shutdown - a prerequisite before scaling to the 30,000-50,000 V2G stations Shanghai plans by 2030.',
+      'Grid adaptability':
+        'State Grid Shanghai is validating that the distribution grid can absorb the 20 MW of V2G discharge on top of a 300 MW smart-charging network without protection or voltage-quality issues.',
+      'Demand response flexibility':
+        'The test measures how quickly the aggregated fleet can respond to dispatch signals during peak demand - the core value proposition justifying the national rollout.',
+      'Business model':
+        'Chinese industry experts flag that viable commercial models are still missing: inter-regional/inter-provincial market rules, retail tariffs and revenue-sharing between drivers, aggregators and grid companies remain underdeveloped.',
+      'Battery degradation':
+        'Battery lifespan under frequent bidirectional cycling is one of the explicit hurdles named by China Briefing; the pilot generates the evidence base needed to reassure OEMs and consumers.',
+      'Charger cost':
+        'Upgrading existing charging stations to bidirectional operation carries substantial capex, cited as a key barrier to large-scale rollout even after the technical pilots succeed.',
+    },
+    businessModel: {
+      type: 'Government-led multi-OEM V2G pilot (grid utility as aggregator)',
+      description:
+        'State Grid Shanghai operates the pilot on behalf of the NDRC program. EV owners and fleet operators provide vehicles; grid company handles dispatch, metering and settlement. Commercial retail products are expected to follow post-evaluation, contingent on the NDRC establishing market rules for V2G participation in electricity trading.',
+    },
+    standardization: {
+      standard: 'Chinese GB/T bidirectional DC (ChaoJi-aligned)',
+      status: 'Pilot supports the NDRC-led national framework for large-scale V2G interaction; results feed a post-pilot evaluation - projects that underperform are removed from the national list.',
+    },
+    technology: {
+      overview: 'District-scale bidirectional network combining passenger cars, buses and heavy trucks on 13 multi-vendor V2G stations, operated by State Grid Shanghai.',
+      hardware: [
+        { name: 'V2G charging stations', details: ['13 bidirectional units', '9 different manufacturers', 'Support cars, buses and heavy trucks'] },
+        { name: 'EV fleet', details: ['19 vehicles', '10 automakers', 'Mixed vehicle classes: passenger, bus, truck'] },
+        { name: 'Underlying network', details: ['300,000 kW smart charging capacity', '20,000 kW V2G discharge capacity'] },
+      ],
+      software: [
+        { name: 'State Grid dispatch platform', details: ['Peak-shaving dispatch', 'Grid access and metering', 'Multi-OEM interoperability testing'] },
+        { name: 'NDRC evaluation framework', details: ['Compatibility, adaptability and flexibility KPIs', 'Post-pilot removal mechanism for underperformers'] },
+      ],
+    },
+    timeline: [
+      { phase: 'National policy', year: 'Jan 2024', description: 'NDRC publishes implementation guidelines for EV/PHEV interaction with the power grid.' },
+      { phase: 'Call for pilots', year: 'Sep 2024', description: 'NDRC opens applications for large-scale V2G pilot cities.' },
+      { phase: 'Pilot selection', year: 'Apr 2025', description: 'NDRC announces 30 pilot projects across 9 cities; Shanghai gets 4.' },
+      { phase: 'Test launch', year: '31 Mar 2025', description: 'First fully integrated V2G test kicks off in Shanghai with 19 EVs and 13 chargers.' },
+      { phase: 'Initial test window', year: 'Mar-Apr 2025', description: 'One-month integrated test evaluates compatibility, grid adaptability and flexibility.' },
+      { phase: 'City rollout target', year: 'by 2030', description: 'Shanghai plan targets 30,000-50,000 V2G-enabled charging stations.' },
+    ],
+    partnerLead: 'State Grid Shanghai (operator), NDRC, National Energy Administration, MIIT, SAMR, 10 automakers, 9 EVSE manufacturers',
+  },
 };
 
 
