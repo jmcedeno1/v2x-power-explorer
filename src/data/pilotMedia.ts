@@ -943,7 +943,7 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
       { phase: 'Typhoon Morakot', year: '2009', description: 'Original Xiaolin Village is buried by landslides during the 88 Flood; reconstruction begins in Jiaxian, Kaohsiung.' },
       { phase: 'Sunlight Xiaolin rollout', year: '2010-2015', description: 'E.T.T. Storage leases rooftops on rebuilt homes and installs distributed PV with battery storage, selling generation to Taipower.' },
       { phase: 'Intelligent Microgrid Demonstration', year: '2016-2021', description: 'Collaboration with NCSIST adds a centralised storage unit and intelligent dispatch to manage local distribution constraints.' },
-      { phase: '3/15 blackout resilience', year: '2022', description: 'During Taiwan''s 3/15 major blackout, Sunlight Xiaolin remains powered via islanded microgrid operation.' },
+      { phase: '3/15 blackout resilience', year: '2022', description: 'During Taiwan\'s 3/15 major blackout, Sunlight Xiaolin remains powered via islanded microgrid operation.' },
       { phase: 'V2G configuration study', year: '2024', description: 'IEEE paper compares AC and DC coupled V2G configurations at the Xiaolin microgrid for frequency and voltage ancillary services.' },
     ],
     partnerLead: 'E.T.T. Storage (Sunlight Xiaolin operator), NCSIST, Taipower, NTUST',
