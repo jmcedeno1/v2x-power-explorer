@@ -591,6 +591,60 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
     ],
     partnerLead: 'SSE Enterprise (lead), BYD, UK Power Networks, University of Leeds, Innovate UK, BEIS/OLEV, Origami Energy',
   },
+  'revs': {
+    references: [
+      { title: 'REVS project page', url: 'https://arena.gov.au/projects/realising-electric-vehicle-to-grid-services/', source: 'ARENA', date: '2020-2025' },
+      { title: 'Insights from the REVS Project - Final Report (Energeia for ARENA)', url: 'https://arena.gov.au/assets/2024/02/ARENA-Vehicle-to-Grid-Insights-Final-Report.pdf', source: 'ARENA / Energeia', date: 'Feb 2024' },
+      { title: 'REVS Lessons Learnt 1 (BSGIP, ANU)', url: 'https://arena.gov.au/assets/2021/09/revs-lessons-learnt-report.pdf', source: 'ARENA / ANU BSGIP', date: 'Apr 2021' },
+      { title: 'REVS Lessons Learnt 2 - Certification against AS/NZS 4777.2', url: 'https://arena.gov.au/assets/2022/05/realising-electric-vehicle-to-grid-services-lessons-learnt-2.pdf', source: 'ARENA / ANU BSGIP', date: 'May 2022' },
+      { title: 'Crossing sectors - a how-to guide for putting V2G into practice', url: 'https://arena.gov.au/assets/2022/08/realising-electric-vehicle-to-grid-services-crossing-sectors-report.pdf', source: 'ARENA / ANU BSGIP', date: 'Jun 2022' },
+      { title: 'Evaluation of FCAS Capabilities of a V2G-Capable EV Charger - Case Study', url: 'https://arena.gov.au/assets/2023/01/assessment-of-fcas-capabilities-of-v2g-capable-ev-charger-case-study.pdf', source: 'BSGIP, ANU', date: 'Jun 2022' },
+      { title: 'World-leading electric vehicle-to-grid trial in ACT', url: 'https://arena.gov.au/news/world-leading-electric-vehicle-to-grid-trial-in-act/', source: 'ARENAWIRE', date: 'Jul 2020' },
+      { title: 'REVS on V2G-Hub', url: 'https://www.v2g-hub.com/projects/realising-electric-vehicle-to-grid-services/', source: 'V2G-Hub' },
+      { title: 'The vehicle-to-grid revolution has arrived in Australia', url: 'https://www.nissan.com.au/about-nissan/news-and-events/news/2022/Dec/the-vehicle-to-grid-revolution-ha-arrived-in-australia.html', source: 'Nissan Australia', date: 'Dec 2022' },
+      { title: 'V2G charging approved in South Australia (Wallbox Quasar)', url: 'https://wallbox.com/en/newsroom/v2g-charging-approved-south-australia', source: 'Wallbox' },
+      { title: 'When 500,000 homes in Victoria lost power, these Canberra EVs got to work', url: 'https://region.com.au/when-500000-homes-in-victoria-lost-power-these-canberra-evs-got-to-work/787013/', source: 'Region Canberra', date: 'Jul 2024' },
+      { title: 'BSGIP research page - REVS', url: 'https://bsgip.com/research/realising-electric-vehicles-to-grid-services/', source: 'ANU BSGIP' },
+      { title: 'V2G tech offers lucrative market for EV fleet owners', url: 'https://www.pv-magazine-australia.com/2024/03/12/vehicle-to-grid-tech-offers-potentially-lucrative-market-for-ev-fleet-owners/', source: 'pv magazine Australia', date: 'Mar 2024' },
+    ],
+    gapExplanations: {
+      'inverter certification delays':
+        'The Wallbox Quasar had to be certified against AS/NZS 4777.2:2020 as a bidirectional inverter - the first such certification in Australia. Test procedures written for stationary PV inverters had to be reinterpreted for a vehicle-coupled asset, driving multi-year delays and rework of firmware, protection settings and grid-support functions before commercial deployment could proceed.',
+      'scaling beyond government fleet':
+        'REVS relied on ACT Government and ActewAGL fleet vehicles with predictable duty cycles, workplace charging and a single retailer. Extending V2G to private drivers, mixed-brand vehicles and multi-retailer settings needs new consumer contracts, warranty positions from OEMs, and a metering/settlement framework that today does not exist at scale in the NEM.',
+    },
+    businessModel: {
+      type: 'Contingency FCAS revenue + fleet charging optimisation',
+      description: 'ActewAGL, as the registered market participant, monetized aggregated Quasar chargers as a contingency FCAS (raise) resource in the AEMO NEM. Fleet owners retained the vehicles for daily use; V2G revenue offset charging cost and part of the vehicle TCO. ARENA/Energeia''s 2024 final report modelled up to ~AUD 12k/vehicle/year of FCAS revenue under favourable conditions.',
+    },
+    standardization: {
+      standard: 'AS/NZS 4777.2:2020 (grid-connect inverter), CHAdeMO V2G, AEMO FCAS market rules',
+      status: 'First bidirectional EV charger (Wallbox Quasar) certified in Australia via REVS; certification later unlocked residential V2G approval in South Australia.',
+    },
+    technology: {
+      overview: 'DC bidirectional charging via CHAdeMO between Nissan LEAF ZE1 vehicles and Wallbox Quasar 1 chargers, aggregated by ActewAGL for contingency-raise FCAS bids into the AEMO NEM.',
+      hardware: [
+        { name: 'Nissan LEAF ZE1', details: ['40 kWh battery', 'CHAdeMO port used for V2G', '51 fleet vehicles across 11 sites'] },
+        { name: 'Wallbox Quasar 1', details: ['Single-phase bidirectional DC charger', '7.4 kW per unit', 'First unit certified against AS/NZS 4777.2:2020 in Australia'] },
+        { name: 'Site metering + comms', details: ['Per-site sub-metering', 'Cellular / site LAN backhaul to aggregator platform'] },
+      ],
+      software: [
+        { name: 'ActewAGL aggregator platform', details: ['Bids aggregated Quasar fleet as contingency FCAS (raise)', 'Dispatch integrated with AEMO market signals'] },
+        { name: 'BSGIP analytics (ANU)', details: ['Charger performance vs AS/NZS 4777.2', 'FCAS response characterisation', 'Fleet duty-cycle and SoC analysis'] },
+        { name: 'Fleet booking integration', details: ['Departure-time SoC guarantees for ACT Government / ActewAGL drivers'] },
+      ],
+    },
+    timeline: [
+      { phase: 'ARENA funding announcement', year: 'Jul 2020', description: 'ARENA commits AUD 2.4M to ActewAGL for a ~AUD 7.22M V2G trial - billed as one of the largest in the world at the time.' },
+      { phase: 'Deployment', year: '2021-2022', description: 'Wallbox Quasar chargers rolled out across 11 Canberra fleet sites paired with Nissan LEAFs; certification work against AS/NZS 4777.2 runs in parallel.' },
+      { phase: 'First certification', year: '2022', description: 'Wallbox Quasar becomes the first bidirectional EV charger certified against AS/NZS 4777.2 in Australia, later enabling residential V2G approval in South Australia.' },
+      { phase: 'FCAS market participation', year: '2023', description: 'ActewAGL registers and dispatches the aggregated Quasar fleet as a contingency-raise FCAS resource in the AEMO NEM.' },
+      { phase: 'Victoria storm event', year: 'Feb 2024', description: 'REVS EVs contribute contingency FCAS during the 13 February Victorian storm event that blacked out ~500,000 homes - a live demonstration of fleet V2G value.' },
+      { phase: 'Final report', year: 'Feb 2024', description: 'Energeia publishes the ARENA V2G Insights Final Report, quantifying up to ~AUD 12k/vehicle/year of FCAS revenue potential.' },
+      { phase: 'Project completion', year: 'Nov 2025', description: 'REVS formally concludes on 21 November 2025; lessons feed BSGIP''s follow-on residential and fleet V2G programs.' },
+    ],
+    partnerLead: 'ActewAGL Retail (lead), Nissan Australia, Wallbox, JET Charge, SG Fleet, ANU BSGIP, ACT Government, Evoenergy, ARENA',
+  },
 };
 
 
