@@ -569,10 +569,10 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
       status: 'Delivered UK evidence base for AC V2G at depot scale and for aggregated G99 certification of mobile generators. Findings feed the UK smart-charging and flexibility policy tracks.',
     },
     technology: {
-      overview: 'AC-based V2G at Europe\'s largest e-bus depot, aggregated to over 1 MW of grid export by an Origami energy router coordinating BYD buses through the cloud.',
+      overview: 'AC-based V2G at Europe\'s largest e-bus depot, with an Origami energy router coordinating BYD buses through the cloud to trigger safe discharge back to the grid.',
       hardware: [
         { name: 'BYD electric double-decker bus', details: ['Battery up to 382 kWh', 'AC charging at 80 kW', 'Two 150 kW electric motors', 'V2G-enabled variant'] },
-        { name: 'Northumberland Park depot', details: ['Europe\'s largest electric bus depot', 'Nearly 100 zero-emission buses on site', '>1 MW aggregated V2G export capacity'] },
+        { name: 'Northumberland Park depot', details: ['Europe\'s largest electric bus depot', 'Nearly 100 zero-emission buses on site', 'V2G export power not publicly disclosed'] },
         { name: 'Origami energy router', details: ['Local site dispatch and metering', 'Detects site frequency for FFR'] },
       ],
       software: [
@@ -585,7 +585,7 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
       { phase: 'V2G competition award', year: '2018', description: 'OLEV / BEIS award Bus2Grid under the V2G competition (UKRI ref 104230); consortium formed with SSE Enterprise, BYD, UK Power Networks and University of Leeds.' },
       { phase: 'Project launch', year: 'Summer 2018', description: 'Bus2Grid begins - billed as the world\'s largest V2G project.' },
       { phase: 'G99 regulation', year: '2019', description: 'New G99 rules for generators take effect; consortium develops aggregated certification approach for depot buses.' },
-      { phase: 'Depot operational', year: '2020', description: 'Northumberland Park depot capable of returning >1 MW to the grid; wholesale, DSO and ESO services tested.' },
+      { phase: 'Depot operational', year: '2020', description: 'Northumberland Park depot begins returning energy to the grid; wholesale, DSO and ESO services tested (site export power not publicly disclosed).' },
       { phase: 'Whitepaper', year: '2021', description: '"Innovating Hard and Soft" whitepaper published, sharing technical and commercial lessons.' },
       { phase: 'Project completion', year: '2022', description: 'Findings inform UK V2G policy, DNO connection rules and SSE\'s commercial flexibility offer.' },
     ],
