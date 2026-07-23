@@ -696,8 +696,8 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
     ],
     partnerLead: 'State Grid Shenzhen and Shenzhen Virtual Power Plant Management Center (operations); NDRC / NEA (national V2G pilot program); Guangming District Government (site host)',
   },
-};
   'budapest v2h demonstrator (drive2x)': {
+
     references: [
       { title: 'DriVe2X Demo Site: Budapest (V2H)', url: 'https://drive2x.eu/demo_sites/budapest/', source: 'DriVe2X' },
       { title: 'DriVe2X Demo Sites overview', url: 'https://drive2x.eu/demo-sites/', source: 'DriVe2X' },
