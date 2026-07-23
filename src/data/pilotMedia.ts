@@ -913,7 +913,43 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
       'cybersecurity': 'AI-driven control over 5G / mesh links raises new authentication and integrity requirements.',
     },
   },
+  'xiaolin village microgrid': {
+    references: [
+      { title: 'Comparison of Different V2G Configurations for A Microgrid System in Terms of Different Ancillary Service Controls', url: 'https://ieeexplore.ieee.org/document/10560936', source: 'IEEE Xplore', date: '2024' },
+      { title: 'Enhancing Power System Resilience and Maximizing Green Energy with Microgrids and Distributed Energy Storage (Sunlight Xiaolin case)', url: 'https://www.energy-omni.com/en/product/detail/AT006013?categoryId=807ZG1CTjfHq6XsE', source: 'EnergyOMNI / E.T.T. Storage', date: 'Oct 2024' },
+    ],
+    gapExplanations: {
+      'islanding control': 'Seamless transfer between grid-connected and islanded modes must handle PV intermittency without tripping loads.',
+      'ancillary service configuration': 'AC vs DC coupled V2G topologies trade off efficiency, cost and speed of frequency and voltage support.',
+      'residential V2G integration': 'Household-scale bidirectional chargers must coexist with rooftop PV, stationary batteries and a shared dispatch controller.',
+    },
+    businessModel: {
+      type: 'Community resilience microgrid with V2G research overlay',
+      description: 'Rooftop PV is leased on rebuilt homes with residents receiving rental income while E.T.T. Storage sells generation to Taipower. A centralised dispatch system optimises local self-consumption and provides backup power during grid outages; V2G is added as an R&D layer to test ancillary services.',
+    },
+    technology: {
+      overview: 'Community PV plus battery microgrid in rebuilt Xiaolin Village, extended with bidirectional EV charging research to compare V2G configurations for ancillary services.',
+      hardware: [
+        { name: 'Rooftop PV', details: ['About 3 kW per participating house', 'Deployed on rebuilt post-Morakot homes'] },
+        { name: 'Household battery storage', details: ['6 to 10 kWh per house', 'Plus a centralised community storage unit'] },
+        { name: 'Bidirectional EV charger', details: ['Used to compare AC and DC coupled V2G topologies for ancillary services'] },
+      ],
+      software: [
+        { name: 'Intelligent dispatch system', details: ['Coordinates PV, storage and loads', 'Supports islanded operation during grid outages'] },
+        { name: 'V2G ancillary service controls', details: ['Frequency and voltage support strategies evaluated in the IEEE study'] },
+      ],
+    },
+    timeline: [
+      { phase: 'Typhoon Morakot', year: '2009', description: 'Original Xiaolin Village is buried by landslides during the 88 Flood; reconstruction begins in Jiaxian, Kaohsiung.' },
+      { phase: 'Sunlight Xiaolin rollout', year: '2010-2015', description: 'E.T.T. Storage leases rooftops on rebuilt homes and installs distributed PV with battery storage, selling generation to Taipower.' },
+      { phase: 'Intelligent Microgrid Demonstration', year: '2016-2021', description: 'Collaboration with NCSIST adds a centralised storage unit and intelligent dispatch to manage local distribution constraints.' },
+      { phase: '3/15 blackout resilience', year: '2022', description: 'During Taiwan\'s 3/15 major blackout, Sunlight Xiaolin remains powered via islanded microgrid operation.' },
+      { phase: 'V2G configuration study', year: '2024', description: 'IEEE paper compares AC and DC coupled V2G configurations at the Xiaolin microgrid for frequency and voltage ancillary services.' },
+    ],
+    partnerLead: 'E.T.T. Storage (Sunlight Xiaolin operator), NCSIST, Taipower, NTUST',
+  },
 };
+
 
 
 
