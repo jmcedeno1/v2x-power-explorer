@@ -696,7 +696,56 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
     ],
     partnerLead: 'State Grid Shenzhen and Shenzhen Virtual Power Plant Management Center (operations); NDRC / NEA (national V2G pilot program); Guangming District Government (site host)',
   },
+  'budapest v2h demonstrator (drive2x)': {
+
+    references: [
+      { title: 'DriVe2X Demo Site: Budapest (V2H)', url: 'https://drive2x.eu/demo_sites/budapest/', source: 'DriVe2X' },
+      { title: 'DriVe2X Demo Sites overview', url: 'https://drive2x.eu/demo-sites/', source: 'DriVe2X' },
+      { title: 'DriVe2X pushes the boundaries of residential energy management with new bidirectional charging control system', url: 'https://www.linkedin.com/pulse/drive2x-project-pushes-boundaries-residential-energy-l1fde/', source: 'LinkedIn (Gonçalo Pinto Mendes)', date: 'May 2025' },
+      { title: 'Integrating Bidirectional EV Charging with Residential Energy Management Systems (ISGT Europe 2025)', url: 'https://lutpub.lut.fi/bitstream/handle/10024/171211/seyfi_et_al_integrating_bidirectional_ev_charging_aam.pdf?sequence=3', source: 'Seyfi et al., LUT University / IEEE PES ISGT Europe 2025', date: '2025' },
+    ],
+    gapExplanations: {
+      'V2H hardware availability':
+        'Residential single-phase bidirectional chargers with integrated HEMS functionality are not yet a mainstream product in Europe. DriVe2X is producing purpose-built units through General Mechatronics (Hungary) to enable real-time monitoring and optimal control of renewables and key household loads.',
+      'HEMS and control':
+        'Most V2H studies rely on simulation. Budapest is one of the first sites to run smart charging algorithms embedded in an open-source HEMS (Home Assistant) with real-world constraints - user departure time, minimum state of charge, battery warranty, CC/CV charging phases, PV forecasts and time-of-use prices.',
+      'Prosumer business case':
+        'V2H revenue in Hungary depends on tariff optimization and self-consumption rather than grid-service payments. The demo characterises what homeowners can realistically save through smart charging + PV + HEMS, and how much of the technical value can be captured today under current retail structures.',
+      'Grid interconnection':
+        'Single-phase installations at residential homes must comply with Hungarian low-voltage connection rules for bidirectional flows. The pilot works with local partners to validate metering, protection and export configuration for behind-the-meter V2H.',
+    },
+    businessModel: {
+      type: 'Behind-the-meter V2H: prosumer tariff optimization + PV self-consumption',
+      description:
+        'Homeowners save on electricity bills by charging when prices are low, discharging the EV to cover the home when prices are high, and maximising the self-consumption of rooftop PV via the HEMS. Bidirectional charging is treated as an additional household flexibility resource, not a wholesale-market asset. Participation in demand response programmes is explored where market frameworks allow.',
+    },
+    standardization: {
+      standard: 'Single-phase residential bidirectional charging; Home Assistant HEMS add-on (open source)',
+      status: 'Reference implementation for the DriVe2X V2H use case. The Smart Charging Algorithm is deployed as a Home Assistant add-on to maximise replicability across European homes.',
+    },
+    technology: {
+      overview:
+        'Five single-phase bidirectional EV chargers installed in Budapest homes (city center and suburbs), covering a mix of prosumers (with rooftop PV) and consumers. Each charger acts as a central controller running a Smart Charging Algorithm (SCA) inside a Home Assistant HEMS, coordinating EV charging/discharging with household loads, PV generation and market prices.',
+      hardware: [
+        { name: 'General Mechatronics single-phase bidirectional home charger', details: ['Purpose-built residential V2H unit', 'Real-time monitoring and control of renewables and household loads', 'Integrated HEMS functionality'] },
+        { name: 'Rooftop PV (prosumer homes)', details: ['On-site generation coupled behind the meter', 'Self-consumption maximised by the HEMS'] },
+      ],
+      software: [
+        { name: 'Smart Charging Algorithm (SCA) - University of Salford', details: ['Time-indexed optimization of charge/discharge', 'Inputs: ToU prices, PV forecast, grid emission intensity', 'Respects driver departure time and minimum SoC', 'Considers CC/CV charging phases and battery warranty'] },
+        { name: 'Home Assistant HEMS add-on - LUT University', details: ['Open-source home automation platform', 'Runs the SCA natively as a modular add-on', 'Real-time data collection and device control', 'Designed for maximum replicability across European homes'] },
+      ],
+    },
+    timeline: [
+      { phase: 'DriVe2X project start', year: '2023', description: 'EU Horizon Europe / UKRI project DriVe2X launched (grant No 101056934 / UKRI 10055673); Budapest selected as the V2H demonstrator city.' },
+      { phase: 'Hardware and algorithm development', year: '2023-2024', description: 'General Mechatronics develops single-phase bidirectional home chargers; Salford develops the Smart Charging Algorithm; LUT builds the Home Assistant HEMS add-on.' },
+      { phase: 'Home recruitment and installation', year: '2024-2025', description: 'Five homes recruited across Budapest city center and suburbs, mixing prosumers (with rooftop PV) and consumers.' },
+      { phase: 'Real-world testing phase', year: '2025', description: 'SCA deployed in Home Assistant at the recruited homes; results published at IEEE PES ISGT Europe 2025 (Seyfi et al.).' },
+      { phase: 'Project end', year: '2026', description: 'Final assessment of V2H impact on household demand curves, energy bills and self-consumption; comparison with traditional EV charging and fossil-fuel baselines.' },
+    ],
+    partnerLead: 'LUT University (coordinator, HEMS integration); University of Salford (smart charging algorithms); General Mechatronics LLC (bidirectional home charger hardware)',
+  },
 };
+
 
 
 
