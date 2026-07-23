@@ -50,29 +50,29 @@ export interface PilotMedia {
 // Generic explanations reused across pilots when a specific one isn't provided
 export const GENERIC_GAP_EXPLANATIONS: Record<string, string> = {
   'redispatch 3.0':
-    'Integrating small consumer flexibility (household EVs, HEMS) into the German TSO Redispatch 3.0 process - today built for large generators - requires new signalling, forecasting and settlement rules between DSOs, TSOs and aggregators.',
+    'Small consumer assets lack aggregation, forecasting and settlement rules for TSO redispatch.',
   'eebus interoperability':
-    'EEBUS is the German home-energy protocol used to coordinate EV, HEMS, heat pumps and PV. Real-world interoperability between OEM wallboxes/vehicles and third-party HEMS is still inconsistent, blocking multi-vendor V2H/V2G deployments.',
+    'Home-energy protocol gaps block multi-vendor V2H/V2G deployments.',
   'metering':
-    'Sub-metering the bidirectional flow of a single connection point (import vs. export from the EV, from the PV, from the household) is not yet standardised for billing and grid-service settlement.',
+    'Bidirectional import/export flows are not yet standardised for billing and settlement.',
   'allocation':
-    'Assigning the economic value of a kWh discharged to the grid across owner, aggregator, DSO and TSO is unresolved - no agreed allocation key exists in most markets.',
+    'No agreed way to split the value of exported kWh across owner, aggregator and grid operators.',
   'tso-dso signalling':
-    'Coordination of activation signals between transmission (TSO) and distribution (DSO) operators for behind-the-meter flexibility is immature; conflicts between local congestion and system-wide balancing are common.',
+    'Activation coordination between transmission and distribution operators is still immature.',
   'cold-climate validation':
-    'Battery efficiency, thermal management losses and cable ratings degrade significantly below -10 °C. Few pilots have validated round-trip efficiency and cycle life for V2G/V2H in sustained cold-climate operation.',
+    'Few pilots have validated V2G round-trip efficiency and cycle life in sustained cold climates.',
   'warranty':
-    'OEM battery warranties often exclude or cap V2G cycling. Without clear warranty frameworks tied to measured degradation, fleet operators cannot underwrite V2G revenue.',
+    'OEM battery warranties often exclude or cap V2G cycling, deterring fleet uptake.',
   'cybersecurity':
-    'A bidirectional charger is a controllable grid asset. IEC 62443 / IEEE 1547.3 compliance, secure firmware update, and OCPP 2.0.1 security profiles are inconsistently implemented across vendors.',
+    'Security standards and firmware-update practices are unevenly implemented across vendors.',
   'standards':
-    'ISO 15118-20 (bidirectional AC/DC), IEC 61851-28 and IEEE 2030.5 are still being finalised or unevenly adopted. Interoperability certification programmes are only starting.',
+    'Bidirectional charging standards are still being finalised or unevenly adopted.',
   'business model':
-    'Revenue stacking (energy arbitrage + FCR + capacity + self-consumption) is technically possible but rarely allowed in one regulatory envelope; pilots typically monetize only one stream.',
+    'Revenue stacking is technically possible but rarely allowed within one regulatory envelope.',
   'permitting':
-    'Distribution grid connection approval for bidirectional assets often follows the same slow process as PV or storage, adding 6–18 months per site.',
+    'Grid connection approval for bidirectional assets is slow and often treated like PV or storage.',
   'user acceptance':
-    'Owners are wary of battery wear, availability at departure time, and unclear compensation. UX for opt-in/opt-out and guaranteed state-of-charge is still being iterated.',
+    'Owners worry about battery wear, vehicle availability and unclear compensation.',
 };
 
 export const pilotMediaMap: Record<string, PilotMedia> = {
@@ -136,13 +136,13 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
     ],
     gapExplanations: {
       'Redispatch 3.0':
-        'BDL Next is the first field trial that connects 20 household EVs into the TenneT/Bayernwerk Redispatch 3.0 process. The regulatory framework only covers >100 kW assets today - the pilot has to invent aggregation, forecasting and settlement rules for <11 kW distributed flexibility.',
+        'Household EVs need new aggregation rules to participate in TSO redispatch.',
       'EEBUS interoperability':
-        'The stack couples BMW iX3, Compleo wallboxes, KEO gateways and third-party HEMS over EEBUS. Real-world tests are surfacing gaps in the SPINE data model for bidirectional use-cases, especially target-SoC and grid-service priority conflicts.',
+        'Multi-vendor home stacks still have data-model gaps for bidirectional control.',
       'Metering / allocation':
-        'A single household grid connection now carries import, export from PV, and export from the EV. Splitting these flows for tax, EEG levy and grid-service payment requires a new metering concept that Bayernwerk and the BMWE are co-developing.',
+        'Splitting household, PV and EV flows for tax and grid payment is unresolved.',
       'TSO–DSO–household signalling':
-        'Activation signals travel TenneT → Bayernwerk Netz → aggregator → HEMS → wallbox → vehicle in <15 min. The pilot is measuring end-to-end latency and failure modes of this chain.',
+        'End-to-end activation latency from grid to vehicle must be validated.',
     },
     businessModel: {
       type: 'Aggregated household flexibility',
@@ -234,15 +234,15 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
     ],
     gapExplanations: {
       'Standards':
-        'The pilot runs entirely on CHAdeMO bidirectional DC, which is dominant in Japan but has limited traction in Europe and North America where CCS and ISO 15118-20 are winning. Scaling the TEPCO model abroad requires cross-standard translation or dual-protocol hardware.',
+        'CHAdeMO dominance in Japan limits scaling to regions using CCS.',
       'Business model':
-        'Japan\'s balancing and capacity markets only opened to aggregators progressively from 2021. Stacking JEPX arbitrage + frequency regulation + demand response in a single contract is still being formalised; today most revenue comes from one stream at a time.',
+        'Market rules historically allow only one revenue stream at a time.',
       'Metering':
-        'Behind-the-meter measurement of import vs. V2G export at commercial sites relies on retrofitted sub-meters. A standardised billing meter for bidirectional flows is not yet mandated by METI.',
+        'Bidirectional billing meters are not yet mandated by regulators.',
       'TSO-DSO signalling':
-        'TEPCO Power Grid (TSO-like) and TEPCO Energy Partner (retailer/aggregator) coordinate internally, but external DSO/TSO signalling APIs for third-party V2G aggregators are still being defined under Japan\'s new balancing market rules.',
+        'Third-party aggregator APIs are still being defined under new market rules.',
       'User acceptance':
-        'Owners of Nissan LEAF and Mitsubishi Outlander PHEV report concerns about battery cycling under CHAdeMO V2G. TEPCO caps discharge depth and offers tariff incentives, but broader consumer roll-out needs clearer warranty coverage from OEMs.',
+        'Battery-wear concerns slow wider consumer adoption.',
     },
     businessModel: {
       type: 'Utility-led V2G aggregator',
@@ -284,21 +284,21 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
     ],
     gapExplanations: {
       'Standards':
-        'The eight cluster projects deliberately test overlapping standards (ISO 15118-20, OCPP 2.0.1, IEEE 2030.5, IEC 61851-28, EEBUS) to identify interoperability gaps. Cross-demo test protocols are being co-developed but no single European conformance certification exists yet.',
+        'No single EU conformance certification covers all overlapping standards.',
       'TSO-DSO signalling':
-        'Each demo country (PT, DE, NL, DK, SI, GR, IT, CZ, IE) has a different TSO-DSO coordination model for behind-the-meter flexibility. The cluster is producing a comparative gap analysis feeding into ENTSO-E and CEER work on grid-code alignment.',
+        'National grid-code models for behind-the-meter flexibility differ across member states.',
       'Business model':
-        'Revenue stacking (arbitrage + FCR/aFRR + capacity + self-consumption) is tested in isolation by different demos but no single regulatory envelope in the EU allows all streams simultaneously; joint policy recommendation is a core cluster deliverable.',
+        'EU rules do not yet allow full revenue stacking in one regulatory envelope.',
       'Cybersecurity':
-        'IEC 62443 and ISO/SAE 21434 compliance for bidirectional chargers and aggregator platforms is uneven across OEMs. The cluster is defining a shared cybersecurity baseline and shared threat model.',
+        'Compliance with security standards is uneven across vendors.',
       'Interoperability':
-        'XL-Connect specifically targets multi-standard integration; early tests show significant vendor-specific behaviour in ISO 15118-20 bidirectional AC and DC implementations across BMW, Renault, Stellantis, Nissan and Kia vehicles.',
+        'Multi-vendor ISO 15118-20 behaviour varies across vehicle brands.',
       'User acceptance':
-        'EV4EU and FLOW run parallel user studies on opt-in/opt-out UX, guaranteed state-of-charge and battery-warranty concerns. Findings will feed a joint EU communication and consumer-protection framework.',
+        'Opt-in UX, guaranteed range and warranty concerns need harmonisation.',
       'Metering':
-        'Sub-metering of import vs. export from EV, PV and household at a single grid connection point is not harmonised across member states; the cluster is preparing a proposal to DG ENER on a common metering concept.',
+        'Sub-metering rules for bidirectional flows differ across member states.',
       'Allocation':
-        'No agreed allocation key for the value of an exported kWh between owner, aggregator, DSO and TSO. Cluster projects are trialling different splits and will compare results.',
+        'No common value split for exported kWh across stakeholders.',
     },
     businessModel: {
       type: 'EU-funded R&I cluster',
@@ -342,17 +342,17 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
     ],
     gapExplanations: {
       'Standards':
-        'The pilot ran exclusively on CHAdeMO bidirectional chargers - at the time the only production V2G-capable standard. ISO 15118-20 was not yet available and CCS bidirectional was still a concept, limiting the fleet to Nissan LEAF vehicles.',
+        'CHAdeMO-only fleet limited the pilot to Nissan LEAF vehicles.',
       'TSO-DSO signalling':
-        'Activating distributed EVs for TSO-level redispatch required custom signalling between TenneT (TSO), the DSOs hosting the chargers, and The Mobility House aggregator. No standard interface existed; the pilot built a bespoke chain that later informed Redispatch 3.0 design.',
+        'No standard interface existed; the pilot built a custom activation chain.',
       'Business model':
-        'German regulation in 2018-2021 did not allow a small distributed asset to be paid as a redispatch resource. Compensation was demonstrated via a blockchain-based settlement layer but required a regulatory sandbox - not a repeatable commercial framework.',
+        'Small distributed assets could not be paid as redispatch resources at the time.',
       'Warranty':
-        'Nissan LEAF batteries used for repeated V2G cycling raised warranty questions. The project produced early evidence that controlled V2G cycling did not materially accelerate degradation, feeding Nissan\'s later official V2G warranty policy.',
+        'Repeated V2G cycling raised battery warranty questions.',
       'Metering':
-        'Sub-metering the redispatch-relevant kWh at each vehicle - separate from household consumption - required dedicated meters at each charger and a data pipeline back to TenneT.',
+        'Redispatch-relevant kWh required dedicated sub-meters per charger.',
       'Allocation':
-        'How to split the value of a redispatch-serving kWh between vehicle owner, aggregator and TSO was resolved contractually in the pilot but never codified into German market rules.',
+        'Value split was never codified into German market rules.',
     },
     businessModel: {
       type: 'TSO-led redispatch demonstrator',
@@ -393,18 +393,16 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
       { title: 'Project Sciurus - trial report', url: 'https://www.scribd.com/document/702149344/PROJECT-SCIURUS', source: 'Scribd (OVO/Cenex report)' },
     ],
     gapExplanations: {
-      'Â£3,700 hardware premium':
-        'The Indra V2G unit cost around £3,700 more than a comparable unidirectional home charger at deployment. Without subsidy, payback on customer revenue alone (~£420/year average) exceeded 8 years - a key barrier to unsubsidised residential V2G roll-out.',
       '£3,700 hardware premium':
-        'The Indra V2G unit cost around £3,700 more than a comparable unidirectional home charger at deployment. Without subsidy, payback on customer revenue alone (~£420/year average) exceeded 8 years - a key barrier to unsubsidised residential V2G roll-out.',
+        'High upfront charger cost blocks unsubsidised residential rollout.',
       'G98/G99 certification bureaucracy':
-        'Every V2G install required Distribution Network Operator (DNO) approval under G98/G99 export rules. In practice this added weeks of paperwork per site and blocked some three-phase / high-import households entirely - a process designed for solar PV, not consumer EV chargers.',
+        'DNO export approval is slow and ill-fitted to EV chargers.',
       'Warranty':
-        'Nissan LEAF batteries were covered for capacity loss but not explicitly for V2G cycling. Cenex battery-health analysis found no accelerated degradation, but the absence of an OEM warranty statement remained a commercial blocker for scaling.',
+        'Absence of explicit V2G warranty remains a commercial blocker.',
       'Standards':
-        'Sciurus ran on CHAdeMO bidirectional DC. The UK and EU market has since shifted toward CCS + ISO 15118-20, so hardware from the trial is not directly reusable for new CCS-only vehicles - a stranded-asset risk flagged in the final report.',
+        'CHAdeMO hardware is stranded as the market shifts to CCS.',
       'User acceptance':
-        'Customer research showed strong appetite for automated V2G once minimum state-of-charge and departure guarantees were in place. Drop-out was low, but onboarding UX (installer visit + app + tariff switch) took ~4 weeks and needs simplification for mass market.',
+        'Onboarding is complex and needs stronger state-of-charge guarantees.',
     },
     businessModel: {
       type: 'Residential V2G aggregator',
@@ -445,15 +443,15 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
     ],
     gapExplanations: {
       'Cross-OEM interoperability':
-        'Parker deliberately mixed Nissan, Mitsubishi and PSA vehicles on the same Enel X CHAdeMO chargers to verify that V2G behaviour (SoC reporting, dispatch response, safe shutdown) was consistent across brands. Divergent OEM implementations of CHAdeMO 2.0 required per-vehicle tuning - a barrier the project formalised via the "Grid Integrated Vehicle" (GIV) rating framework.',
+        'Per-vehicle tuning was needed for consistent V2G behaviour.',
       'FCR-N market rules':
-        'Parker qualified as a real market participant in the Nordic FCR-N (symmetric primary reserve) product. Bidding EV fleets into a market designed for large generators required minimum-bid aggregation, 4-hour blocks and 100% availability guarantees - resolved commercially by Nuvve\'s aggregator platform.',
+        'EV fleets had to adapt to a market designed for large generators.',
       'Battery degradation':
-        'DTU\'s measurement campaign over the trial found no measurable accelerated capacity fade attributable to V2G cycling under FCR-N duty. This became a widely-cited evidence point unlocking OEM comfort with bidirectional use.',
+        'No measurable accelerated capacity fade under FCR-N cycling.',
       'Standards':
-        'Deployed on CHAdeMO 2.0 bidirectional DC. Lessons on symmetric power flow, protection and vehicle-charger handshaking were fed into IEC 61851-23 / ISO 15118-20 for CCS bidirectional and into CHAdeMO 3.0.',
+        'CHAdeMO 2.0 lessons fed into CCS and ISO 15118-20 bidirectional work.',
       'Hardware cost':
-        'Enel X 10 kW bidirectional DC units were purpose-built for the trial and carried a substantial cost premium over unidirectional AC wallboxes - identified as the main barrier to residential scale-up despite viable FCR-N revenue at fleet level.',
+        'Purpose-built chargers carried a large premium over standard wallboxes.',
     },
     businessModel: {
       type: 'Commercial fleet V2G aggregator (FCR-N)',
@@ -495,17 +493,17 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
     ],
     gapExplanations: {
       'Equipment compatibility':
-        'The pilot deliberately mixes 19 EVs from 10 automakers with 13 chargers from 9 manufacturers to stress-test interoperability of bidirectional handshakes, SoC reporting and safe shutdown - a prerequisite before scaling to the 30,000-50,000 V2G stations Shanghai plans by 2030.',
+        'Multi-OEM and multi-vendor interoperability must be proven at scale.',
       'Grid adaptability':
-        'State Grid Shanghai is validating that the distribution grid can absorb the 20 MW of V2G discharge on top of a 300 MW smart-charging network without protection or voltage-quality issues.',
+        'Distribution grid must absorb 20 MW of V2G discharge without quality issues.',
       'Demand response flexibility':
-        'The test measures how quickly the aggregated fleet can respond to dispatch signals during peak demand - the core value proposition justifying the national rollout.',
+        'Fleet response speed is the core value proposition.',
       'Business model':
-        'Chinese industry experts flag that viable commercial models are still missing: inter-regional/inter-provincial market rules, retail tariffs and revenue-sharing between drivers, aggregators and grid companies remain underdeveloped.',
+        'Revenue-sharing and market rules are still underdeveloped.',
       'Battery degradation':
-        'Battery lifespan under frequent bidirectional cycling is one of the explicit hurdles named by China Briefing; the pilot generates the evidence base needed to reassure OEMs and consumers.',
+        'Battery life under frequent cycling needs evidence to reassure users.',
       'Charger cost':
-        'Upgrading existing charging stations to bidirectional operation carries substantial capex, cited as a key barrier to large-scale rollout even after the technical pilots succeed.',
+        'Bidirectional retrofit capex is a barrier to large-scale rollout.',
     },
     businessModel: {
       type: 'Government-led multi-OEM V2G pilot (grid utility as aggregator)',
@@ -549,15 +547,15 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
     ],
     gapExplanations: {
       'AC bidirectional dispatch':
-        'Bus2Grid runs AC-based V2G, so the on-board charger controls the discharge. The team originally hoped to signal via the Type 2 socket, but it could not carry enough information. They shifted to a cloud-based control path (Origami router - Origami cloud - BYD cloud - bus) to trigger safe discharge, which added latency and required tight coordination between energy and vehicle stacks.',
+        'Type 2 socket could not carry enough control data; cloud path added latency.',
       'G99 certification':
-        'G99 came into force in 2019 for stationary generators. Because the "generator" in Bus2Grid is the bus itself (battery + on-board inverter) and it leaves the depot every day, the project had to test and certify voltage, harmonics and reactive-power behaviour for the aggregated buses when parked - a novel interpretation of the standard.',
+        'Mobile-generator interpretation required novel aggregated testing.',
       'Battery degradation':
-        'BYD engineers modelled expected V2G duty on the depot buses and concluded the impact was small enough that the standard battery warranty was unaffected. Direct measurement was ruled out because degradation over the project window would be too small to isolate.',
+        'Warranty impact was modelled rather than directly measured.',
       'Business model':
-        'University of Leeds led business-model design, working out how bus operators, transport authorities, DSOs and National Grid ESO share value from wholesale trades, DSO services and frequency response. New commercial arrangements between energy and transport sectors are the main non-technical barrier to replication.',
+        'New value-sharing arrangements between transport and energy sectors are needed.',
       'Cross-industry collaboration':
-        'The project required an OEM (BYD), a DNO (UK Power Networks), an energy services company (SSE), a university and multiple regulators to align on data, dispatch and safety. Bus2Grid was, in effect, the first at-scale template for that collaboration in the UK.',
+        'Energy-transport alignment is the main non-technical barrier.',
     },
     businessModel: {
       type: 'Depot-scale bus V2G aggregator',
@@ -609,9 +607,9 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
     ],
     gapExplanations: {
       'inverter certification delays':
-        'The Wallbox Quasar had to be certified against AS/NZS 4777.2:2020 as a bidirectional inverter - the first such certification in Australia. Test procedures written for stationary PV inverters had to be reinterpreted for a vehicle-coupled asset, driving multi-year delays and rework of firmware, protection settings and grid-support functions before commercial deployment could proceed.',
+        'First bidirectional inverter certification took several years.',
       'scaling beyond government fleet':
-        'REVS relied on ACT Government and ActewAGL fleet vehicles with predictable duty cycles, workplace charging and a single retailer. Extending V2G to private drivers, mixed-brand vehicles and multi-retailer settings needs new consumer contracts, warranty positions from OEMs, and a metering/settlement framework that today does not exist at scale in the NEM.',
+        'Consumer contracts, warranties and metering are missing for private drivers.',
     },
     businessModel: {
       type: 'Contingency FCAS revenue + fleet charging optimisation',
@@ -656,13 +654,13 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
     ],
     gapExplanations: {
       'Megawatt V2G hardware':
-        'A single-gun 1,000 kW fully liquid-cooled bidirectional charger for passenger cars is a first-of-a-kind product. Thermal management, connector standards and battery-side acceptance of megawatt discharge are all beyond today\'s CCS/GB/T V2G specifications, so the Hongqiao Park deployment doubles as a real-world validation environment for the next generation of ultra-fast V2G equipment.',
+        'First-of-a-kind 1 MW liquid-cooled charger needs real-world validation.',
       'Grid interconnection':
-        'Discharging up to 2,770 kW at a single site requires medium-voltage grid access. The project uses China\'s first 20 kV prefabricated "Power Cube" substation to shorten construction time and enable zero-carbon site operation, and is dispatched through Shenzhen\'s Virtual Power Plant Management Center rather than as an isolated charger.',
+        '2.77 MW discharge requires medium-voltage grid access.',
       'Storage for high-power buffering':
-        'To keep peak charging/discharging from stressing the upstream feeder, the site pairs V2G with a purpose-built sodium-ion battery energy storage system - China\'s first sodium-ion BESS designed specifically for ultra-fast charging duty cycles - plus rooftop PV in a DC-coupled PV-storage-charging microgrid.',
+        'Sodium-ion BESS buffers peak power and protects the feeder.',
       'Business model at city scale':
-        'Shenzhen\'s prior city-wide V2G test paid drivers 4 yuan/kWh for exports against ~0.4 yuan/kWh off-peak charging. Hongqiao Park translates that experimental price signal into permanent infrastructure aggregated by a municipal VPP, giving the pilot city model a real revenue and settlement backbone.',
+        'Municipal VPP turns the pilot price signal into permanent revenue.',
     },
     businessModel: {
       type: 'Municipal virtual power plant + ultra-fast charging revenue',
@@ -706,15 +704,15 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
     ],
     gapExplanations: {
       'Consumer complexity management':
-        'The DriVe2X Budapest demo is explicitly designed around this gap. Seyfi et al. (IEEE PES ISGT Europe 2025) show how the Smart Charging Algorithm hides the complexity of bidirectional charging from the homeowner by embedding it in a Home Assistant HEMS add-on that automatically balances user-defined constraints (departure time, minimum SoC, battery warranty, CC/CV limits) against PV forecasts, time-of-use prices and grid emissions. The LinkedIn article by project coordinator Gonçalo Pinto Mendes (May 2025) frames the same challenge from the user side: the team is calibrating how much control and customisation homeowners can sustainably handle themselves versus what the automation should decide, so that prosumers keep a sense of agency while still capturing the flexibility value.',
+        'Automation must balance user control with flexibility value.',
       'V2H hardware availability':
-        'Residential single-phase bidirectional chargers with integrated HEMS functionality are not yet a mainstream product in Europe. DriVe2X is producing purpose-built units through General Mechatronics (Hungary) to enable real-time monitoring and optimal control of renewables and key household loads.',
+        'Residential bidirectional chargers are not yet mainstream products.',
       'HEMS and control':
-        'Most V2H studies rely on simulation. Budapest is one of the first sites to run smart charging algorithms embedded in an open-source HEMS (Home Assistant) with real-world constraints - user departure time, minimum state of charge, battery warranty, CC/CV charging phases, PV forecasts and time-of-use prices.',
+        'Real-world HEMS algorithms with actual constraints remain rare.',
       'Prosumer business case':
-        'V2H revenue in Hungary depends on tariff optimization and self-consumption rather than grid-service payments. The demo characterises what homeowners can realistically save through smart charging + PV + HEMS, and how much of the technical value can be captured today under current retail structures.',
+        'Savings depend on tariffs and self-consumption, not grid-service payments.',
       'Grid interconnection':
-        'Single-phase installations at residential homes must comply with Hungarian low-voltage connection rules for bidirectional flows. The pilot works with local partners to validate metering, protection and export configuration for behind-the-meter V2H.',
+        'Residential bidirectional flow needs metering and protection validation.',
     },
     businessModel: {
       type: 'Behind-the-meter V2H: prosumer tariff optimization + PV self-consumption',
