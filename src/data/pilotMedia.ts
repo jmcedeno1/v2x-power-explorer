@@ -945,7 +945,45 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
     ],
     partnerLead: 'E.T.T. Storage (Sunlight Xiaolin operator), NCSIST, Taipower, NTUST',
   },
+  'beverly school bus': {
+    references: [
+      { title: 'Massachusetts Electric School Bus Helps Power Electricity Grid in Breakthrough for Vehicle-to-Grid Technology', url: 'https://www.businesswire.com/news/home/20211013005688/en/Massachusetts-Electric-School-Bus-Helps-Power-Electricity-Grid-in-Breakthrough-for-Vehicle-to-Grid-Technology', source: 'Business Wire / Highland Electric Fleets', date: 'Oct 2021' },
+      { title: 'Highland Electric Fleets coordinates V2G programme with electric school buses', url: 'https://www.electrive.com/2022/08/28/highland-electric-fleets-coordinates-v2g-programme-with-electric-school-buses/', source: 'electrive', date: 'Aug 2022' },
+      { title: 'US: Highland Electric school buses support grid with V2G technology', url: 'https://bus-news.com/us-highland-electric-school-buses-support-grid-with-v2g-technology/', source: 'Bus-News' },
+      { title: 'Vehicle-to-Grid (V2G) - Highland Electric Fleets', url: 'https://highlandfleets.com/vehicle-to-grid-v2g/', source: 'Highland Electric Fleets' },
+      { title: 'Latest lessons from electric school bus vehicle-to-grid programs', url: 'https://electricschoolbusinitiative.org/latest-lessons-electric-school-bus-vehicle-grid-programs', source: 'Electric School Bus Initiative (WRI)' },
+    ],
+    gapExplanations: {
+      'only 2 buses - needs expansion': 'Aggregated capacity is too small to move wholesale markets; scaling requires depot-level fleets and multi-utility replication.',
+      'summer-only dispatch': 'V2G value is concentrated in summer peak events; year-round revenue needs winter heating peaks and additional service stacks.',
+      'demand charge exposure': 'Fast bidirectional charging can trigger utility demand charges that erode net V2G revenue without careful managed charging.',
+    },
+    businessModel: {
+      type: 'Turnkey fleet-as-a-service subscription with V2G revenue share',
+      description: 'Highland Electric Fleets owns the buses and chargers and leases them to Beverly Public Schools under a fixed, mileage-based subscription that undercuts diesel operating cost. Highland captures the V2G revenue from National Grid Connected Solutions Daily Dispatch and passes value back through a lower subscription price.',
+    },
+    technology: {
+      overview: 'Two Thomas Built Saf-T-Liner C2 Jouley electric school buses with Proterra 226 kWh batteries discharge to the New England grid via 60 kW Rhombus DC bidirectional chargers, orchestrated by Synop software under National Grid dispatch signals.',
+      hardware: [
+        { name: 'Thomas Built Saf-T-Liner C2 Jouley', details: ['Type C electric school bus', '226 kWh Proterra battery, up to 135 miles range', 'Bidirectional-capable powertrain'] },
+        { name: 'Rhombus Energy Solutions DC charger', details: ['60 kW bidirectional DC', 'UL1741-SA certified', 'One power control system serves up to five buses'] },
+      ],
+      software: [
+        { name: 'Synop V2G orchestration', details: ['Route planning and charge management', 'Grid-event dispatch and telemetry', 'Energy monitoring and reporting'] },
+        { name: 'National Grid Connected Solutions Daily Dispatch', details: ['Technology-neutral peak-shaving program', 'Compensates enrolled resources per event'] },
+      ],
+    },
+    timeline: [
+      { phase: 'Deployment', year: '2021', description: 'First bus enters service at Beverly Public Schools under Highland Electric Fleets subscription with National Grid V2G enrollment.' },
+      { phase: 'First V2G summer', year: '2021', description: 'Single bus delivers about 3 MWh across 30 grid events, roughly 50-60 hours of discharge into National Grid Connected Solutions Daily Dispatch.' },
+      { phase: 'Fleet expansion', year: '2022', description: 'Second bus added; two-bus fleet discharges more than 7 MWh in over 80 hours across 32 summer grid events.' },
+      { phase: 'Cumulative milestone', year: '2022', description: 'Aggregated discharge across both summers reaches roughly 10 MWh, cited as enough to power up to 600 homes for a day.' },
+      { phase: 'Ongoing operation', year: '2023+', description: 'Beverly continues as Highland Electric Fleets reference site while the model is replicated in Maryland, Vermont, Colorado, California and Virginia.' },
+    ],
+    partnerLead: 'Highland Electric Fleets (integrator and subscription provider); National Grid; Proterra; Thomas Built Buses; Rhombus Energy Solutions; Synop; Beverly Public Schools',
+  },
 };
+
 
 
 
