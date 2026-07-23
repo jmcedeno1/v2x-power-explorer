@@ -645,6 +645,57 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
     ],
     partnerLead: 'ActewAGL Retail (lead), Nissan Australia, Wallbox, JET Charge, SG Fleet, ANU BSGIP, ACT Government, Evoenergy, ARENA',
   },
+  'shenzhen ultra-fast v2g hub (hongqiao park)': {
+    references: [
+      { title: 'Largest V2G Ultra-Fast Charging Station in Greater Bay Area Launches in Shenzhen', url: 'https://english.news18a.com/news/english_247035.html', source: 'News18a', date: 'Apr 2026' },
+      { title: 'SZ to lead V2G integration as national pilot city', url: 'https://www.sz.gov.cn/en_szgov/news/latest/content/post_12104344.html', source: 'Shenzhen Daily', date: 'Apr 2025' },
+      { title: 'Shenzhen developing a top-tier charging network', url: 'https://www.sz.gov.cn/en_szgov/news/latest/content/post_11961881.html', source: 'Shenzhen Daily', date: 'Jan 2025' },
+      { title: 'Industry Leaders Tour Ultra-Fast Charging Hub, Unlocking New Value in the EV Charging Ecosystem', url: 'https://www.linkedin.com/pulse/industry-leaders-tour-ultra-fast-charging-hub-unlocking-new-vfihc/', source: 'Shenzhen NEV Operators Association (LinkedIn)', date: 'Jul 2025' },
+      { title: 'Hongqiao Park V2G station walkthrough (video)', url: 'https://www.youtube.com/watch?v=wTiBSttdoPY', source: 'YouTube', date: '2026' },
+      { title: 'Hongqiao Park V2G station reel', url: 'https://www.instagram.com/reels/DX_iFzqO5cs/', source: 'Instagram' },
+    ],
+    gapExplanations: {
+      'Megawatt V2G hardware':
+        'A single-gun 1,000 kW fully liquid-cooled bidirectional charger for passenger cars is a first-of-a-kind product. Thermal management, connector standards and battery-side acceptance of megawatt discharge are all beyond today\'s CCS/GB/T V2G specifications, so the Hongqiao Park deployment doubles as a real-world validation environment for the next generation of ultra-fast V2G equipment.',
+      'Grid interconnection':
+        'Discharging up to 2,770 kW at a single site requires medium-voltage grid access. The project uses China\'s first 20 kV prefabricated "Power Cube" substation to shorten construction time and enable zero-carbon site operation, and is dispatched through Shenzhen\'s Virtual Power Plant Management Center rather than as an isolated charger.',
+      'Storage for high-power buffering':
+        'To keep peak charging/discharging from stressing the upstream feeder, the site pairs V2G with a purpose-built sodium-ion battery energy storage system - China\'s first sodium-ion BESS designed specifically for ultra-fast charging duty cycles - plus rooftop PV in a DC-coupled PV-storage-charging microgrid.',
+      'Business model at city scale':
+        'Shenzhen\'s prior city-wide V2G test paid drivers 4 yuan/kWh for exports against ~0.4 yuan/kWh off-peak charging. Hongqiao Park translates that experimental price signal into permanent infrastructure aggregated by a municipal VPP, giving the pilot city model a real revenue and settlement backbone.',
+    },
+    businessModel: {
+      type: 'Municipal virtual power plant + ultra-fast charging revenue',
+      description:
+        'Hongqiao Park is operated as an asset of Shenzhen\'s Virtual Power Plant Management Center. Revenue stacks EV ultra-fast charging fees, peak-shaving/ancillary payments from the VPP, and on-site PV self-consumption. It anchors the national V2G pilot program (NDRC/NEA) that selected Shenzhen as one of China\'s first nine V2G pilot cities in April 2025.',
+    },
+    standardization: {
+      standard: 'GB/T V2G, 20 kV MV grid interconnection, China VPP dispatch protocols',
+      status: 'Reference site for China\'s national V2G pilot program; showcases megawatt liquid-cooled V2G charger, 20 kV Power Cube substation and sodium-ion BESS as candidate building blocks for scale-out to the other pilot cities.',
+    },
+    technology: {
+      overview:
+        '23 V2G charging piles across 37 parking spaces at Hongqiao Park, dispatched by Shenzhen\'s Virtual Power Plant Management Center. Peak site discharge is 2,770 kW, combined with a ~140,000 kWh/year rooftop PV canopy and a dedicated sodium-ion BESS in a DC-coupled microgrid.',
+      hardware: [
+        { name: 'Megawatt liquid-cooled V2G charger', details: ['1,000 kW single-gun for passenger vehicles', 'Fully liquid-cooled', '~400 km of range added in ~5 minutes'] },
+        { name: 'Ultra-fast chargers', details: ['6 x 600 kW ultra-fast chargers', '11 x 250-300 kW fast chargers (0-80% in <30 min)', 'Additional 30-120 kW units for legacy vehicles'] },
+        { name: '20 kV Power Cube substation', details: ['China\'s first 20 kV prefabricated MV substation', 'Enables zero-carbon site operation', 'Compact footprint for urban sites'] },
+        { name: 'Sodium-ion BESS', details: ['China\'s first sodium-ion BESS designed for ultra-fast charging duty', 'Buffers high-power charge/discharge cycles', 'Improves stability during simultaneous V2G dispatch'] },
+        { name: 'Rooftop PV canopy', details: ['~600 m2 of PV panels above the parking canopy', '~140,000 kWh/year generation', 'DC-coupled with storage and chargers'] },
+      ],
+      software: [
+        { name: 'Shenzhen VPP Management Center', details: ['Aggregates Hongqiao Park with other city assets', 'Dispatches V2G discharge for peak shaving and ancillary services', 'Settles export revenue with drivers/operators'] },
+        { name: 'Site energy management platform', details: ['Real-time control of PV-storage-charger microgrid', 'Round-the-clock O&M and safety alarms', 'Coordinates charging demand with grid signals'] },
+      ],
+    },
+    timeline: [
+      { phase: 'City-wide V2G test', year: 'Mar 2025', description: 'Shenzhen runs China\'s largest V2G test to date - 17,000+ NEVs and 760 charging stations - paying drivers 4 yuan/kWh for grid exports.' },
+      { phase: 'National pilot designation', year: 'Apr 2025', description: 'NDRC selects Shenzhen as one of China\'s first nine cities for large-scale V2G integration; city commits to permanent high-power V2G infrastructure.' },
+      { phase: 'Model site tour', year: 'Jul 2025', description: 'Shenzhen NEV Operators Association hosts industry tour of ultra-fast + V2G sites (incl. CheDianXingNeng Jinkui Zone II) as templates for the Hongqiao Park build-out.' },
+      { phase: 'Hongqiao Park launch', year: 'Apr 2026', description: 'Hongqiao Park Ultra-Fast Charging Station opens with 23 V2G piles / 37 stalls, 2,770 kW peak discharge, integrated with Shenzhen\'s Virtual Power Plant Management Center.' },
+    ],
+    partnerLead: 'State Grid Shenzhen and Shenzhen Virtual Power Plant Management Center (operations); NDRC / NEA (national V2G pilot program); Guangming District Government (site host)',
+  },
 };
 
 
