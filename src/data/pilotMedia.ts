@@ -1020,7 +1020,47 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
     ],
     partnerLead: 'MAHLE chargeBIG GmbH (operator); MAHLE New Mobility Solutions; Fraunhofer ITWM (optimization); Eliso (original co-developer); Green by IT (Amperix EMS); Munster Technological University; funded by BMWi Sofortprogramm Saubere Luft.',
   },
+  'lambda laboratory': {
+    references: [
+      { title: 'Vehicle-to-Grid (V2G) Technology Infrastructure Implemented in an University LVAC Microgrid Lab', url: 'https://ieeexplore.ieee.org/document/11218083', source: 'Frattale Mascioli, Golino, Loggia, Moscatiello, Sgriscia, Falvo - 2025 AEIT International Annual Conference, DOI 10.23919/AEIT67669.2025.11218083', date: 'Sep 2025' },
+      { title: 'E-mobility Lab (Terna) - project profile', url: 'https://www.v2g-hub.com/projects/e-mobility-lab/', source: 'V2G Hub' },
+      { title: 'Scalable Energy Management Model for Integrating V2G Capabilities into Renewable Energy Communities', url: 'https://www.mdpi.com/2032-6653/16/8/450', source: 'Pezzati, Innocenti, Berzi, Delogu - World Electric Vehicle Journal 16(8) 450', date: 'Aug 2025' },
+    ],
+    gapExplanations: {
+      'early-stage italian v2g': 'V2G in Italy is still limited to a handful of pilots; university labs like LAMBDA are needed to characterise EV, EVSE and aggregation platforms before commercial rollout.',
+      'microgrid-ev co-optimisation': 'Algorithms that simultaneously guarantee user charging targets and intelligent microgrid energy management are still research-stage and not embedded in commercial EMS products.',
+      'standardisation of test procedures': 'There is no shared protocol to certify EVs and chargers as flexible resources for the grid; TSO-hosted labs such as Ternas E-mobility Lab are being used to define one.',
+    },
+    businessModel: {
+      type: 'University research and testing infrastructure (non-commercial)',
+      description: 'LAMBDA is a low-voltage AC microgrid laboratory operated by a Sapienza University of Rome research group to test bidirectional EV-building-grid interaction. It is not a revenue-generating pilot: value is scientific output, algorithm validation and training, complementing the Italian TSO Ternas E-mobility Lab which offers open testing capacity of up to 500 kW for up to 13 EVs/EVSEs to industry partners.',
+    },
+    standardization: {
+      standard: 'IEC 61851 / ISO 15118 (AC and DC bidirectional charging); Italian grid codes CEI 0-16 and CEI 0-21',
+      status: 'The lab is used to run compliance and interoperability tests referenced against IEC 61851, ISO 15118 and the Italian connection rules; findings feed into Ternas open V2G testing programme.',
+    },
+    technology: {
+      overview: 'LAMBDA is a state-of-the-art LVAC university microgrid combining real EV chargers, PV, storage and controllable loads with a real-time simulator, used to run algorithms that simultaneously guarantee EV charging targets and intelligent microgrid energy management. The Terna E-mobility Lab in Rome provides a complementary industrial-scale sandbox with an up-to-500 kW connection hosting up to 13 EVs and EV supply equipment.',
+      hardware: [
+        { name: 'Bidirectional EV chargers (AC and DC)', details: ['Multiple EVSE units connected to the LVAC microgrid busbar', 'Support both smart charging and V2G operating modes', 'Terna E-mobility Lab: up to 13 EVs/EVSEs, connection up to 500 kW'] },
+        { name: 'Microgrid assets', details: ['PV generation, battery energy storage and controllable loads', 'LVAC busbar with monitoring and protection', 'Grid-connected and islanded operating modes'] },
+        { name: 'Real-time simulation and measurement', details: ['Hardware-in-the-loop for grid and market scenarios', 'High-resolution power quality and metering equipment'] },
+      ],
+      software: [
+        { name: 'EV-microgrid co-optimisation algorithm', details: ['Ensures user-required SOC at departure', 'Manages microgrid energy flows for self-consumption and peak shaving', 'Documented in Frattale Mascioli et al. 2025'] },
+        { name: 'REC/EMS integration models', details: ['Cloud scheduler + local controllers for V2G in Renewable Energy Communities (Pezzati et al. 2025)', 'Uses ENTSO-E prices and Forecast.Solar APIs', 'MILP optimisation with SOC/C-rate and user penalties'] },
+      ],
+    },
+    timeline: [
+      { phase: 'Lab commissioning', year: '2021', description: 'Terna opens the E-mobility Lab in Italy as an open TSO-hosted testing infrastructure for EVs, EVSEs and aggregation platforms (up to 13 assets, up to 500 kW).' },
+      { phase: 'University LAMBDA build-out', year: '2023-2024', description: 'Sapienza research group equips the LAMBDA LVAC microgrid lab with bidirectional AC/DC chargers, PV, BESS and controllable loads to test V2G scenarios.' },
+      { phase: 'V2G algorithm development', year: '2024-2025', description: 'Development of an algorithm that jointly manages EV charging and microgrid energy flows; complementary REC-scale EMS with V2G validated on University of Florence Campus/Moving sites (Pezzati et al. 2025).' },
+      { phase: 'Peer-reviewed dissemination', year: '2025', description: 'LAMBDA infrastructure and experiments published at the 2025 AEIT International Annual Conference (Amantea, IT); Scalable REC-V2G EMS published in World Electric Vehicle Journal.' },
+    ],
+    partnerLead: 'Sapienza University of Rome DIAEE (LAMBDA lab, M. C. Falvo et al.); Terna S.p.A. (open E-mobility Lab, Italian TSO); University of Florence DIEF (companion REC-V2G EMS work).',
+  },
 };
+
 
 
 
