@@ -705,6 +705,8 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
       { title: 'Integrating Bidirectional EV Charging with Residential Energy Management Systems (ISGT Europe 2025)', url: 'https://lutpub.lut.fi/bitstream/handle/10024/171211/seyfi_et_al_integrating_bidirectional_ev_charging_aam.pdf?sequence=3', source: 'Seyfi et al., LUT University / IEEE PES ISGT Europe 2025', date: '2025' },
     ],
     gapExplanations: {
+      'Consumer complexity management':
+        'The DriVe2X Budapest demo is explicitly designed around this gap. Seyfi et al. (IEEE PES ISGT Europe 2025) show how the Smart Charging Algorithm hides the complexity of bidirectional charging from the homeowner by embedding it in a Home Assistant HEMS add-on that automatically balances user-defined constraints (departure time, minimum SoC, battery warranty, CC/CV limits) against PV forecasts, time-of-use prices and grid emissions. The LinkedIn article by project coordinator Gonçalo Pinto Mendes (May 2025) frames the same challenge from the user side: the team is calibrating how much control and customisation homeowners can sustainably handle themselves versus what the automation should decide, so that prosumers keep a sense of agency while still capturing the flexibility value.',
       'V2H hardware availability':
         'Residential single-phase bidirectional chargers with integrated HEMS functionality are not yet a mainstream product in Europe. DriVe2X is producing purpose-built units through General Mechatronics (Hungary) to enable real-time monitoring and optimal control of renewables and key household loads.',
       'HEMS and control':
