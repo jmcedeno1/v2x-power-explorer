@@ -76,6 +76,49 @@ export const GENERIC_GAP_EXPLANATIONS: Record<string, string> = {
 };
 
 export const pilotMediaMap: Record<string, PilotMedia> = {
+  'dorchester / codman square': {
+    gapExplanations: {
+      'single vehicle pilot': 'One shared LEAF limits how much peak demand can be shaved; scaling needs several vehicles per building.',
+      'multifamily replicability': 'Model depends on affordable-housing owners with in-house energy management and demand-charged tariffs.',
+      'demand-charge dependency': 'Value comes almost entirely from utility demand charges; flat-rate tariffs erode the business case.',
+      'utility tariff design': 'Local tariff must expose peak demand and export/compensation rules for V2B savings to persist.',
+      'niche setting': 'Affordable multifamily housing with a carshare EV is a narrow deployment envelope for now.',
+    },
+    references: [
+      { title: 'BlueHub Capital - Vehicle-to-grid pilot program', url: 'https://bluehubcapital.org/about-us/news-insights/Vehicle-to-grid-pilot-program', source: 'BlueHub Capital' },
+      { title: 'Fermata Energy launches V2G charging pilot for multifamily housing', url: 'https://pluginamerica.org/fermata-energy-launches-vehicle-to-grid-charging-pilot-for-multifamily-housing/', source: 'Plug In America', date: '2023-09-19' },
+      { title: 'Pilot for affordable access to EVs launched in Boston', url: 'https://www.enterprisemobility.com/en/news-stories/news-stories-archive/2023/09/pilot-for-affordable-access-to-evs-launched-in-boston.html', source: 'Enterprise Mobility', date: '2023-09' },
+      { title: 'Enterprise joins pilot program to provide EV access to low-income communities', url: 'https://www.autoremarketing.com/ar/enterprise-joins-pilot-program-to-provide-ev-access-to-low-income-communities/', source: 'Auto Remarketing' },
+      { title: 'Dorchester program aims to make EVs affordable', url: 'https://www.bostonglobe.com/2023/09/19/business/dorchester-program-aims-make-evs-affordable/', source: 'Boston Globe', date: '2023-09-19' },
+      { title: 'Boston Globe - Pilot program aims to make EVs affordable', url: 'https://bluehubcapital.org/about-us/news-insights/boston-globe-pilot-program-aims-make-evs-affordable', source: 'BlueHub Capital' },
+      { title: 'Affordable and Convenient Access to EV Charging Toolkit (PDF)', url: 'https://pluginamerica.org/wp-content/uploads/2025/05/Affordable-and-Convenient-Access-to-EV-Charging-Toolkit.pdf', source: 'Plug In America', date: '2025-05' },
+    ],
+    partnerLead: 'BlueHub Capital (site owner) with Fermata Energy (V2B platform) and Enterprise Mobility (carshare)',
+    businessModel: {
+      type: 'Demand-charge reduction (behind-the-meter V2B)',
+      description: 'Fermata Energy dispatches the shared LEAF to shave the multifamily building peak, cutting utility demand charges. Savings flow to BlueHub Capital; residents get subsidized EV access via Enterprise CarShare.',
+    },
+    standardization: {
+      standard: 'CHAdeMO bidirectional (Nissan LEAF) with Fermata Energy FE-15',
+      status: 'Commercial hardware, deployed - CHAdeMO limits future vehicle choice as fleets move to CCS/NACS',
+    },
+    technology: {
+      overview: 'Behind-the-meter V2B using a Fermata Energy FE-15 bidirectional DC charger paired with a Nissan LEAF and cloud-based building-load optimization.',
+      hardware: [
+        { name: 'Fermata Energy FE-15 bidirectional charger', details: ['~15 kW bidirectional DC', 'CHAdeMO connector', 'Installed at Codman Square multifamily site'] },
+        { name: 'Nissan LEAF (shared EV)', details: ['CHAdeMO-capable battery', 'Operated by Enterprise CarShare for residents'] },
+      ],
+      software: [
+        { name: 'Fermata Energy cloud platform', details: ['Real-time building-load monitoring', 'Automated peak-shaving dispatch', 'Recharge scheduling on low-cost / low-carbon hours'] },
+      ],
+    },
+    timeline: [
+      { phase: 'Planning', year: '2022-2023', description: 'BlueHub Capital, Fermata Energy and Enterprise Mobility design the affordable multifamily V2B model.' },
+      { phase: 'Launch', year: 'Sept 2023', description: 'Pilot goes live at Codman Square Apartments, Dorchester - first V2B deployment in Boston affordable housing.' },
+      { phase: 'Operation', year: '2023-2025', description: 'Shared LEAF cuts building demand charges; findings feed into Plug In America\'s 2025 Access to EV Charging Toolkit.' },
+    ],
+  },
+
   'bdl next': {
     images: [
       {
