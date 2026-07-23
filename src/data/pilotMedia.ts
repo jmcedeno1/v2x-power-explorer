@@ -585,7 +585,7 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
       { phase: 'V2G competition award', year: '2018', description: 'OLEV / BEIS award Bus2Grid under the V2G competition (UKRI ref 104230); consortium formed with SSE Enterprise, BYD, UK Power Networks and University of Leeds.' },
       { phase: 'Project launch', year: 'Summer 2018', description: 'Bus2Grid begins - billed as the world\'s largest V2G project.' },
       { phase: 'G99 regulation', year: '2019', description: 'New G99 rules for generators take effect; consortium develops aggregated certification approach for depot buses.' },
-      { phase: 'Depot operational', year: '2020', description: 'Northumberland Park depot capable of returning >1 MW to the grid; wholesale, DSO and ESO services tested.' },
+      { phase: 'Depot operational', year: '2020', description: 'Northumberland Park depot begins returning energy to the grid; wholesale, DSO and ESO services tested (site export power not publicly disclosed).' },
       { phase: 'Whitepaper', year: '2021', description: '"Innovating Hard and Soft" whitepaper published, sharing technical and commercial lessons.' },
       { phase: 'Project completion', year: '2022', description: 'Findings inform UK V2G policy, DNO connection rules and SSE\'s commercial flexibility offer.' },
     ],
