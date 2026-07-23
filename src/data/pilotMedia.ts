@@ -115,7 +115,7 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
     timeline: [
       { phase: 'Planning', year: '2022-2023', description: 'BlueHub Capital, Fermata Energy and Enterprise Mobility design the affordable multifamily V2B model.' },
       { phase: 'Launch', year: 'Sept 2023', description: 'Pilot goes live at Codman Square Apartments, Dorchester - first V2B deployment in Boston affordable housing.' },
-      { phase: 'Operation', year: '2023-2025', description: 'Shared LEAF cuts building demand charges; findings feed into Plug In America''s 2025 Access to EV Charging Toolkit.' },
+      { phase: 'Operation', year: '2023-2025', description: 'Shared LEAF cuts building demand charges; findings feed into Plug In America\'s 2025 Access to EV Charging Toolkit.' },
     ],
   },
 
