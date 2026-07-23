@@ -435,6 +435,55 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
     ],
     partnerLead: 'OVO Energy, Kaluza, Cenex, Indra, Nissan, National Grid ESO, Western Power Distribution, OZEV, Innovate UK',
   },
+  'parker project': {
+    references: [
+      { title: 'Parker Denmark - project page', url: 'https://www.v2g-hub.com/projects/parker-denmark/', source: 'V2G Hub' },
+      { title: 'The Parker Project - Final Report', url: 'https://orbit.dtu.dk/en/publications/the-parker-project-final-report/', source: 'DTU Orbit', date: '2018' },
+      { title: 'Vehicle-to-Grid (V2G) pilots overview', url: 'https://m2mserver.com/en/vehicle-to-grid-v2g-pilots/', source: 'M2M Server' },
+      { title: 'Parker - project page', url: 'https://www.v2g-hub.com/projects/parker/', source: 'V2G Hub' },
+      { title: 'The Parker Project: cross-brand service testing of V2G', url: 'https://www.mdpi.com/2032-6653/10/4/66', source: 'MDPI - World Electric Vehicle Journal', date: '2019' },
+    ],
+    gapExplanations: {
+      'Cross-OEM interoperability':
+        'Parker deliberately mixed Nissan, Mitsubishi and PSA vehicles on the same Enel X CHAdeMO chargers to verify that V2G behaviour (SoC reporting, dispatch response, safe shutdown) was consistent across brands. Divergent OEM implementations of CHAdeMO 2.0 required per-vehicle tuning - a barrier the project formalised via the "Grid Integrated Vehicle" (GIV) rating framework.',
+      'FCR-N market rules':
+        'Parker qualified as a real market participant in the Nordic FCR-N (symmetric primary reserve) product. Bidding EV fleets into a market designed for large generators required minimum-bid aggregation, 4-hour blocks and 100% availability guarantees - resolved commercially by Nuvve\'s aggregator platform.',
+      'Battery degradation':
+        'DTU\'s measurement campaign over the trial found no measurable accelerated capacity fade attributable to V2G cycling under FCR-N duty. This became a widely-cited evidence point unlocking OEM comfort with bidirectional use.',
+      'Standards':
+        'Deployed on CHAdeMO 2.0 bidirectional DC. Lessons on symmetric power flow, protection and vehicle-charger handshaking were fed into IEC 61851-23 / ISO 15118-20 for CCS bidirectional and into CHAdeMO 3.0.',
+      'Hardware cost':
+        'Enel X 10 kW bidirectional DC units were purpose-built for the trial and carried a substantial cost premium over unidirectional AC wallboxes - identified as the main barrier to residential scale-up despite viable FCR-N revenue at fleet level.',
+    },
+    businessModel: {
+      type: 'Commercial fleet V2G aggregator (FCR-N)',
+      description:
+        'Frederiksberg Forsyning municipal fleet aggregated by Nuvve to sell Frequency Containment Reserve (FCR-N) on the Danish/Nordic ancillary services market operated by Energinet. Average revenue of approximately EUR 1,860 per vehicle per year - the first documented positive-business-case V2G operation on a live TSO market.',
+    },
+    standardization: {
+      standard: 'CHAdeMO 2.0 bidirectional DC; Energinet FCR-N market qualification',
+      status: 'Full commercial qualification. Contributed to IEC 61851-23 / ISO 15118-20 bidirectional work and to the CHAdeMO 3.0 (ChaoJi) evolution.',
+    },
+    technology: {
+      overview: 'Municipal fleet with cross-OEM EVs on Enel X 10 kW bidirectional DC chargers, aggregated by Nuvve for Energinet FCR-N.',
+      hardware: [
+        { name: 'Enel X V2G Charger', details: ['10 kW bidirectional DC', 'CHAdeMO 2.0 connector', 'Depot deployment at Frederiksberg Forsyning'] },
+        { name: 'EV fleet', details: ['10 Nissan e-NV200 (core commercial fleet)', 'Mitsubishi Outlander PHEV & i-MiEV', 'PSA Peugeot iOn - cross-OEM testing'] },
+      ],
+      software: [
+        { name: 'Nuvve GIVe platform', details: ['Real-time dispatch of fleet to FCR-N signal', '4-hour market bidding blocks', 'Per-vehicle SoC and availability optimisation'] },
+        { name: 'DTU measurement & analytics', details: ['Battery-health tracking', 'Grid-service performance verification', '"Grid Integrated Vehicle" (GIV) cross-brand rating framework'] },
+      ],
+    },
+    timeline: [
+      { phase: 'Project start', year: '2016', description: 'Consortium formed under EUDP funding; DTU coordinates, Nuvve provides aggregator, Enel X supplies 10 kW bidirectional CHAdeMO units, Frederiksberg Forsyning hosts the fleet.' },
+      { phase: 'Commercial operation', year: '2017', description: 'World\'s first fully commercial V2G hub goes live - fleet begins bidding FCR-N on Energinet\'s ancillary services market.' },
+      { phase: 'Cross-OEM testing', year: '2017-2018', description: 'Nissan, Mitsubishi and PSA vehicles tested on the same chargers; GIV rating framework published.' },
+      { phase: 'Final report', year: 'Aug 2018', description: 'DTU publishes final report: ~EUR 1,860/vehicle/year FCR-N revenue, no accelerated battery degradation, cross-OEM interoperability validated.' },
+      { phase: 'Legacy', year: '2019+', description: 'Findings feed IEC/ISO 15118-20 and CHAdeMO 3.0 standardisation; Nuvve scales the commercial V2G-for-FCR model internationally.' },
+    ],
+    partnerLead: 'DTU (Technical University of Denmark), Nuvve (aggregator), Enel X (charger OEM), Nissan / Mitsubishi / PSA (vehicle OEMs), Frederiksberg Forsyning (fleet operator), Energinet (TSO), Insero',
+  },
 };
 
 
