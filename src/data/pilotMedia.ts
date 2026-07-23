@@ -615,7 +615,7 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
     },
     businessModel: {
       type: 'Contingency FCAS revenue + fleet charging optimisation',
-      description: 'ActewAGL, as the registered market participant, monetized aggregated Quasar chargers as a contingency FCAS (raise) resource in the AEMO NEM. Fleet owners retained the vehicles for daily use; V2G revenue offset charging cost and part of the vehicle TCO. ARENA/Energeia''s 2024 final report modelled up to ~AUD 12k/vehicle/year of FCAS revenue under favourable conditions.',
+      description: 'ActewAGL, as the registered market participant, monetized aggregated Quasar chargers as a contingency FCAS (raise) resource in the AEMO NEM. Fleet owners retained the vehicles for daily use; V2G revenue offset charging cost and part of the vehicle TCO. ARENA/Energeia\'s 2024 final report modelled up to ~AUD 12k/vehicle/year of FCAS revenue under favourable conditions.',
     },
     standardization: {
       standard: 'AS/NZS 4777.2:2020 (grid-connect inverter), CHAdeMO V2G, AEMO FCAS market rules',
@@ -641,7 +641,7 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
       { phase: 'FCAS market participation', year: '2023', description: 'ActewAGL registers and dispatches the aggregated Quasar fleet as a contingency-raise FCAS resource in the AEMO NEM.' },
       { phase: 'Victoria storm event', year: 'Feb 2024', description: 'REVS EVs contribute contingency FCAS during the 13 February Victorian storm event that blacked out ~500,000 homes - a live demonstration of fleet V2G value.' },
       { phase: 'Final report', year: 'Feb 2024', description: 'Energeia publishes the ARENA V2G Insights Final Report, quantifying up to ~AUD 12k/vehicle/year of FCAS revenue potential.' },
-      { phase: 'Project completion', year: 'Nov 2025', description: 'REVS formally concludes on 21 November 2025; lessons feed BSGIP''s follow-on residential and fleet V2G programs.' },
+      { phase: 'Project completion', year: 'Nov 2025', description: 'REVS formally concludes on 21 November 2025; lessons feed BSGIP\'s follow-on residential and fleet V2G programs.' },
     ],
     partnerLead: 'ActewAGL Retail (lead), Nissan Australia, Wallbox, JET Charge, SG Fleet, ANU BSGIP, ACT Government, Evoenergy, ARENA',
   },
