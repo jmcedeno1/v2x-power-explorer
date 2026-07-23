@@ -538,6 +538,59 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
     ],
     partnerLead: 'State Grid Shanghai (operator), NDRC, National Energy Administration, MIIT, SAMR, 10 automakers, 9 EVSE manufacturers',
   },
+  'bus2grid': {
+    references: [
+      { title: 'Bus2Grid - UKRI Gateway to Research', url: 'https://gtr.ukri.org/projects?ref=104230', source: 'UKRI / Innovate UK' },
+      { title: 'Project Bus2Grid will explore V2G charging with buses', url: 'https://www.electrive.com/2018/03/07/project-bus2grid-will-explore-v2g-charging-buses/', source: 'electrive', date: 'Mar 2018' },
+      { title: 'Bus2Grid: Innovating Hard and Soft (whitepaper, PDF)', url: 'https://plugin-power.com/wp-content/uploads/2021/02/Bus2Grid-Innovating-Hard-and-Soft.pdf', source: 'Plugin Power / SSE', date: '2021' },
+      { title: 'Bus2Grid: The next step in decarbonising transport?', url: 'https://www.evinfrastructurenews.com/emobility/bus2grid-the-next-step-in-decarbonising-transport', source: 'EV Infrastructure News', date: 'Oct 2020' },
+      { title: 'Road to Renewables', url: 'https://www.sseenergysolutions.co.uk/roadtorenewables', source: 'SSE Energy Solutions' },
+      { title: 'Bus2Grid project uses BYD London double-decker buses for V2G', url: 'https://www.yolegroup.com/industry-news/bus2grid-project-aims-the-use-of-byd-london-double-decker-buses-for-v2g-solutions/', source: 'Yole Group', date: 'Aug 2020' },
+    ],
+    gapExplanations: {
+      'AC bidirectional dispatch':
+        'Bus2Grid runs AC-based V2G, so the on-board charger controls the discharge. The team originally hoped to signal via the Type 2 socket, but it could not carry enough information. They shifted to a cloud-based control path (Origami router - Origami cloud - BYD cloud - bus) to trigger safe discharge, which added latency and required tight coordination between energy and vehicle stacks.',
+      'G99 certification':
+        'G99 came into force in 2019 for stationary generators. Because the "generator" in Bus2Grid is the bus itself (battery + on-board inverter) and it leaves the depot every day, the project had to test and certify voltage, harmonics and reactive-power behaviour for the aggregated buses when parked - a novel interpretation of the standard.',
+      'Battery degradation':
+        'BYD engineers modelled expected V2G duty on the depot buses and concluded the impact was small enough that the standard battery warranty was unaffected. Direct measurement was ruled out because degradation over the project window would be too small to isolate.',
+      'Business model':
+        'University of Leeds led business-model design, working out how bus operators, transport authorities, DSOs and National Grid ESO share value from wholesale trades, DSO services and frequency response. New commercial arrangements between energy and transport sectors are the main non-technical barrier to replication.',
+      'Cross-industry collaboration':
+        'The project required an OEM (BYD), a DNO (UK Power Networks), an energy services company (SSE), a university and multiple regulators to align on data, dispatch and safety. Bus2Grid was, in effect, the first at-scale template for that collaboration in the UK.',
+    },
+    businessModel: {
+      type: 'Depot-scale bus V2G aggregator',
+      description:
+        'SSE Enterprise aggregates BYD electric buses parked overnight at Northumberland Park depot and sells the resulting flexibility into wholesale energy markets, UK Power Networks DSO services, and National Grid ESO frequency response. Predictable route timings make buses an attractive asset class for grid services relative to consumer EVs.',
+    },
+    standardization: {
+      standard: 'AC V2G on Type 2 with cloud dispatch; G99 depot compliance',
+      status: 'Delivered UK evidence base for AC V2G at depot scale and for aggregated G99 certification of mobile generators. Findings feed the UK smart-charging and flexibility policy tracks.',
+    },
+    technology: {
+      overview: 'AC-based V2G at Europe\'s largest e-bus depot, aggregated to over 1 MW of grid export by an Origami energy router coordinating BYD buses through the cloud.',
+      hardware: [
+        { name: 'BYD electric double-decker bus', details: ['Battery up to 382 kWh', 'AC charging at 80 kW', 'Two 150 kW electric motors', 'V2G-enabled variant'] },
+        { name: 'Northumberland Park depot', details: ['Europe\'s largest electric bus depot', 'Nearly 100 zero-emission buses on site', '>1 MW aggregated V2G export capacity'] },
+        { name: 'Origami energy router', details: ['Local site dispatch and metering', 'Detects site frequency for FFR'] },
+      ],
+      software: [
+        { name: 'Origami cloud + BYD cloud', details: ['Dispatch signal path: router -> Origami cloud -> BYD cloud -> bus', 'Enables safe AC discharge control'] },
+        { name: 'Market interfaces', details: ['Wholesale energy trades', 'UK Power Networks DSO services', 'National Grid ESO static & dynamic frequency response'] },
+        { name: 'University of Leeds analytics', details: ['Business-model design', 'Barriers-to-market analysis'] },
+      ],
+    },
+    timeline: [
+      { phase: 'V2G competition award', year: '2018', description: 'OLEV / BEIS award Bus2Grid under the V2G competition (UKRI ref 104230); consortium formed with SSE Enterprise, BYD, UK Power Networks and University of Leeds.' },
+      { phase: 'Project launch', year: 'Summer 2018', description: 'Bus2Grid begins - billed as the world\'s largest V2G project.' },
+      { phase: 'G99 regulation', year: '2019', description: 'New G99 rules for generators take effect; consortium develops aggregated certification approach for depot buses.' },
+      { phase: 'Depot operational', year: '2020', description: 'Northumberland Park depot capable of returning >1 MW to the grid; wholesale, DSO and ESO services tested.' },
+      { phase: 'Whitepaper', year: '2021', description: '"Innovating Hard and Soft" whitepaper published, sharing technical and commercial lessons.' },
+      { phase: 'Project completion', year: '2022', description: 'Findings inform UK V2G policy, DNO connection rules and SSE\'s commercial flexibility offer.' },
+    ],
+    partnerLead: 'SSE Enterprise (lead), BYD, UK Power Networks, University of Leeds, Innovate UK, BEIS/OLEV, Origami Energy',
+  },
 };
 
 
