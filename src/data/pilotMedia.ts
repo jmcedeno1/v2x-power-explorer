@@ -982,6 +982,44 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
     ],
     partnerLead: 'Highland Electric Fleets (integrator and subscription provider); National Grid; Proterra; Thomas Built Buses; Rhombus Energy Solutions; Synop; Beverly Public Schools',
   },
+  'mahle chargebig demonstrator, stuttgart': {
+    references: [
+      { title: 'Assessing bidirectional EV charging for employer parking: a case study of the MAHLE chargeBIG demonstrator in Stuttgart', url: 'https://www.scilit.com/publications/dd4f3ae33b556b032b127b3833b47ef5', source: 'Leippi et al., Energy Conversion and Management 358 (2026) 121479', date: 'Apr 2026' },
+      { title: 'chargeBIG - joint MAHLE / Fraunhofer ITWM charging infrastructure project', url: 'https://www.itwm.fraunhofer.de/en/departments/optimization/energy-supply/chargebig.html', source: 'Fraunhofer ITWM' },
+      { title: "World's smallest wallbox is made by MAHLE chargeBIG (smallBOX + chargeCLUSTER)", url: 'https://newsroom.mahle.com/press/en/press-releases/worlds-smallest-wallbox-is-made-by-mahle-chargebig-107968', source: 'MAHLE Newsroom', date: 'Mar 2025' },
+      { title: 'MAHLE chargeBIG6 brings inexpensive charging infrastructure for apartment buildings', url: 'https://newsroom.mahle.com/press/en/press-releases/mahle-chargebig6-brings-inexpensive-charging-infrastructure-for-apartment-buildings-94528', source: 'MAHLE Newsroom', date: 'Nov 2022' },
+    ],
+    gapExplanations: {
+      'battery degradation uncertainty': 'Break-even discharge price is highly sensitive to assumed cell degradation cost; without OEM warranty clarity, fleet users hesitate to enrol.',
+      'day-ahead arbitrage unprofitable': 'Under 2023 DE-LU price spreads and user availability, pure energy arbitrage did not pay; value came from peak shaving and price-based DR, not wholesale trading.',
+      'user availability constraints': 'Employees leave at fixed times with a required departure SOC, capping how much energy the aggregator can discharge each day.',
+    },
+    businessModel: {
+      type: 'Employer-owned V2B / peak-shaving demonstrator with on-site PV self-consumption',
+      description: 'MAHLE owns the chargeBIG infrastructure and uses employee EVs plugged in during working hours as a flexible load and short-duration battery. Value is captured by the company through reduced peak demand charges, higher PV self-consumption and price-based demand response on the German day-ahead market; individual employees receive charging as a workplace benefit.',
+    },
+    technology: {
+      overview: 'Centralized chargeBIG architecture: one central power cabinet with dynamic phase-specific load management feeds 101 low-cost sockets across the MAHLE staff car park, complemented by a stationary battery, a DC-DC fast charger, a dedicated PV plant and the Amperix energy management system.',
+      hardware: [
+        { name: 'chargeBIG central cabinet + tethered sockets (101 CPs)', details: ['AC charging scenarios 7.2 to 11 kW per point', 'Dynamic phase-specific load management to avoid unbalanced grid loads', 'Calibration-compliant billing'] },
+        { name: 'On-site stationary battery + DC-DC fast charger', details: ['Buffers PV and shifts peak load', 'Enables DC fast-charging option from the stationary battery'] },
+        { name: 'Dedicated rooftop PV system', details: ['Directly coupled to the car-park energy system', 'Optimization suggests up to ~820 kWp when combined with bidirectional charging'] },
+      ],
+      software: [
+        { name: 'Amperix energy management system (Green by IT)', details: ['Optimizes self-consumption, peak shaving and use of flexible tariffs', 'Coordinates PV, stationary battery and EV charging'] },
+        { name: 'Fraunhofer ITWM optimization models', details: ['Mixed-integer linear programming, 15-min resolution', 'Price-based demand response on DE-LU day-ahead market', 'Battery degradation cost embedded in the objective'] },
+      ],
+    },
+    timeline: [
+      { phase: 'Prototype', year: '2019', description: 'MAHLE and Fraunhofer ITWM build the first chargeBIG prototype with 18 charging points as the blueprint for the Stuttgart demonstrator.' },
+      { phase: 'Demonstrator build-out', year: '2020-2022', description: 'chargeBIG site at MAHLE Stuttgart scales up with stationary battery, DC-DC fast charger, PV system and Amperix EMS; funded by the BMWi Sofortprogramm Saubere Luft.' },
+      { phase: 'chargeBIG6 launch', year: '2022', description: 'MAHLE extends the centralized architecture to residential buildings with chargeBIG6 (up to 6 EVs at 11 or 22 kW on one house connection).' },
+      { phase: 'Operational V2B dataset', year: '2023', description: 'Full-year 2023 charging data from 101 chargeBIG points at Stuttgart used as the empirical basis for the bidirectional charging case study.' },
+      { phase: 'chargeCLUSTER product line', year: '2025', description: 'MAHLE launches smallBOX (7.4 / 22 kW) and modular chargeCLUSTER (2 / 6 / up to 36 points) with dynamic load management and calibration-compliant billing.' },
+      { phase: 'Case-study publication', year: '2026', description: 'Leippi et al. publish results in Energy Conversion and Management: break-even 0.66-1.78 EUR per discharged kWh, average savings 211-893 EUR per EV per year, up to 610-2018 EUR in the best scenarios, and ~22% lower battery degradation cost.' },
+    ],
+    partnerLead: 'MAHLE chargeBIG GmbH (operator); MAHLE New Mobility Solutions; Fraunhofer ITWM (optimization); Eliso (original co-developer); Green by IT (Amperix EMS); Munster Technological University; funded by BMWi Sofortprogramm Saubere Luft.',
+  },
 };
 
 
