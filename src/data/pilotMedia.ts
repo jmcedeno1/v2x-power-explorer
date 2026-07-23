@@ -569,10 +569,10 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
       status: 'Delivered UK evidence base for AC V2G at depot scale and for aggregated G99 certification of mobile generators. Findings feed the UK smart-charging and flexibility policy tracks.',
     },
     technology: {
-      overview: 'AC-based V2G at Europe\'s largest e-bus depot, aggregated to over 1 MW of grid export by an Origami energy router coordinating BYD buses through the cloud.',
+      overview: 'AC-based V2G at Europe\'s largest e-bus depot, with an Origami energy router coordinating BYD buses through the cloud to trigger safe discharge back to the grid.',
       hardware: [
         { name: 'BYD electric double-decker bus', details: ['Battery up to 382 kWh', 'AC charging at 80 kW', 'Two 150 kW electric motors', 'V2G-enabled variant'] },
-        { name: 'Northumberland Park depot', details: ['Europe\'s largest electric bus depot', 'Nearly 100 zero-emission buses on site', '>1 MW aggregated V2G export capacity'] },
+        { name: 'Northumberland Park depot', details: ['Europe\'s largest electric bus depot', 'Nearly 100 zero-emission buses on site', 'V2G export power not publicly disclosed'] },
         { name: 'Origami energy router', details: ['Local site dispatch and metering', 'Detects site frequency for FFR'] },
       ],
       software: [
