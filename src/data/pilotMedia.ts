@@ -76,6 +76,51 @@ export const GENERIC_GAP_EXPLANATIONS: Record<string, string> = {
 };
 
 export const pilotMediaMap: Record<string, PilotMedia> = {
+  'neverflat': {
+    gapExplanations: {
+      'low-cost bidirectional hardware': 'Bidirectional chargers remain expensive; WBG semiconductors and simplified topologies must bring cost down for mass rollout.',
+      'cross-border interoperability': 'Users need seamless roaming and settlement across country borders and CPO networks.',
+      'user acceptance': 'Convenience, transparency and clear incentives are needed for drivers to allow bidirectional dispatch.',
+      'grid integration with renewables': 'Chargers must be orchestrated with local PV, storage and DSO signals to actually raise RES utilisation.',
+    },
+    references: [
+      { title: 'NEVERFLAT project website', url: 'https://neverflat.eu/', source: 'Consortium' },
+      { title: 'CORDIS - iNnovative EV-charging EnviRonment for Future Low-cost mAss deploymenT (101192973)', url: 'https://cordis.europa.eu/project/id/101192973', source: 'European Commission / CORDIS' },
+      { title: 'NEVERFLAT project profile', url: 'https://www.2zeroemission.eu/research-project/neverflat/', source: '2ZERO Partnership' },
+      { title: 'NEVERFLAT at TU Berlin - MPM research', url: 'https://www.tu.berlin/en/mpm/research/projects/neverflat', source: 'TU Berlin' },
+      { title: 'NEVERFLAT at Aarhus University - ECE', url: 'https://ece.au.dk/forskning/eksterne-bevillinger/neverflat-innovative-ev-charging-environment-for-future-low-cost-mass-deployment', source: 'Aarhus University' },
+      { title: 'NEVERFLAT on LinkedIn', url: 'https://www.linkedin.com/company/neverflat-project/', source: 'LinkedIn' },
+    ],
+    partnerLead: 'Aarhus University (coordinator) with a 13-partner consortium including TU Berlin, Hubject, IREC, Tekniker, Ingartek, Stansol Energy, BEIA, Grid&Co GmbH, Romanian Energy Center, Edentify Foundation, and the cities of Alba Iulia and Vitoria-Gasteiz.',
+    businessModel: {
+      type: 'Horizon Europe research and innovation action (2ZERO Partnership)',
+      description: 'Public co-funded R&I project targeting affordable, user-friendly bidirectional charging. No commercial revenue model - value is expected from cost-reduced hardware, orchestration software, and social/business incentive schemes exploited by industry partners after the project.',
+    },
+    standardization: {
+      standard: 'Bidirectional charging aligned with 2ZERO Partnership objectives; roaming/settlement handled via Hubject interoperability platform',
+      status: 'Under development - integration and pilot preparation ongoing as of GA4 (June 2026, Berlin)',
+    },
+    technology: {
+      overview: 'Low-cost pervasive bidirectional charging infrastructure combining WBG-based power electronics, ML-driven orchestration and placement, PV canopies and cross-border interoperability, validated in three national pilots.',
+      hardware: [
+        { name: 'Low-cost bidirectional charger', details: ['Wide-bandgap (WBG) semiconductor power stage', 'Targeted at pervasive slow charging with V2G/V2H/V2B'] },
+        { name: 'Photovoltaic canopy', details: ['NEVERFLAT PV canopy concept previewed at Genera 2025', 'Couples on-site generation with bidirectional charging'] },
+      ],
+      software: [
+        { name: 'ML predictive models and simulation', details: ['Optimises deployment and placement of chargers', 'Supports grid-aware orchestration and RES utilisation'] },
+        { name: 'Interoperability & roaming (Hubject)', details: ['Enables cross-border user access', 'Handles authentication and settlement across CPOs'] },
+      ],
+    },
+    timeline: [
+      { phase: 'Grant', year: '2024', description: 'Selected under Horizon Europe call HORIZON-CL5-2024-D5-01-01 (2ZERO Partnership).' },
+      { phase: 'Project start', year: '2025', description: 'Consortium of 13 partners across DE, ES, RO, DK begins work under Aarhus University coordination.' },
+      { phase: 'Public preview', year: 'May 2025', description: 'NEVERFLAT PV canopy concept unveiled at Genera 2025.' },
+      { phase: 'Integration phase', year: 'Jun 2026', description: 'GA4 General Assembly in Berlin (hosted by Hubject) coordinates technology integration and pilot preparation.' },
+      { phase: 'Pilots', year: '2026-2027', description: 'Real-life deployments in Germany, Romania (Alba Iulia) and Spain (Vitoria-Gasteiz) to validate the integrated stack.' },
+    ],
+  },
+
+
   'dorchester / codman square': {
     gapExplanations: {
       'single vehicle pilot': 'One shared LEAF limits how much peak demand can be shaved; scaling needs several vehicles per building.',
