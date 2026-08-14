@@ -1059,6 +1059,48 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
     ],
     partnerLead: 'Sapienza University of Rome DIAEE (LAMBDA lab, M. C. Falvo et al.); Terna S.p.A. (open E-mobility Lab, Italian TSO); University of Florence DIEF (companion REC-V2G EMS work).',
   },
+  'los angeles air force base vehicle to grid pilot project': {
+    references: [
+      { title: 'Los Angeles Air Force Base Vehicle to Grid Pilot Project (LBNL-6154E)', url: 'https://gridintegration.lbl.gov/publications/los-angeles-air-force-base-vehicle', source: 'Lawrence Berkeley National Laboratory', date: 'Jun 2013' },
+      { title: 'Los Angeles Air Force Base Vehicle to Grid Pilot Project (PDF)', url: 'https://eta-publications.lbl.gov/sites/default/files/lbnl-6154e.pdf', source: 'LBNL / ECEEE 2013 Summer Study', date: 'Jun 2013' },
+    ],
+    gapExplanations: {
+      'regulatory and market participation': 'The base must act as both a retail SCE customer and a wholesale CAISO market participant, creating untested interconnection and scheduling-coordinator precedents.',
+      'cybersecurity and base firewall': 'Military IT security requirements forced the fleet-management system to sit outside the base firewall, complicating deployment and approval.',
+      'vehicle and evse procurement': 'Only a few V2G-capable vehicles and chargers existed in 2012-2013, making it hard to build a mixed-duty 40-vehicle fleet that meets CAISO minimums.',
+      'fast charging infrastructure': 'CAISO Reg.U+D revenue scales with available bidirectional power, but fast DC V2G chargers required costly infrastructure upgrades.',
+    },
+    businessModel: {
+      type: 'DoD / California co-funded V2G demonstration with CAISO ancillary-service revenue',
+      description: 'The pilot aimed to offset the higher lifecycle cost of an all-electric non-tactical fleet by bidding V2G capacity into CAISO Regulation Up and Down markets. Funding came from DoD ESTCP and the California Energy Commission; the economic value was prospective market revenue rather than a commercial profit model.',
+    },
+    standardization: {
+      standard: 'OpenADR 2.0b for CAISO dispatch signals; CAISO Reg.U+D market rules; CHAdeMO / AC bidirectional charging for participating vehicles',
+      status: 'Deployed - one of the first military pilots to use OpenADR to bridge CAISO dispatch instructions to a V2G fleet.',
+    },
+    technology: {
+      overview: 'PEV-fleetOPT combined three technology layers: Bosch eMobility Solution for fleet and charging management, Akuacom OpenADR Demand Response Automation Server (DRAS) for CAISO signal receipt, and Berkeley Lab DER-CAM for real-time charge-discharge optimization.',
+      hardware: [
+        { name: 'V2G-capable PEV fleet', details: ['Approximately 40 plug-in electric vehicles', 'Mixed-duty non-tactical fleet', 'About half of the fleet was intended to participate in V2G markets'] },
+        { name: 'Compatible EVSE (up to 40 units)', details: ['AC charging stations supporting participating vehicles', 'Managed by Bosch eMobility Charging Services'] },
+        { name: 'On-site PV arrays', details: ['300 kW parking-lot canopy PV', 'Additional rooftop and ground-mount arrays planned near the dispatchers building'] },
+      ],
+      software: [
+        { name: 'Bosch eMobility Solution', details: ['Fleet Services: dispatcher scheduling, vehicle availability and SOC tracking', 'Charging Services: individual EVSE control for charge-discharge schedules'] },
+        { name: 'Akuacom OpenADR DRAS', details: ['Receives secure CAISO Reg.U+D dispatch signals', 'Forwards instructions via OpenADR to eMobility', 'Supports 4-second response requirement'] },
+        { name: 'Berkeley Lab DER-CAM optimization', details: ['Forecasts energy and ancillary-service prices', 'Builds day-ahead and hour-ahead charge-discharge schedules', 'Minimizes energy cost while maximizing AS revenue'] },
+      ],
+    },
+    timeline: [
+      { phase: 'Project start', year: 'Feb 2012', description: 'DoD ESTCP and California Energy Commission fund the L.A. AFB V2G pilot to test a mixed-duty all-electric fleet.' },
+      { phase: 'Software integration', year: '2012', description: 'Interfaces between Bosch eMobility, Akuacom OpenADR DRAS and Berkeley Lab DER-CAM are developed.' },
+      { phase: 'Regulatory and cybersecurity hurdles', year: '2012-2013', description: 'Most effort is spent resolving CAISO market participation, SCE interconnection and base cybersecurity approvals; deployment is delayed into early 2013.' },
+      { phase: 'Fleet deployment', year: 'Mid-2013', description: 'Approximately 40 V2G-capable PEVs and compatible EVSE are installed at the base.' },
+      { phase: 'Market participation', year: 'Aug 2013', description: 'Target date for CAISO Reg.U+D market entry, contingent on proving 500 kW continuous bidirectional capability for one hour.' },
+      { phase: 'Pilot operation and reporting', year: '2013-2014', description: 'Fleet operates through end 2013; major project shuts down in early 2014 and results are reported at ECEEE 2013.' },
+    ],
+    partnerLead: 'Lawrence Berkeley National Laboratory (DER-CAM and project lead); Bosch Software Innovations (eMobility Solution); Akuacom (OpenADR DRAS); Olivine (regulatory and interconnection); U.S. DoD ESTCP; California Energy Commission; Southern California Edison; CAISO.',
+  },
 };
 
 
