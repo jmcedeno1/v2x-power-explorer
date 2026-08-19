@@ -232,11 +232,13 @@ export default function NewsPage() {
     const byMonth = new Map<string, number>();
     const topicCounts = new Map<string, number>();
     const topicMonths = new Map<string, Map<string, number>>();
+    const topicQuarters = new Map<string, Map<string, number>>();
     const topicSources = new Map<string, Map<string, number>>();
     const topicArticles = new Map<string, NewsDoc[]>();
     // topic -> subtopic -> quarter -> count
     const topicSubs = new Map<string, Map<string, Map<string, number>>>();
     const allQuarters = new Set<string>();
+
 
     for (const n of news) {
       const month = n.date ? n.date.slice(0, 7) : null;
