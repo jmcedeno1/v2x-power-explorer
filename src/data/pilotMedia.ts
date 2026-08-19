@@ -1108,13 +1108,6 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
       { title: 'JUMPSmartMaui stakeholders announce successful completion of the project', url: 'https://www.medb.org/jumpsmartmaui-stakeholders-announce-successful-completion-of-the-project/', source: 'Maui Economic Development Board' },
     ],
   },
-  'savona campus smart poly-generation micro-grid (spm)': {
-    references: [
-      { title: 'La Smart Polygeneration Microgrid (SPM) - Savona Campus', url: 'https://campus-savona.unige.it/en/progetti/Energia2020/SPM', source: 'University of Genoa' },
-      { title: 'The University of Genoa smart polygeneration microgrid test-bed facility', url: 'https://www.sciencedirect.com/science/article/abs/pii/S1364032112005515', source: 'Renewable & Sustainable Energy Reviews' },
-      { title: 'E-Mobility & Microgrid Laboratory at the Savona Campus of Genova University', url: 'https://www.researchgate.net/publication/346595922_E-Mobility_Microgrid_Laboratory_at_the_Savona_Campus_of_Genova_University', source: 'IEEE / ResearchGate' },
-    ],
-  },
   'oakland school district': {
     references: [
       { title: "Zum Launches Nation's First School District with 100% Electric, Bidirectional V2G School Bus Fleet in Oakland", url: 'https://www.ridezum.com/press-release/zum-launches-nations-first-school-district-with-100-electric-bidirectional-v2g-school-bus-fleet-in-oakland/', source: 'Zum' },
