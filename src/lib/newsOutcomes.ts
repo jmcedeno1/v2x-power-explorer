@@ -228,7 +228,14 @@ export function groupOutcomes(articles: OutcomeArticle[]): Map<OutcomeType, Outc
       map.set(o.type, arr);
     }
   }
-  for (const [k, arr] of map) {
+  for (const [k, list] of map) {
+    // one entry per article per outcome type: keep the strongest
+    const byArticle = new Map<string, Outcome>();
+    for (const o of list) {
+      const prev = byArticle.get(o.article.id);
+      if (!prev || o.weight > prev.weight) byArticle.set(o.article.id, o);
+    }
+    const arr = [...byArticle.values()];
     arr.sort((x, y) => {
       const dx = x.article.date ?? '';
       const dy = y.article.date ?? '';
