@@ -1107,6 +1107,38 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
       { title: 'U.S.-Japan Collaborative Smart Grid Demonstration Project in Maui (final report)', url: 'https://www.nedo.go.jp/content/100864936.pdf', source: 'NEDO' },
       { title: 'JUMPSmartMaui stakeholders announce successful completion of the project', url: 'https://www.medb.org/jumpsmartmaui-stakeholders-announce-successful-completion-of-the-project/', source: 'Maui Economic Development Board' },
     ],
+    businessModel: {
+      type: 'Government-funded bilateral demonstration',
+      description: 'NEDO (Japan) funded the demonstration jointly with Hawaii state partners. The value case was absorbing curtailed night-time wind, deferring distribution upgrades and testing customer incentives for managed and bidirectional charging rather than direct market revenue.',
+    },
+    standardization: {
+      standard: 'CHAdeMO bidirectional DC charging; IEC 61850 grid interfaces; distribution management system integration',
+      status: 'Completed - findings fed into CHAdeMO V2X and Hawaii grid-integration practice.',
+    },
+    technology: {
+      overview: 'Island smart-grid demonstration combining EVs, fast chargers, distributed storage and a directed-charging management system on the Maui distribution network.',
+      hardware: [
+        { name: 'CHAdeMO DC fast chargers', details: ['Public network across Maui', 'Bidirectional-capable units for V2G tests'] },
+        { name: 'EV fleet', details: ['Nissan LEAF and other participating vehicles', 'Residential and public charging points'] },
+        { name: 'Distribution automation', details: ['Smart inverters and grid sensors on Maui Electric feeders'] },
+      ],
+      software: [
+        { name: 'Directed charging management system', details: ['Shifts charging to periods of surplus wind generation', 'Customer opt-in scheduling'] },
+        { name: 'Grid and forecasting platform', details: ['Wind and load forecasting for dispatch', 'Hitachi-developed control layer'] },
+      ],
+    },
+    timeline: [
+      { phase: 'Project launch', year: '2011', description: 'NEDO, Hitachi and Hawaii partners sign the Maui smart-grid agreement.' },
+      { phase: 'Field deployment', year: '2013-2015', description: 'Chargers, EVs and management system installed and operated across Maui.' },
+      { phase: 'Evaluation', year: '2016', description: 'Curtailed-wind absorption and customer response assessed.' },
+      { phase: 'Completion', year: '2017', description: 'Project closes; results published by NEDO and MEDB.' },
+    ],
+    partnerLead: 'Hitachi and NEDO (Japan) with Maui Electric, County of Maui and Hawaiian Electric',
+    gapExplanations: {
+      'user acceptance': 'Drivers had to accept directed charging windows tied to wind availability rather than their own convenience.',
+      'metering': 'Island tariffs did not yet settle exported energy from vehicles.',
+      'standards': 'Early CHAdeMO bidirectional profiles were ahead of any harmonised grid-code requirement.',
+    },
   },
   'oakland school district': {
     references: [
@@ -1114,6 +1146,38 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
       { title: 'OUSD Becomes First Major District in Nation to Have an All-Electric Student Bus Fleet', url: 'https://www.ousd.org/communications-public-affairs/newsroom/news/~board/ousd-news/post/ousd-becomes-first-major-district-in-nation-to-have-an-all-electric-student-bus-fleet-through-partnership-with-zm', source: 'Oakland USD' },
       { title: 'The biggest electric school-bus-as-grid-battery project in the US goes live', url: 'https://www.canarymedia.com/articles/clean-fleets/the-biggest-electric-school-bus-as-grid-battery-project-in-the-us-goes-live', source: 'Canary Media' },
     ],
+    businessModel: {
+      type: 'Fleet-as-a-service with utility grid revenue',
+      description: 'Zum owns and operates the buses and chargers under a service contract with the district, then monetises the aggregated fleet as a virtual power plant with PG&E. The district pays for transport service, not for batteries, while grid revenue offsets the electrification premium.',
+    },
+    standardization: {
+      standard: 'CCS bidirectional DC charging; utility interconnection under CA Rule 21; CAISO/PG&E program participation',
+      status: 'Operational - one of the first at-scale bidirectional school-bus interconnections in the US.',
+    },
+    technology: {
+      overview: 'Seventy-four electric school buses operated as a single dispatchable virtual power plant able to return over 2.1 GWh per year to the grid.',
+      hardware: [
+        { name: 'Electric school buses', details: ['74 vehicles serving Oakland USD routes', 'Traction batteries used as grid assets between routes'] },
+        { name: 'Bidirectional DC chargers', details: ['Depot charging with export capability', 'Sized for overnight fleet turnaround'] },
+        { name: 'Depot electrical upgrades', details: ['Service capacity and switchgear for simultaneous charge and export'] },
+      ],
+      software: [
+        { name: 'Fleet and VPP dispatch platform', details: ['Zum software schedules routes, charging and export', 'Guarantees route-ready state of charge'] },
+        { name: 'Utility integration', details: ['PG&E dispatch signals and settlement', 'Export scheduled to grid peak windows'] },
+      ],
+    },
+    timeline: [
+      { phase: 'Contract award', year: '2023', description: 'Oakland USD selects Zum to electrify the full bus fleet.' },
+      { phase: 'Fleet conversion', year: '2024', description: 'All 74 buses and depot charging come online.' },
+      { phase: 'VPP operation', year: '2025', description: 'Bidirectional dispatch to PG&E begins at fleet scale.' },
+      { phase: 'Scale-up', year: '2026', description: 'Model replicated in other US districts.' },
+    ],
+    partnerLead: 'Zum (fleet operator) with PG&E and Oakland Unified School District',
+    gapExplanations: {
+      'grid integration': 'Interconnecting a multi-megawatt exporting depot required extended utility study and upgrades.',
+      'metering': 'Export from a behind-the-meter fleet must be measured separately from depot load for settlement.',
+      'standards': 'Bus, charger and platform vendors still align bidirectional CCS behaviour case by case.',
+    },
   },
   'aces project': {
     references: [
@@ -1121,12 +1185,74 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
       { title: 'Across Continents Electric Vehicle Services', url: 'https://orbit.dtu.dk/en/projects/across-continents-electric-vehicle-services', source: 'DTU' },
       { title: 'ACES Project Final Report', url: 'https://eudp.dk/files/media/document/ACES_project_final_report_-_04-11-2020_1_05112020_0829.pdf', source: 'EUDP', date: '2020' },
     ],
+    businessModel: {
+      type: 'Publicly co-funded demonstration (EUDP) with ancillary-service revenue',
+      description: 'EUDP funding covered the demonstration while participating fleets earned frequency-regulation revenue through Nuvve aggregation, testing whether island-scale EV fleets can replace conventional reserve capacity.',
+    },
+    standardization: {
+      standard: 'CHAdeMO V2G; Danish TSO (Energinet) prequalification for frequency regulation',
+      status: 'Completed - prequalified aggregated EV capacity for Danish reserve markets.',
+    },
+    technology: {
+      overview: 'Island-scale study on Bornholm of how EV fleets, aggregation and high wind penetration interact when vehicles provide grid services.',
+      hardware: [
+        { name: 'Bidirectional CHAdeMO chargers', details: ['Deployed at municipal and utility sites', 'Aggregated into a single controllable pool'] },
+        { name: 'EV fleet', details: ['Nissan e-NV200 and LEAF vehicles', 'Operational duty cycles preserved during service delivery'] },
+      ],
+      software: [
+        { name: 'Nuvve GIVe aggregation platform', details: ['Real-time frequency response dispatch', 'State-of-charge aware bidding'] },
+        { name: 'Grid modelling and analytics', details: ['DTU scenario modelling of high-EV island grids', 'Battery degradation assessment'] },
+      ],
+    },
+    timeline: [
+      { phase: 'Project start', year: '2017', description: 'ACES consortium formed around Bornholm as a living-lab island grid.' },
+      { phase: 'Deployment', year: '2018-2019', description: 'Bidirectional chargers and aggregated fleet enter service.' },
+      { phase: 'Analysis', year: '2019-2020', description: 'Grid impact, degradation and market value assessed.' },
+      { phase: 'Final report', year: '2020', description: 'EUDP final report published with island scaling scenarios.' },
+    ],
+    partnerLead: 'Nuvve with Frederiksberg Forsyning, DTU, Nissan and Bornholm partners',
+    gapExplanations: {
+      'aggregation': 'Small island fleets struggle to reach the minimum bid size of reserve markets.',
+      'battery degradation': 'Long-term cycling impact on warranties remained a barrier for fleet owners.',
+      'standards': 'CHAdeMO-only hardware limited which vehicles could take part.',
+    },
   },
   'xl-connect': {
     references: [
       { title: 'XL-Connect - Large scale system approach for advanced charging solutions', url: 'https://cordis.europa.eu/project/id/101056756', source: 'CORDIS (Horizon Europe)' },
       { title: 'V2X Cluster', url: 'https://ev4eu.eu/v2xcluster/', source: 'EU V2X Cluster' },
     ],
+    businessModel: {
+      type: 'EU research grant (Horizon Europe)',
+      description: 'Fully grant funded. The intended value is lower charging-infrastructure cost per vehicle by combining high-power, smart and bidirectional charging in a single system architecture.',
+    },
+    standardization: {
+      standard: 'ISO 15118-20, OCPP 2.0.1, OpenADR alignment across charging use cases',
+      status: 'Under development - specifications contributed to EU standardisation bodies.',
+    },
+    technology: {
+      overview: 'System-level approach to advanced charging that treats megawatt charging, smart charging and bidirectional power flow as one coordinated infrastructure problem.',
+      hardware: [
+        { name: 'High-power charging demonstrators', details: ['Test benches for advanced charging hardware', 'Bidirectional-capable converters'] },
+        { name: 'Grid connection equipment', details: ['Local buffering and power electronics for peak shaving'] },
+      ],
+      software: [
+        { name: 'Charging control architecture', details: ['Interoperable control layer across charger classes', 'Grid-aware scheduling'] },
+        { name: 'Simulation toolchain', details: ['System-level modelling of large charging sites'] },
+      ],
+    },
+    timeline: [
+      { phase: 'Project start', year: '2022', description: 'XL-Connect launches under Horizon Europe.' },
+      { phase: 'Architecture definition', year: '2023', description: 'Reference architecture for advanced charging systems published.' },
+      { phase: 'Demonstration', year: '2024-2025', description: 'Hardware and control validated at partner sites.' },
+      { phase: 'Project end', year: '2026', description: 'Results transferred to the EU V2X Cluster and standardisation.' },
+    ],
+    partnerLead: 'Horizon Europe consortium (2Zero partnership) coordinated with the EU V2X Cluster',
+    gapExplanations: {
+      'standards': 'Bidirectional profiles are not yet consistent across charging power classes.',
+      'grid integration': 'High-power sites need connection rules that credit local flexibility.',
+      'interoperability': 'Cross-vendor validation of ISO 15118-20 remains incomplete.',
+    },
   },
   'drive2x': {
     references: [
@@ -1134,6 +1260,37 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
       { title: 'DriVe2X - Homepage', url: 'https://drive2x.eu/', source: 'DriVe2X' },
       { title: 'DriVe2X - Demo Sites', url: 'https://drive2x.eu/demo-sites/', source: 'DriVe2X' },
     ],
+    businessModel: {
+      type: 'EU research grant with demo-site business-model assessment',
+      description: 'Grant funded, with each demo site testing a different revenue logic: V2G for grid services, V2B for building peak shaving and V2H for household self-consumption.',
+    },
+    standardization: {
+      standard: 'ISO 15118-20, CCS bidirectional DC, OCPP 2.0.1',
+      status: 'Under development - validated across five European demonstration sites.',
+    },
+    technology: {
+      overview: 'Cross-European programme that disrupts V2X through new power electronics, control algorithms and business models validated in real user environments.',
+      hardware: [
+        { name: 'Bidirectional chargers', details: ['AC and DC units across five demo sites', 'New converter topologies developed in the project'] },
+        { name: 'Site energy assets', details: ['Building loads, PV and stationary storage at demo sites'] },
+      ],
+      software: [
+        { name: 'V2X control platform', details: ['Site-level optimisation of charge and discharge', 'User-constraint aware scheduling'] },
+        { name: 'Assessment framework', details: ['Techno-economic and user-acceptance evaluation across sites'] },
+      ],
+    },
+    timeline: [
+      { phase: 'Project start', year: '2022', description: 'DriVe2X launches under Horizon Europe.' },
+      { phase: 'Site preparation', year: '2023', description: 'Demo sites selected and hardware specified.' },
+      { phase: 'Demonstration', year: '2024-2025', description: 'V2G, V2B and V2H operation at Terni, Porto, Amsterdam, Budapest and the Isle of Wight.' },
+      { phase: 'Project end', year: '2026', description: 'Cross-site results and business-model guidance published.' },
+    ],
+    partnerLead: 'DriVe2X Horizon Europe consortium with demo sites in Italy, Portugal, the Netherlands, Hungary and the UK',
+    gapExplanations: {
+      'standards': 'Each demo site meets different national grid-code and metering rules.',
+      'user acceptance': 'Private and shared users differ in tolerance for discharge.',
+      'metering': 'Building-connected V2B export lacks harmonised settlement across member states.',
+    },
   },
   'scale': {
     references: [
@@ -1141,6 +1298,36 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
       { title: 'SCALE - Smart Charging ALignment for Europe', url: 'https://scale-horizon.eu/', source: 'SCALE' },
       { title: 'SCALE project', url: 'https://www.2zeroemission.eu/research-project/scale/', source: '2Zero' },
     ],
+    businessModel: {
+      type: 'EU research grant',
+      description: 'Grant funded. The project targets mass-market smart and bidirectional charging by aligning protocols, user propositions and market access rather than building new hardware.',
+    },
+    standardization: {
+      standard: 'ISO 15118-2 / 15118-20, OCPP, OpenADR, EEBUS alignment',
+      status: 'Under development - protocol alignment feeding EU interoperability work.',
+    },
+    technology: {
+      overview: 'Europe-wide alignment of smart-charging and V2G implementations so that vehicles, chargers, home systems and market parties interoperate at scale.',
+      hardware: [
+        { name: 'Interoperability test setups', details: ['Multi-vendor vehicle and charger combinations', 'Home energy management integration'] },
+      ],
+      software: [
+        { name: 'Smart-charging control stack', details: ['Protocol translation between vehicle, charger and market platforms', 'Flexibility offering to aggregators'] },
+        { name: 'User propositions', details: ['Tariff and incentive designs tested with real users'] },
+      ],
+    },
+    timeline: [
+      { phase: 'Project start', year: '2022', description: 'SCALE begins under Horizon Europe.' },
+      { phase: 'Interoperability testing', year: '2023-2024', description: 'Cross-vendor smart-charging and V2G validation.' },
+      { phase: 'Field pilots', year: '2024-2025', description: 'User propositions tested in several member states.' },
+      { phase: 'Project end', year: '2026', description: 'Recommendations delivered to standardisation and regulators.' },
+    ],
+    partnerLead: 'SCALE Horizon Europe consortium (smart-charging and V2G alignment for Europe)',
+    gapExplanations: {
+      'interoperability': 'Vehicle and charger implementations of the same standard still behave differently.',
+      'standards': 'Home protocols (EEBUS) and charging protocols (ISO 15118) are not fully mapped.',
+      'market access': 'National rules limit how small flexible assets can bid.',
+    },
   },
   'flow': {
     references: [
@@ -1148,18 +1335,107 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
       { title: 'Flow Project', url: 'https://theflowproject.eu/', source: 'FLOW' },
       { title: 'FLOW project', url: 'https://www.2zeroemission.eu/research-project/flow/', source: '2Zero' },
     ],
+    businessModel: {
+      type: 'EU research grant',
+      description: 'Grant funded, with demonstrators quantifying the value of user-centric flexibility for DSOs and energy retailers as a route to future commercial offers.',
+    },
+    standardization: {
+      standard: 'ISO 15118-20, OCPP 2.0.1, grid-service interfaces with participating DSOs',
+      status: 'Under development across the project demonstrators.',
+    },
+    technology: {
+      overview: 'User-centric approach to integrating EVs as flexible resources, combining V1G and V2G with behavioural modelling of driver willingness to provide flexibility.',
+      hardware: [
+        { name: 'Bidirectional and smart chargers', details: ['Residential and fleet installations at demonstrators'] },
+        { name: 'Grid measurement equipment', details: ['Feeder-level monitoring at DSO partners'] },
+      ],
+      software: [
+        { name: 'Flexibility management platform', details: ['Aggregates vehicle flexibility for DSO and market use', 'Learns user availability patterns'] },
+        { name: 'Behavioural models', details: ['Willingness-to-flex models feeding dispatch decisions'] },
+      ],
+    },
+    timeline: [
+      { phase: 'Project start', year: '2022', description: 'FLOW launches under Horizon Europe.' },
+      { phase: 'Model development', year: '2023', description: 'User flexibility and grid-impact models built.' },
+      { phase: 'Demonstration', year: '2024-2025', description: 'V1G and V2G operated at demonstrator sites.' },
+      { phase: 'Project end', year: '2026', description: 'Flexibility value quantified for DSOs and retailers.' },
+    ],
+    partnerLead: 'FLOW Horizon Europe consortium with demonstrators in several EU member states',
+    gapExplanations: {
+      'user acceptance': 'Flexibility value depends on how much control drivers will hand over.',
+      'tso-dso signalling': 'Local congestion services still lack standard procurement paths.',
+      'metering': 'Sub-metering per vehicle is needed to reward individual flexibility.',
+    },
   },
   'ev4eu': {
     references: [
       { title: 'EV4EU - Electric Vehicles Management for carbon neutrality in Europe (Fact Sheet)', url: 'https://cordis.europa.eu/project/id/101056765', source: 'CORDIS (Horizon Europe)' },
       { title: 'EV4EU - Home', url: 'https://ev4eu.eu/', source: 'EV4EU' },
     ],
+    businessModel: {
+      type: 'EU research grant',
+      description: 'Grant funded. EV4EU develops user-centric V2X management strategies and the market and regulatory designs that would let them be paid for after the project.',
+    },
+    standardization: {
+      standard: 'ISO 15118-20, EN 50549 grid connection, national DSO interfaces',
+      status: 'Under development - proposals fed into EU regulatory discussion.',
+    },
+    technology: {
+      overview: 'User-centric V2X management strategies applied from household level up to transmission-system level, with pilots in Portugal, Greece, Denmark and Slovenia.',
+      hardware: [
+        { name: 'Bidirectional charging pilots', details: ['Residential, campus and island installations', 'Integration with local PV and storage'] },
+      ],
+      software: [
+        { name: 'Hierarchical V2X management', details: ['Coordinated control from home EMS to TSO level', 'Congestion and voltage support strategies'] },
+        { name: 'Market and policy toolkit', details: ['Business-model and regulatory recommendations'] },
+      ],
+    },
+    timeline: [
+      { phase: 'Project start', year: '2022', description: 'EV4EU begins under Horizon Europe.' },
+      { phase: 'Strategy development', year: '2023', description: 'V2X management strategies defined across grid levels.' },
+      { phase: 'Pilots', year: '2024-2025', description: 'Demonstrations in four member states.' },
+      { phase: 'Project end', year: '2026', description: 'Deployment and policy roadmap published.' },
+    ],
+    partnerLead: 'EV4EU consortium coordinated by Instituto Superior Tecnico (Portugal)',
+    gapExplanations: {
+      'standards': 'Coordinating home, DSO and TSO layers requires interfaces that do not yet exist.',
+      'allocation': 'Value created at several grid levels has no agreed sharing rule.',
+      'user acceptance': 'Household users need guarantees on availability and battery health.',
+    },
   },
   'epowermove': {
     references: [
       { title: 'ePowerMove - Project Fact Sheet', url: 'https://cordis.europa.eu/project/id/101192753', source: 'CORDIS (Horizon Europe)' },
       { title: 'ePowerMove project', url: 'https://www.2zeroemission.eu/research-project/epowermove/', source: '2Zero' },
     ],
+    businessModel: {
+      type: 'EU research grant',
+      description: 'Grant funded. The aim is lower total cost of electrified mobility through more efficient powertrains and charging, with bidirectional capability as an added revenue option for users.',
+    },
+    standardization: {
+      standard: 'ISO 15118-20 bidirectional charging; EU efficiency and safety requirements',
+      status: 'Under development in the early project phase.',
+    },
+    technology: {
+      overview: 'Energy-efficiency focused programme covering vehicle powertrain, charging chain and grid interaction, including bidirectional power transfer.',
+      hardware: [
+        { name: 'Efficient power electronics', details: ['High-efficiency on-board and off-board converters', 'Bidirectional-capable topologies'] },
+      ],
+      software: [
+        { name: 'Energy management software', details: ['Whole-chain efficiency optimisation', 'Charging and discharging strategies'] },
+      ],
+    },
+    timeline: [
+      { phase: 'Project start', year: '2024', description: 'ePowerMove launches under Horizon Europe.' },
+      { phase: 'Component development', year: '2025', description: 'Efficient bidirectional power electronics developed.' },
+      { phase: 'Validation', year: '2026', description: 'Vehicle and charging chain efficiency validated.' },
+      { phase: 'Project end', year: '2027', description: 'Results transferred to industry partners.' },
+    ],
+    partnerLead: 'ePowerMove Horizon Europe consortium (2Zero partnership)',
+    gapExplanations: {
+      'standards': 'Efficiency reporting for bidirectional chains is not standardised.',
+      'grid integration': 'Bidirectional capability must not compromise charging performance or safety.',
+    },
   },
   'nio v2g & battery swap': {
     references: [
@@ -1167,12 +1443,74 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
       { title: 'Nio puts 10 charging stations supporting vehicle-to-grid into operation in Shanghai', url: 'https://cnevpost.com/2024/01/09/nio-puts-10-v2g-charging-stations-into-operation-shanghai/', source: 'CnEVPost', date: '2024' },
       { title: 'How Chinese EV owners are profiting from powering the grid with V2G', url: 'https://carnewschina.com/2025/06/05/how-chinese-ev-owners-are-profiting-from-powering-the-grid-with-v2g/', source: 'CarNewsChina' },
     ],
+    businessModel: {
+      type: 'Commercial V2G with owner compensation and swap-station arbitrage',
+      description: 'NIO pays vehicle owners and swap-station operators for discharged energy, arbitraging peak and off-peak tariffs. Battery-swap stations act as stationary storage while parked vehicles add dispatchable capacity during grid peaks.',
+    },
+    standardization: {
+      standard: 'GB/T bidirectional charging and discharging standards; provincial grid dispatch interfaces',
+      status: 'Operational - among the largest commercial V2G programmes in China.',
+    },
+    technology: {
+      overview: 'Combined battery-swap and V2G network where both swap-station batteries and customer vehicles respond to provincial grid dispatch signals.',
+      hardware: [
+        { name: 'Bidirectional charging stations', details: ['First 10 V2G stations in Shanghai from 2024', 'Expanded across provinces'] },
+        { name: 'Battery-swap stations', details: ['Station battery inventory used as grid storage', 'Charge scheduled off-peak'] },
+      ],
+      software: [
+        { name: 'NIO Power cloud dispatch', details: ['Aggregates vehicles and stations for grid response', 'Owner incentive and settlement engine'] },
+        { name: 'Grid interface', details: ['Provincial dispatch signals and peak-shaving programmes'] },
+      ],
+    },
+    timeline: [
+      { phase: 'Swap network build-out', year: '2021-2023', description: 'Battery-swap stations scale nationwide.' },
+      { phase: 'First V2G stations', year: '2024', description: 'Ten bidirectional stations enter service in Shanghai.' },
+      { phase: 'Owner earnings programme', year: '2025', description: 'EV owners paid for discharging during peaks.' },
+      { phase: 'Large-scale trial', year: '2026', description: 'Jiangsu province V2G trial with grid operator participation.' },
+    ],
+    partnerLead: 'NIO Power with State Grid subsidiaries and Jiangsu / Shanghai grid operators',
+    gapExplanations: {
+      'metering': 'Owner-level settlement of exported energy needs auditable metering at every station.',
+      'battery degradation': 'Frequent discharge cycles are managed against battery warranty and swap-fleet health.',
+      'market access': 'Provincial rules differ on how aggregated vehicle capacity can be dispatched.',
+    },
   },
   'ahead': {
     references: [
       { title: 'AHEAD - AI-informed Holistic EVs integration Approaches for Distribution grids (Fact Sheet)', url: 'https://cordis.europa.eu/project/id/101160665', source: 'CORDIS (Horizon Europe)' },
       { title: 'AHEAD - Project Website', url: 'https://horizon-ahead.eu/', source: 'AHEAD' },
     ],
+    businessModel: {
+      type: 'EU research grant',
+      description: 'Grant funded. Value is framed as deferred distribution-grid reinforcement through AI-informed coordination of EV charging and discharging.',
+    },
+    standardization: {
+      standard: 'IEC 61850 and CIM data models for DSO integration; ISO 15118-20 at the vehicle interface',
+      status: 'Under development in the early project phase.',
+    },
+    technology: {
+      overview: 'AI-based methods for hosting large EV volumes in distribution grids, using forecasting and coordinated V1G/V2G control to avoid congestion and voltage problems.',
+      hardware: [
+        { name: 'DSO monitoring equipment', details: ['Feeder measurement at participating distribution operators'] },
+        { name: 'Bidirectional charging test sites', details: ['Field validation of controlled discharge'] },
+      ],
+      software: [
+        { name: 'AI forecasting and control', details: ['Load, PV and EV availability prediction', 'Congestion-avoiding dispatch'] },
+        { name: 'Digital twin of distribution feeders', details: ['Scenario testing before field deployment'] },
+      ],
+    },
+    timeline: [
+      { phase: 'Project start', year: '2024', description: 'AHEAD begins under Horizon Europe.' },
+      { phase: 'Model development', year: '2025', description: 'AI forecasting and control methods developed.' },
+      { phase: 'Field validation', year: '2026', description: 'Methods validated with DSO partners.' },
+      { phase: 'Project end', year: '2027', description: 'Guidance for DSO adoption published.' },
+    ],
+    partnerLead: 'AHEAD Horizon Europe consortium (AI-informed EV integration for distribution grids)',
+    gapExplanations: {
+      'tso-dso signalling': 'Coordinated control needs agreed data exchange between DSO and aggregators.',
+      'cybersecurity': 'AI control of distributed assets raises data integrity requirements.',
+      'standards': 'Grid-service interfaces for EVs are not yet harmonised across DSOs.',
+    },
   },
   'cajon valley school district': {
     references: [
@@ -1180,6 +1518,37 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
       { title: "SDG&E and Cajon Valley Flip the Switch on Region's First Vehicle-to-Grid Project", url: 'https://www.sempra.com/sdge-and-cajon-valley-union-school-district-flip-switch-regions-first-vehicle-grid-project', source: 'Sempra / SDG&E' },
       { title: 'The Electric School Bus Series: Powering the Grid with Cajon Valley USD', url: 'https://www.wri.org/update/electric-school-bus-series-powering-grid-cajon-valley-union-school-district', source: 'World Resources Institute' },
     ],
+    businessModel: {
+      type: 'Utility-supported V2G with demand-charge and market revenue',
+      description: 'SDG&E funded the charging infrastructure while Nuvve aggregates the buses for market participation. The district benefits from lower fuel and demand charges; grid revenue offsets bus cost.',
+    },
+    standardization: {
+      standard: 'CHAdeMO / CCS bidirectional DC; CA Rule 21 interconnection; CAISO market participation via aggregation',
+      status: 'Operational - first vehicle-to-grid project in the San Diego region.',
+    },
+    technology: {
+      overview: 'Electric school buses at a school district depot providing bidirectional grid services during summer and off-route hours.',
+      hardware: [
+        { name: 'Electric school buses', details: ['District fleet with V2G-capable drivetrains', 'Long idle windows between routes'] },
+        { name: 'Bidirectional DC chargers', details: ['Nuvve-enabled depot chargers', 'Utility-funded make-ready infrastructure'] },
+      ],
+      software: [
+        { name: 'Nuvve GIVe platform', details: ['Aggregates buses for market bids', 'Guarantees route readiness'] },
+        { name: 'Utility dispatch integration', details: ['SDG&E signals for peak periods'] },
+      ],
+    },
+    timeline: [
+      { phase: 'Project launch', year: '2019', description: 'SDG&E and Cajon Valley announce the region\u2019s first V2G project.' },
+      { phase: 'Commissioning', year: '2020', description: 'Bidirectional chargers energised at the bus depot.' },
+      { phase: 'Operation', year: '2021-2023', description: 'Buses discharge during summer breaks and peak periods.' },
+      { phase: 'Documentation', year: '2024', description: 'Results captured in WRI electric school-bus case studies.' },
+    ],
+    partnerLead: 'Nuvve with SDG&E and Cajon Valley Union School District',
+    gapExplanations: {
+      'grid integration': 'Depot export capacity was limited by the existing service connection.',
+      'metering': 'Separate metering was required to settle exported energy.',
+      'user acceptance': 'Transport operations must never be compromised by grid dispatch.',
+    },
   },
   'california school bus v2g': {
     references: [
@@ -1187,6 +1556,37 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
       { title: 'Vehicle-to-Grid Electric School Bus Commercialization Project', url: 'https://www.energy.gov/eere/vehicles/articles/vehicle-grid-electric-school-bus-commercialization-project', source: 'U.S. DOE' },
       { title: 'Nuvve and Blue Bird Announce Availability of Nationwide V2G School Bus Offer', url: 'https://www.prnewswire.com/news-releases/nuvve-and-blue-bird-announce-availability-of-nationwide-vehicle-to-grid-v2g-school-bus-offer-301131309.html', source: 'PR Newswire' },
     ],
+    businessModel: {
+      type: 'Commercialisation programme with bundled bus, charger and grid revenue',
+      description: 'Nuvve and Blue Bird offer V2G-qualified buses with aggregation contracts so districts can offset purchase cost with grid revenue, supported by DOE commercialisation funding and California incentives.',
+    },
+    standardization: {
+      standard: 'CHAdeMO and CCS bidirectional DC; CAISO market participation; UL 1741 SA inverter requirements',
+      status: 'Operational - moving from demonstration to commercial product offer.',
+    },
+    technology: {
+      overview: 'Statewide effort to make V2G-capable electric school buses a standard commercial product rather than a one-off pilot.',
+      hardware: [
+        { name: 'V2G-qualified Blue Bird buses', details: ['Factory bidirectional capability', 'Deployed across several California districts'] },
+        { name: 'Depot bidirectional chargers', details: ['Nuvve-controlled DC units'] },
+      ],
+      software: [
+        { name: 'Aggregation and bidding platform', details: ['Nuvve GIVe manages fleet-wide dispatch', 'Route-aware constraints'] },
+        { name: 'Fleet monitoring', details: ['Battery health and availability tracking across districts'] },
+      ],
+    },
+    timeline: [
+      { phase: 'Programme launch', year: '2020', description: 'Nuvve and Blue Bird announce a nationwide V2G school-bus offer.' },
+      { phase: 'District deployments', year: '2021-2022', description: 'Ramona Unified and other districts unveil V2G-enabled buses.' },
+      { phase: 'DOE commercialisation', year: '2022-2024', description: 'Federal project supports scale-up of the commercial model.' },
+      { phase: 'Scaling', year: '2025', description: 'V2G buses offered as a standard procurement option.' },
+    ],
+    partnerLead: 'Nuvve with Blue Bird, participating California districts and the US DOE',
+    gapExplanations: {
+      'standards': 'Bus, charger and platform interoperability still needs per-model validation.',
+      'market access': 'Aggregated school-bus capacity must meet CAISO participation rules.',
+      'battery degradation': 'Warranty terms for grid cycling remain a procurement question.',
+    },
   },
   'porto airport & amsterdam arena (drive2x)': {
     references: [
@@ -1194,12 +1594,74 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
       { title: 'Amsterdam (V2B) - Demo Site', url: 'https://drive2x.eu/demo_sites/amsterdam/', source: 'DriVe2X' },
       { title: 'DriVe2X - Project Fact Sheet', url: 'https://cordis.europa.eu/project/id/101056934', source: 'CORDIS (Horizon Europe)' },
     ],
+    businessModel: {
+      type: 'Vehicle-to-building peak shaving for large facilities',
+      description: 'Both sites monetise V2B by cutting building peak demand and demand charges, and by pairing vehicle storage with on-site PV so that self-consumption rises without new stationary batteries.',
+    },
+    standardization: {
+      standard: 'ISO 15118-20 bidirectional DC; building energy-management interfaces; Dutch and Portuguese grid codes',
+      status: 'Under development within the DriVe2X demonstration programme.',
+    },
+    technology: {
+      overview: 'Two large-facility V2B demonstrators where parked fleets and staff vehicles support building loads and on-site generation.',
+      hardware: [
+        { name: 'Bidirectional DC chargers', details: ['Installed in airport and stadium car parks', 'Sized for facility peak support'] },
+        { name: 'On-site generation and storage', details: ['Rooftop PV and existing stationary batteries at the ArenA'] },
+      ],
+      software: [
+        { name: 'Building energy management', details: ['Coordinates vehicle discharge with HVAC and event loads', 'Peak-demand forecasting'] },
+        { name: 'V2B optimiser', details: ['Respects vehicle departure times while shaving facility peaks'] },
+      ],
+    },
+    timeline: [
+      { phase: 'Site selection', year: '2023', description: 'Porto Airport and Amsterdam ArenA join DriVe2X as V2B demonstrators.' },
+      { phase: 'Installation', year: '2024', description: 'Bidirectional chargers integrated with building systems.' },
+      { phase: 'Operation', year: '2025', description: 'Peak shaving and PV self-consumption validated during real events and flight schedules.' },
+      { phase: 'Assessment', year: '2026', description: 'Business case for facility V2B reported.' },
+    ],
+    partnerLead: 'DriVe2X consortium with ANA/Porto Airport and Johan Cruijff ArenA partners',
+    gapExplanations: {
+      'metering': 'Behind-the-meter export must be separated from building consumption for settlement.',
+      'user acceptance': 'Staff and visitor vehicles participate only with guaranteed charge on departure.',
+      'grid integration': 'Facility connection limits shape how much export is allowed.',
+    },
   },
   'terni city centre (drive2x)': {
     references: [
       { title: 'Terni City Centre (V2G) - Demo Site', url: 'https://drive2x.eu/demo_sites/terni-city-centre-v2g/', source: 'DriVe2X' },
       { title: 'DriVe2X - Project Fact Sheet', url: 'https://cordis.europa.eu/project/id/101056934', source: 'CORDIS (Horizon Europe)' },
     ],
+    businessModel: {
+      type: 'Urban V2G with distribution-grid support',
+      description: 'The demonstrator tests payments for local grid services from public-space charging, where the DSO values voltage support and congestion relief in a dense urban feeder more than wholesale arbitrage.',
+    },
+    standardization: {
+      standard: 'ISO 15118-20; Italian CEI 0-21 grid connection rules; DSO dispatch interface',
+      status: 'Under development within the DriVe2X programme.',
+    },
+    technology: {
+      overview: 'City-centre V2G demonstrator using public bidirectional charging points connected to a local distribution network with high PV penetration.',
+      hardware: [
+        { name: 'Public bidirectional chargers', details: ['Installed in Terni city-centre parking', 'Connected to ASM Terni distribution feeders'] },
+        { name: 'Grid measurement', details: ['Feeder monitoring for voltage and congestion effects'] },
+      ],
+      software: [
+        { name: 'DSO flexibility platform', details: ['Requests local support from connected vehicles', 'Voltage and congestion signals'] },
+        { name: 'User app', details: ['Departure time and minimum state-of-charge settings'] },
+      ],
+    },
+    timeline: [
+      { phase: 'Site preparation', year: '2023', description: 'Terni selected as the DriVe2X urban V2G demonstrator.' },
+      { phase: 'Installation', year: '2024', description: 'Public bidirectional chargers commissioned.' },
+      { phase: 'Operation', year: '2025', description: 'Local grid services delivered from city-centre charging.' },
+      { phase: 'Assessment', year: '2026', description: 'Urban V2G value for DSOs reported.' },
+    ],
+    partnerLead: 'DriVe2X consortium with ASM Terni (local DSO) and the City of Terni',
+    gapExplanations: {
+      'tso-dso signalling': 'Local flexibility products still lack standard activation and settlement.',
+      'user acceptance': 'Public users need clear compensation for allowing discharge.',
+      'metering': 'Public charging export settlement is not yet defined in national rules.',
+    },
   },
   'v2x suisse': {
     references: [
@@ -1207,6 +1669,37 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
       { title: 'V2X Suisse', url: 'https://www.v2g-hub.com/projects/v2x-suisse/', source: 'V2G Hub' },
       { title: 'Honda and V2X Suisse Consortium to Advance V2G Charging in Switzerland', url: 'https://global.honda/en/newsroom/news/2022/c220119beng.html', source: 'Honda' },
     ],
+    businessModel: {
+      type: 'Car-sharing fleet monetised as balancing capacity',
+      description: 'Mobility earns balancing-market revenue from its shared fleet while vehicles sit idle, using tiko as aggregator. Because the operator owns both vehicles and usage data, availability can be scheduled commercially rather than negotiated with individual drivers.',
+    },
+    standardization: {
+      standard: 'CHAdeMO bidirectional; Swissgrid prequalification for control reserve',
+      status: 'Operational - one of the largest commercial V2G car-sharing fleets in Europe.',
+    },
+    technology: {
+      overview: 'Fifty Honda e vehicles across Swiss car-sharing stations providing grid balancing power when not rented.',
+      hardware: [
+        { name: 'Honda e fleet', details: ['50 bidirectional-capable vehicles', 'Distributed across Mobility stations nationwide'] },
+        { name: 'Bidirectional chargers', details: ['EVTEC and sun2wheel units at car-sharing stations'] },
+      ],
+      software: [
+        { name: 'tiko aggregation platform', details: ['Pools vehicles into a virtual power plant', 'Bids into Swiss balancing markets'] },
+        { name: 'Booking integration', details: ['Discharge scheduled around car-sharing reservations'] },
+      ],
+    },
+    timeline: [
+      { phase: 'Consortium formed', year: '2022', description: 'Honda and Mobility announce V2X Suisse.' },
+      { phase: 'Fleet rollout', year: '2022-2023', description: '50 vehicles and bidirectional chargers deployed at stations.' },
+      { phase: 'Market operation', year: '2023-2024', description: 'Fleet delivers balancing services to the Swiss grid.' },
+      { phase: 'Evaluation', year: '2025', description: 'Commercial viability of shared-fleet V2G assessed.' },
+    ],
+    partnerLead: 'Mobility Cooperative with Honda, EVTEC, sun2wheel, tiko Energy Solutions and Novatlantis',
+    gapExplanations: {
+      'aggregation': 'Vehicle availability depends on booking patterns that vary by station.',
+      'standards': 'CHAdeMO-based hardware limits vehicle choice for future expansion.',
+      'metering': 'Per-station export settlement had to be arranged with local suppliers.',
+    },
   },
   'smart solar charging': {
     references: [
@@ -1214,12 +1707,74 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
       { title: "Europe's first V2G ecosystem in Utrecht", url: 'https://www.lastmilesolutions.com/insights/cases/v2g-utrecht-last-mile-solutions-we-drive-solar/', source: 'Last Mile Solutions' },
       { title: 'We Drive Solar', url: 'https://wedrivesolar.com/', source: 'We Drive Solar' },
     ],
+    businessModel: {
+      type: 'Solar-backed V2G car sharing',
+      description: 'Shared vehicles are charged from local rooftop and car-park PV and discharge into neighbourhood grids at peak, so revenue comes from balancing local solar surplus and avoiding grid reinforcement rather than from wholesale trading.',
+    },
+    standardization: {
+      standard: 'CCS bidirectional AC/DC; Dutch grid connection rules; OCPP-based charge-point management',
+      status: 'Operational - scaled to a city-wide bidirectional car-sharing service.',
+    },
+    technology: {
+      overview: 'City-scale bidirectional car-sharing ecosystem in Utrecht linking rooftop solar, shared EVs and neighbourhood grids.',
+      hardware: [
+        { name: 'Bidirectional charging points', details: ['Hundreds of units across Utrecht neighbourhoods', 'AC bidirectional charging with Renault vehicles'] },
+        { name: 'Shared EV fleet', details: ['Renault Zoe and Megane E-Tech car-sharing vehicles'] },
+      ],
+      software: [
+        { name: 'Last Mile Solutions platform', details: ['Charge-point management and settlement', 'Bidirectional session control'] },
+        { name: 'Local energy optimisation', details: ['Matches PV surplus with vehicle charging and discharge'] },
+      ],
+    },
+    timeline: [
+      { phase: 'First pilots', year: '2016-2018', description: 'Early bidirectional charging trials in Utrecht neighbourhoods.' },
+      { phase: 'Ecosystem launch', year: '2019-2021', description: 'We Drive Solar scales shared bidirectional vehicles.' },
+      { phase: 'City-wide service', year: '2022-2024', description: 'Utrecht becomes the first city with a V2G car-sharing service.' },
+      { phase: 'Expansion', year: '2025', description: 'Model extended to additional districts and vehicle models.' },
+    ],
+    partnerLead: 'We Drive Solar with Renault, Last Mile Solutions and the City of Utrecht',
+    gapExplanations: {
+      'metering': 'Neighbourhood-level export settlement across many charge points is administratively complex.',
+      'standards': 'AC bidirectional charging depends on a small set of compatible vehicles.',
+      'grid integration': 'Local feeders limit how much simultaneous export is possible.',
+    },
   },
   'isle of wight car club (drive2x)': {
     references: [
       { title: 'Isle of Wight (V2G) - Demo Site', url: 'https://drive2x.eu/demo_sites/isle-of-wight-v2g/', source: 'DriVe2X' },
       { title: 'DriVe2X - Project Fact Sheet', url: 'https://cordis.europa.eu/project/id/101056934', source: 'CORDIS (Horizon Europe)' },
     ],
+    businessModel: {
+      type: 'Shared-mobility V2G on a constrained island network',
+      description: 'A community car club provides the vehicles, so discharge can be scheduled between bookings. Value comes from supporting an island network with limited import capacity and high renewable output rather than from national markets.',
+    },
+    standardization: {
+      standard: 'ISO 15118-20; UK G99 connection requirements; DNO flexibility service interfaces',
+      status: 'Under development within the DriVe2X programme.',
+    },
+    technology: {
+      overview: 'Island car-club demonstrator testing V2G under real shared-mobility duty cycles and constrained network conditions.',
+      hardware: [
+        { name: 'Car-club EV fleet', details: ['Shared vehicles booked by island residents', 'Idle between community bookings'] },
+        { name: 'Bidirectional chargers', details: ['Installed at car-club parking locations'] },
+      ],
+      software: [
+        { name: 'Booking-aware dispatch', details: ['Discharge scheduled around reservations', 'Minimum state-of-charge guarantees'] },
+        { name: 'Network flexibility interface', details: ['Local network support signals'] },
+      ],
+    },
+    timeline: [
+      { phase: 'Site selection', year: '2023', description: 'Isle of Wight joins DriVe2X as a shared-mobility V2G site.' },
+      { phase: 'Installation', year: '2024', description: 'Bidirectional chargers deployed at car-club sites.' },
+      { phase: 'Operation', year: '2025', description: 'V2G operated alongside community car-sharing bookings.' },
+      { phase: 'Assessment', year: '2026', description: 'Island network and user results reported.' },
+    ],
+    partnerLead: 'DriVe2X consortium with the Isle of Wight car club operator and local network partners',
+    gapExplanations: {
+      'user acceptance': 'Car-club members need certainty that a booked vehicle is charged.',
+      'tso-dso signalling': 'Island network services are procured through non-standard local arrangements.',
+      'aggregation': 'A small fleet is below the size threshold of national flexibility markets.',
+    },
   },
   'grid motion': {
     references: [
@@ -1227,6 +1782,37 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
       { title: 'GridMotion Project: reducing electric vehicle usage cost thanks to smart charging', url: 'https://www.enel.com/media/explore/search-press-releases/press/2017/05/gridmotion-project-reducing-electric-vehicle-usage-cost-thanks-to-smart-charging-process', source: 'Enel', date: '2017' },
       { title: 'Groupe PSA and partners launch GridMotion', url: 'https://www.greencarcongress.com/2017/05/20170512-psa.html', source: 'Green Car Congress' },
     ],
+    businessModel: {
+      type: 'Commercial smart and bidirectional charging trial with cost savings for fleets',
+      description: 'The trial quantified how much of an EV fleet\u2019s energy bill can be cut through smart charging and V2G participation, aimed at proving a commercial proposition for corporate and public fleets.',
+    },
+    standardization: {
+      standard: 'CHAdeMO and AC bidirectional charging; French grid connection and market rules',
+      status: 'Completed - results informed Renault\u2019s later bidirectional AC strategy.',
+    },
+    technology: {
+      overview: 'European trial of smart and reversible charging with fleets of Renault Zoe vehicles in France and Portugal.',
+      hardware: [
+        { name: 'Renault Zoe fleet', details: ['Corporate and private participants', 'Reversible-charging capable units'] },
+        { name: 'Smart and bidirectional chargers', details: ['Enel X and partner hardware at fleet sites'] },
+      ],
+      software: [
+        { name: 'Aggregation platforms', details: ['Nuvve and Enel X control layers for market participation'] },
+        { name: 'Tariff optimisation', details: ['Charging shifted to low-price and low-carbon periods'] },
+      ],
+    },
+    timeline: [
+      { phase: 'Project launch', year: '2017', description: 'GridMotion consortium formed around Groupe Renault.' },
+      { phase: 'Fleet deployment', year: '2018', description: 'Vehicles and chargers deployed in France and Portugal.' },
+      { phase: 'Trial operation', year: '2019-2020', description: 'Smart and reversible charging tested against fleet duty cycles.' },
+      { phase: 'Results', year: '2020', description: 'Cost savings and grid-service potential published.' },
+    ],
+    partnerLead: 'Groupe Renault with Enel X, Nuvve, Direct Energie, Forsee Power and Zeleny Ostrov partners',
+    gapExplanations: {
+      'standards': 'Reversible AC charging was ahead of any harmonised European profile.',
+      'metering': 'French settlement rules did not yet handle vehicle export cleanly.',
+      'user acceptance': 'Fleet drivers required guaranteed range despite grid participation.',
+    },
   },
   'octopus powerloop': {
     references: [
@@ -1234,6 +1820,37 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
       { title: 'Bundled vehicle-to-grid (V2G) charging can benefit EV users', url: 'https://www.ukri.org/who-we-are/how-we-are-doing/research-outcomes-and-impact/innovate-uk/bundled-vehicle-to-grid-v2g-charging-can-benefit-ev-users/', source: 'UKRI' },
       { title: 'Powerloop: Trialling Vehicle-to-Grid technology (ESO & Octopus)', url: 'https://www.neso.energy/document/281316/download', source: 'National Energy System Operator' },
     ],
+    businessModel: {
+      type: 'Bundled V2G lease with energy tariff',
+      description: 'Powerloop bundled the vehicle, a bidirectional charger and an energy tariff into a single monthly lease, paying customers a credit for making the car available for export. Revenue came from wholesale price spreads and grid services rather than a separate hardware sale.',
+    },
+    standardization: {
+      standard: 'CHAdeMO V2G; UK G99 connection; supplier settlement through Octopus Energy',
+      status: 'Completed as a trial - lessons carried into Octopus bidirectional tariffs.',
+    },
+    technology: {
+      overview: 'One of the first commercial domestic V2G propositions in the UK, combining lease, charger and tariff in a single consumer product.',
+      hardware: [
+        { name: 'Nissan LEAF fleet', details: ['Leased to domestic customers', 'CHAdeMO bidirectional capability'] },
+        { name: 'Domestic bidirectional chargers', details: ['Installed at customer homes', 'Remotely dispatchable'] },
+      ],
+      software: [
+        { name: 'Octopus dispatch platform', details: ['Schedules export around household needs and price signals', 'Customer app control'] },
+        { name: 'Settlement integration', details: ['Export credited through the customer energy account'] },
+      ],
+    },
+    timeline: [
+      { phase: 'Trial launch', year: '2018', description: 'Powerloop announced with Innovate UK support.' },
+      { phase: 'Customer rollout', year: '2019-2020', description: 'Domestic customers receive bundled vehicle and charger.' },
+      { phase: 'Grid service operation', year: '2020-2021', description: 'Export dispatched against price and grid signals.' },
+      { phase: 'Findings published', year: '2022', description: 'UKRI and NESO report on bundled V2G consumer value.' },
+    ],
+    partnerLead: 'Octopus Electric Vehicles with UK Power Networks, National Grid ESO and Innovate UK support',
+    gapExplanations: {
+      'metering': 'Domestic export from a vehicle needed supplier settlement treatment that did not exist.',
+      'standards': 'CHAdeMO-only hardware constrained the vehicle range offered.',
+      'user acceptance': 'Customers needed a guaranteed minimum charge each morning.',
+    },
   },
   'm-tech labo': {
     references: [
@@ -1241,6 +1858,38 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
       { title: 'Mitsubishi companies launch smart grid demonstration system using EVs and used battery packs', url: 'https://www.greencarcongress.com/2012/04/mlabo-20120412.html', source: 'Green Car Congress', date: '2012' },
       { title: 'Electric vehicle smart grid demonstration project at M-tech Labo', url: 'https://www.ebmag.com/electric-vehicle-smart-grid-demonstration-project-at-m-tech-labo-12242/', source: 'Electrical Business' },
     ],
+    businessModel: {
+      type: 'Corporate demonstration facility',
+      description: 'Fully corporate funded as an internal demonstration. The value tested was peak-demand reduction and backup power for a commercial building using EVs plus second-life battery packs, ahead of any market product.',
+    },
+    standardization: {
+      standard: 'CHAdeMO bidirectional discharge; Japanese building electrical and grid connection standards',
+      status: 'Completed - contributed to CHAdeMO V2X and Japanese V2B practice.',
+    },
+    technology: {
+      overview: 'Early EV smart-grid demonstration combining vehicle discharge, reused EV battery packs and building energy management at a Mitsubishi facility.',
+      hardware: [
+        { name: 'EV fleet', details: ['Mitsubishi i-MiEV and Outlander PHEV vehicles', 'CHAdeMO discharge capability'] },
+        { name: 'Second-life battery storage', details: ['Used EV packs repurposed as stationary storage'] },
+        { name: 'Bidirectional chargers', details: ['CHAdeMO discharge units at the facility'] },
+      ],
+      software: [
+        { name: 'Building energy management system', details: ['Coordinates PV, storage, vehicles and building load', 'Peak-shaving control'] },
+        { name: 'Monitoring and analytics', details: ['Performance of new versus second-life batteries'] },
+      ],
+    },
+    timeline: [
+      { phase: 'Project announced', year: '2012', description: 'Three Mitsubishi companies launch the M-tech Labo demonstration.' },
+      { phase: 'System build', year: '2012-2013', description: 'EVs, second-life packs and building EMS integrated.' },
+      { phase: 'Operation', year: '2013-2014', description: 'Peak shaving and backup power demonstrated.' },
+      { phase: 'Findings', year: '2015', description: 'Results feed CHAdeMO V2X and commercial V2B products.' },
+    ],
+    partnerLead: 'Mitsubishi Corporation, Mitsubishi Motors and Mitsubishi Electric',
+    gapExplanations: {
+      'battery degradation': 'Second-life pack performance and safety needed long-term validation.',
+      'standards': 'Building-side interfaces for vehicle discharge were not yet standardised.',
+      'metering': 'Behind-the-meter vehicle export lacked settlement rules at the time.',
+    },
   },
 };
 
