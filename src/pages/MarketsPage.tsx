@@ -150,12 +150,6 @@ export default function MarketsPage() {
                         );
                       })}
                     </div>
-
-                            </motion.button>
-                          </RevenueStreamPopup>
-                        );
-                      })}
-                    </div>
                     <p className="text-xs text-muted-foreground mt-5 pt-4 border-t leading-relaxed">{revenueStackingNote}</p>
                   </div>
                 </div>
