@@ -367,7 +367,7 @@ export default function NewsPage() {
       }))
       .sort((a, b) => b.points - a.points);
 
-    return { total, topics, last30, uniqueDomains, uniqueCountries, hnStories };
+    return { total, topics, last30, uniqueDomains, uniqueCountries, hnStories, summary };
   }, [news]);
 
   return (
