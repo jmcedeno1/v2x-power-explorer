@@ -1101,40 +1101,11 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
     ],
     partnerLead: 'Lawrence Berkeley National Laboratory (DER-CAM and project lead); Bosch Software Innovations (eMobility Solution); Akuacom (OpenADR DRAS); Olivine (regulatory and interconnection); U.S. DoD ESTCP; California Energy Commission; Southern California Edison; CAISO.',
   },
-  'korean v2g pilot': {
-    references: [
-      { title: 'VGI core component development and V2G demonstration using CCS Type 1 standard (KEPCO)', url: 'https://www.v2g-hub.com/projects/vgi-core-component-development-and-v2g-demonstration-using-ccs-type-1-standard-kepco/', source: 'V2G Hub' },
-      { title: 'A Grid-Friendly Electric Vehicle Infrastructure: The Korean Approach', url: 'https://www.researchgate.net/publication/375176279_A_Grid-Friendly_Electric_Vehicle_Infrastructure_The_Korean_Approach', source: 'ResearchGate' },
-      { title: 'Smart managed charging (V1G) field demonstration in KEPCO', url: 'https://ieeexplore.ieee.org/document/9841761/', source: 'IEEE Xplore' },
-      { title: 'Vehicle-to-grid technology - Analysis', url: 'https://www.iea.org/reports/vehicle-to-grid-technology', source: 'IEA' },
-    ],
-  },
-  'merge - mobile energy resources in grids of electricity': {
-    references: [
-      { title: 'Mobile Energy Resources in Grids of Electricity (MERGE)', url: 'https://cordis.europa.eu/project/id/241399', source: 'CORDIS (FP7)' },
-      { title: 'MERGE - Mobile Energy Resources in Grids of Electricity', url: 'https://www.iit.comillas.edu/publicacion/proyecto/en/MERGE_EU_FP7/MERGE_-_Mobile_Energy_Resources_in_Grids_of_Electricity', source: 'IIT Comillas' },
-      { title: 'MERGE (Portugal) - Smart Grid Project', url: 'https://openei.org/wiki/MERGE_Mobile_Energy_Resources_in_Grids_of_Electricity_(Smart_Grid_Project)_(Portugal)', source: 'OpenEI' },
-    ],
-  },
-  'invent': {
-    references: [
-      { title: 'INVENT - UCSD / Nissan / Nuvve', url: 'https://www.v2g-hub.com/projects/invent-ucsd-nissan-nuvve/', source: 'V2G Hub' },
-      { title: 'Nuvve and UC San Diego to Demonstrate Vehicle-to-Grid Technology Through Energy Commission Grant', url: 'https://today.ucsd.edu/story/nuvve_and_uc_san_diego_to_demonstrate_vehicle_to_grid_technology', source: 'UC San Diego' },
-      { title: 'Nuvve Announces Vehicle-to-Grid (V2G) Pilot Programs', url: 'https://insideevs.com/news/341858/nuvve-announces-vehicle-to-grid-v2g-pilot-programs/', source: 'InsideEVs' },
-    ],
-  },
   'jumpsmart maui': {
     references: [
       { title: 'JUMPSmartMaui Announces Successful Completion of Project', url: 'https://mauinow.com/2017/05/05/jumpsmartmaui-announces-successful-completion-of-project/', source: 'Maui Now', date: '2017' },
       { title: 'U.S.-Japan Collaborative Smart Grid Demonstration Project in Maui (final report)', url: 'https://www.nedo.go.jp/content/100864936.pdf', source: 'NEDO' },
       { title: 'JUMPSmartMaui stakeholders announce successful completion of the project', url: 'https://www.medb.org/jumpsmartmaui-stakeholders-announce-successful-completion-of-the-project/', source: 'Maui Economic Development Board' },
-    ],
-  },
-  'savona campus smart poly-generation micro-grid (spm)': {
-    references: [
-      { title: 'La Smart Polygeneration Microgrid (SPM) - Savona Campus', url: 'https://campus-savona.unige.it/en/progetti/Energia2020/SPM', source: 'University of Genoa' },
-      { title: 'The University of Genoa smart polygeneration microgrid test-bed facility', url: 'https://www.sciencedirect.com/science/article/abs/pii/S1364032112005515', source: 'Renewable & Sustainable Energy Reviews' },
-      { title: 'E-Mobility & Microgrid Laboratory at the Savona Campus of Genova University', url: 'https://www.researchgate.net/publication/346595922_E-Mobility_Microgrid_Laboratory_at_the_Savona_Campus_of_Genova_University', source: 'IEEE / ResearchGate' },
     ],
   },
   'oakland school district': {
@@ -1222,13 +1193,6 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
       { title: 'Porto Airport (V2B) - Demo Site', url: 'https://drive2x.eu/demo_sites/porto-airport-v2b/', source: 'Drive2X' },
       { title: 'Amsterdam (V2B) - Demo Site', url: 'https://drive2x.eu/demo_sites/amsterdam/', source: 'DriVe2X' },
       { title: 'DriVe2X - Project Fact Sheet', url: 'https://cordis.europa.eu/project/id/101056934', source: 'CORDIS (Horizon Europe)' },
-    ],
-  },
-  'electric school bus v2g project (caiso/southern california edison)': {
-    references: [
-      { title: 'Case study (USA): Electric school bus vehicle-to-grid pilot in California', url: 'https://www.ofgem.gov.uk/publications/case-study-usa-electric-school-bus-vehicle-grid-pilot-california', source: 'Ofgem' },
-      { title: 'Vehicle-to-Grid Electric School Bus Commercialization Project', url: 'https://www.energy.gov/eere/vehicles/articles/vehicle-grid-electric-school-bus-commercialization-project', source: 'U.S. DOE' },
-      { title: 'SCE Receives State Approval for Four Electric Transportation Pilots', url: 'https://energized.edison.com/stories/sce-receives-state-approval-for-four-electric-transportation-pilots', source: 'Southern California Edison' },
     ],
   },
   'terni city centre (drive2x)': {
