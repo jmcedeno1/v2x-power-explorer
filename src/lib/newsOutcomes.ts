@@ -39,8 +39,8 @@ export const OUTCOME_META: Record<OutcomeType, { label: string; accent: string; 
   compensation: { label: 'Compensation', accent: 'text-energy-green', ring: 'border-energy-green/30 bg-energy-green/5' },
   range: { label: 'Range / Battery', accent: 'text-energy-red', ring: 'border-energy-red/30 bg-energy-red/5' },
   deployments: { label: 'Deployments', accent: 'text-primary', ring: 'border-primary/30 bg-primary/5' },
-  pilots: { label: 'Pilots', accent: 'text-accent-foreground', ring: 'border-accent/40 bg-accent/10' },
-  cost: { label: 'Market / Cost', accent: 'text-energy-teal', ring: 'border-energy-teal/30 bg-energy-teal/5' },
+  pilots: { label: 'Pilots', accent: 'text-energy-amber', ring: 'border-energy-amber/30 bg-energy-amber/5' },
+  cost: { label: 'Market / Cost', accent: 'text-energy-purple', ring: 'border-energy-purple/30 bg-energy-purple/5' },
   savings: { label: 'Savings', accent: 'text-energy-green', ring: 'border-energy-green/30 bg-energy-green/5' },
   efficiency: { label: 'Efficiency', accent: 'text-energy-blue', ring: 'border-energy-blue/30 bg-energy-blue/5' },
 };
