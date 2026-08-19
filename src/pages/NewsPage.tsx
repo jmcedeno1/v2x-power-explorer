@@ -375,55 +375,55 @@ export default function NewsPage() {
                 <ul className="space-y-3">
                   <li className="flex items-start gap-3">
                     <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
-                    <p className="text-sm text-foreground"><strong>Coverage is at an all-time high.</strong> The current quarter is the largest on record, roughly <strong>three times the 2025 quarterly average</strong>, signaling that bidirectional charging is moving from niche tech coverage into mainstream market reporting. <span className="text-muted-foreground">(News &amp; Media)</span></p>
+                    <p className="text-sm text-foreground"><strong>Coverage is at an all-time high.</strong> The current quarter is the largest on record, roughly <strong>three times the 2025 quarterly average</strong>, signaling that bidirectional charging is moving from niche tech coverage into mainstream market reporting.</p>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
-                    <p className="text-sm text-foreground"><strong>The narrative has rotated from product launches to grid applications.</strong> Earlier peaks were driven by OEM announcements and home backup products; the current wave is dominated by <strong>V2G deployments, market participation, and revenue models</strong>. <span className="text-muted-foreground">(News &amp; Media)</span></p>
+                    <p className="text-sm text-foreground"><strong>The narrative has rotated from product launches to grid applications.</strong> Earlier peaks were driven by OEM announcements and home backup products; the current wave is dominated by <strong>V2G deployments, market participation, and revenue models</strong>.</p>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
-                    <p className="text-sm text-foreground"><strong>Two storylines are diverging: home energy versus grid services.</strong> Coverage of home backup, bidirectional chargers, and OEM ecosystems moves as one cluster, while V2G and pilot deployments form a separate cluster - a sign the industry is splitting into consumer and utility-facing markets. <span className="text-muted-foreground">(News &amp; Media, quarterly series)</span></p>
+                    <p className="text-sm text-foreground"><strong>Two storylines are diverging: home energy versus grid services.</strong> Coverage of home backup, bidirectional chargers, and OEM ecosystems moves as one cluster, while V2G and pilot deployments form a separate cluster - a sign the industry is splitting into consumer and utility-facing markets.</p>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
-                    <p className="text-sm text-foreground"><strong>Pilots drive V2G headlines more than policy does.</strong> Most V2G-related coverage is tied to concrete deployments and partnerships, suggesting the market is being pulled by live projects rather than pushed by regulation. <span className="text-muted-foreground">(News &amp; Media)</span></p>
+                    <p className="text-sm text-foreground"><strong>Pilots drive V2G headlines more than policy does.</strong> Most V2G-related coverage is tied to concrete deployments and partnerships, suggesting the market is being pulled by live projects rather than pushed by regulation.</p>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
-                    <p className="text-sm text-foreground"><strong>Automakers remain the main gatekeepers of public attention.</strong> OEM coverage is the second-largest cluster and closely linked to both V2H and bidirectional charger stories, meaning consumer adoption is still framed around which car brands enable the feature. <span className="text-muted-foreground">(News &amp; Media)</span></p>
+                    <p className="text-sm text-foreground"><strong>Automakers remain the main gatekeepers of public attention.</strong> OEM coverage is the second-largest cluster and closely linked to both V2H and bidirectional charger stories, meaning consumer adoption is still framed around which car brands enable the feature.</p>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
-                    <p className="text-sm text-foreground"><strong>The dominant adoption frame is owner compensation.</strong> The most influential coverage reframes the market around <strong>how much drivers can earn</strong>, turning a technology question into a consumer-incentive question. <span className="text-muted-foreground">(The Cool Down/MSN 2026-08-03)</span></p>
+                    <p className="text-sm text-foreground"><strong>The dominant adoption frame is owner compensation.</strong> The most influential coverage reframes the market around <strong>how much drivers can earn</strong>, turning a technology question into a consumer-incentive question.</p>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
-                    <p className="text-sm text-foreground"><strong>Renewables integration is the fastest-emerging theme.</strong> Almost all solar, wind, and microgrid-related coverage appears in the latest quarter, suggesting the conversation is beginning to shift toward V2X as a tool for absorbing surplus renewable generation. <span className="text-muted-foreground">(News &amp; Media)</span></p>
+                    <p className="text-sm text-foreground"><strong>Renewables integration is the fastest-emerging theme.</strong> Almost all solar, wind, and microgrid-related coverage appears in the latest quarter, suggesting the conversation is beginning to shift toward V2X as a tool for absorbing surplus renewable generation.</p>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
-                    <p className="text-sm text-foreground"><strong>Investment narratives favor the grid case over the home case.</strong> Funding and M&amp;A coverage tracks V2G and battery concerns far more than V2H, implying investors see the larger monetizable opportunity on the utility side. <span className="text-muted-foreground">(News &amp; Media)</span></p>
+                    <p className="text-sm text-foreground"><strong>Investment narratives favor the grid case over the home case.</strong> Funding and M&amp;A coverage tracks V2G and battery concerns far more than V2H, implying investors see the larger monetizable opportunity on the utility side.</p>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
-                    <p className="text-sm text-foreground"><strong>The buyer of flexibility is barely visible.</strong> Grid services, utilities, and DSOs receive minimal coverage despite carrying most of the modeled revenue in the Markets module - a major gap between market theory and media attention. <span className="text-muted-foreground">(News &amp; Media vs. Markets module)</span></p>
+                    <p className="text-sm text-foreground"><strong>The buyer of flexibility is barely visible.</strong> Grid services, utilities, and DSOs receive minimal coverage despite carrying most of the modeled revenue in the Markets module - a major gap between market theory and media attention.</p>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
-                    <p className="text-sm text-foreground"><strong>Regulation and standards are under-covered.</strong> Policy and interoperability standards appear rarely, even though standards such as ISO 15118 and OCPP are repeatedly cited in the Engineering and Standards modules as the main deployment bottleneck. <span className="text-muted-foreground">(News &amp; Media vs. Standards module)</span></p>
+                    <p className="text-sm text-foreground"><strong>Regulation and standards are under-covered.</strong> Policy and interoperability standards appear rarely, even though standards such as ISO 15118 and OCPP are repeatedly cited in the Engineering and Standards modules as the main deployment bottleneck.</p>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
-                    <p className="text-sm text-foreground"><strong>Battery degradation remains a footnote.</strong> Despite being one of the most common owner objections, degradation is discussed mainly alongside funding rather than as a standalone consumer risk, leaving a credibility gap in public coverage. <span className="text-muted-foreground">(News &amp; Media)</span></p>
+                    <p className="text-sm text-foreground"><strong>Battery degradation remains a footnote.</strong> Despite being one of the most common owner objections, degradation is discussed mainly alongside funding rather than as a standalone consumer risk, leaving a credibility gap in public coverage.</p>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
-                    <p className="text-sm text-foreground"><strong>Fleets are under-reported relative to real-world deployment.</strong> Fleet and depot coverage is a small share of the news corpus even though most pilots in the database are fleet-scale, so press attention lags the actual deployment base. <span className="text-muted-foreground">(News &amp; Media vs. Pilots module)</span></p>
+                    <p className="text-sm text-foreground"><strong>Fleets are under-reported relative to real-world deployment.</strong> Fleet and depot coverage is a small share of the news corpus even though most pilots in the database are fleet-scale, so press attention lags the actual deployment base.</p>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
-                    <p className="text-sm text-foreground"><strong>Coverage quality is still thin and finance-heavy.</strong> A large share of items comes from aggregators, newswires, and finance outlets, with limited trade or utility reporting - the market is still being narrated by press releases rather than independent industry journalism. <span className="text-muted-foreground">(News &amp; Media)</span></p>
+                    <p className="text-sm text-foreground"><strong>Coverage quality is still thin and finance-heavy.</strong> A large share of items comes from aggregators, newswires, and finance outlets, with limited trade or utility reporting - the market is still being narrated by press releases rather than independent industry journalism.</p>
                   </li>
                 </ul>
 
