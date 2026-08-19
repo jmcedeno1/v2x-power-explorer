@@ -13,7 +13,23 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 
+const PILOT_EVIDENCE: string[] = [
+  '<strong>Fleets, not private cars, carry the field evidence.</strong> The largest deployments are depot-based: school buses in Oakland (74 buses, over 2.1 GWh/year), Bus2Grid in London and shared fleets such as V2X Suisse. Predictable dwell times and a single decision-maker matter more than battery size.',
+  '<strong>Scale arrived after 2020.</strong> Early work (M-tech Labo, LA Air Force Base, JumpSmart Maui) proved the physics with tens of vehicles; the current wave (Oakland, NIO in China, EU DriVe2X sites) is about commercial dispatch and settlement rather than technical feasibility.',
+  '<strong>Three business models dominate.</strong> Fleet-as-a-service where the operator owns batteries and sells transport (Zum, Highland); bundled lease plus tariff for consumers (Octopus Powerloop, GridMotion); and grant-funded consortia converting research into market rules (DriVe2X, EV4EU, SCALE, FLOW, XL-Connect).',
+  '<strong>Aggregators are the pivotal players.</strong> Nuvve, The Mobility House, tiko, Octopus and Last Mile Solutions supply the layer that turns parked vehicles into a market-qualified resource; OEM and charger vendors alone never reach the market.',
+  '<strong>Hardware is converging on bidirectional DC, with a CHAdeMO legacy.</strong> Most pre-2022 pilots depended on CHAdeMO and a narrow vehicle list; newer sites use bidirectional CCS and ISO 15118-20, while AC bidirectional remains the low-cost route for homes and car sharing (Utrecht, Renault).',
+  '<strong>Software value sits in constraint-aware dispatch.</strong> Every successful pilot guarantees departure time and minimum state of charge before offering flexibility - route-aware bus scheduling, booking-aware car sharing, home EMS overrides. Availability forecasting, not power electronics, sets earnings.',
+  '<strong>Revenue depends on which door is open.</strong> Frequency regulation pays best but demands prequalification and aggregation (Parker, ACES, V2X Suisse); demand-charge and building peak shaving are the most accessible behind-the-meter streams (Cajon Valley, Porto Airport, Amsterdam ArenA).',
+  '<strong>Recurring gap: metering and settlement.</strong> Nearly every case reports that exported kWh from a vehicle lack a clean measurement and billing path, especially behind the meter or at shared connection points.',
+  '<strong>Recurring gap: interoperability.</strong> Vehicle, charger and platform combinations still need case-by-case validation even where the same standard is claimed, which keeps deployment engineering cost high.',
+  '<strong>Recurring gap: local grid signals.</strong> DSO-level congestion and voltage services (Terni, AHEAD, FLOW) have real technical value but no standard procurement, activation or settlement route in most markets.',
+  '<strong>Battery degradation is managed, not resolved.</strong> Studies from Parker, ACES and school-bus programmes report acceptable measured impact, yet warranty language remains a procurement blocker for fleet owners.',
+  '<strong>Resilience is emerging as a second value case.</strong> Microgrid and V2H sites (Xiaolin Village, Dorchester, Budapest) justify bidirectional capability through backup power and outage survival, where market revenue alone would not close the business case.',
+];
+
 function maturityFromRow(r: any): string {
+
   const fs = r.fleet_size ?? 0;
   const pw = r.power_kw ?? 0;
   if (fs >= 50 || pw >= 2000) return 'grid_critical';
