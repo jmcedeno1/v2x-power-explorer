@@ -8,7 +8,7 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/h
 import { PieChart as RechartsPie, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { marketsContent } from '@/data/moduleContent';
 import { MarketSizeChart } from '@/components/dashboard/MarketSizeChart';
-import { revenueStreamDetails, revenueStackingNote } from '@/data/revenueStreamsData';
+import { revenueStreamDetails } from '@/data/revenueStreamsData';
 import { RevenueStreamPopup } from '@/components/markets/RevenueStreamPopup';
 
 export default function MarketsPage() {
