@@ -372,13 +372,12 @@ export default function NewsPage() {
               <TrendingUp className="w-4 h-4 text-primary" />
               <h2 className="text-base font-semibold">Most frequent topics in coverage</h2>
               <span className="text-xs text-muted-foreground">
-                — one visual per topic, built from ingested article titles
+                — sub-themes covered inside each topic, from ingested articles
               </span>
             </div>
             <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4 mb-6">
               {stats.topics.map((t) => {
                 const share = stats.total ? Math.round((t.count / stats.total) * 100) : 0;
-                const peak = t.trend.reduce((a, b) => (b.count > a.count ? b : a), { month: '', count: 0 });
                 return (
                   <Card key={t.name} className="flex flex-col">
                     <CardHeader className="pb-2">
@@ -387,29 +386,51 @@ export default function NewsPage() {
                         <Badge variant="secondary" className="shrink-0">{t.count}</Badge>
                       </div>
                       <div className="text-xs text-muted-foreground">
-                        {share}% of coverage{peak.month ? ` · peak ${peak.month}` : ''}
+                        {share}% of coverage{t.subTotals[0] ? ` · lead sub-theme: ${t.subTotals[0].name}` : ''}
                       </div>
                     </CardHeader>
                     <CardContent className="pt-0 space-y-3">
-                      <ResponsiveContainer width="100%" height={80}>
-                        <AreaChart data={t.trend} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
-                          <XAxis dataKey="month" hide />
-                          <YAxis hide allowDecimals={false} />
-                          <Tooltip
-                            contentStyle={{ fontSize: 11 }}
-                            formatter={(v: number) => [v, 'articles']}
-                            labelFormatter={(l) => String(l)}
-                          />
-                          <Area
-                            type="monotone"
-                            dataKey="count"
-                            stroke="hsl(var(--primary))"
-                            fill="hsl(var(--primary))"
-                            fillOpacity={0.2}
-                            strokeWidth={1.5}
-                          />
-                        </AreaChart>
-                      </ResponsiveContainer>
+                      {t.subNames.length > 0 ? (
+                        <>
+                          <ResponsiveContainer width="100%" height={130}>
+                            <LineChart data={t.subSeries} margin={{ top: 6, right: 6, left: -22, bottom: 0 }}>
+                              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                              <XAxis dataKey="quarter" tick={{ fontSize: 9, fill: 'hsl(var(--muted-foreground))' }} interval="preserveStartEnd" />
+                              <YAxis allowDecimals={false} tick={{ fontSize: 9, fill: 'hsl(var(--muted-foreground))' }} />
+                              <Tooltip contentStyle={{ fontSize: 11, background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: 8 }} />
+                              {t.subNames.map((s, i) => (
+                                <Line
+                                  key={s}
+                                  type="monotone"
+                                  dataKey={s}
+                                  stroke={SUB_COLORS[i % SUB_COLORS.length]}
+                                  strokeWidth={1.8}
+                                  dot={{ r: 2 }}
+                                />
+                              ))}
+                            </LineChart>
+                          </ResponsiveContainer>
+                          <div className="flex flex-wrap gap-x-3 gap-y-1">
+                            {t.subTotals.map((s) => {
+                              const idx = t.subNames.indexOf(s.name);
+                              return (
+                                <div key={s.name} className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
+                                  <span
+                                    className="w-2.5 h-0.5 rounded"
+                                    style={{ background: SUB_COLORS[idx % SUB_COLORS.length] }}
+                                  />
+                                  {s.name} <span className="tabular-nums">{s.count}</span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </>
+                      ) : (
+                        <div className="text-xs text-muted-foreground py-6 text-center">
+                          No sub-theme signal detected yet
+                        </div>
+                      )}
+
 
                       {t.sources.length > 0 && (
                         <div>
