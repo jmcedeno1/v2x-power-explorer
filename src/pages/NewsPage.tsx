@@ -9,6 +9,8 @@ import { Badge } from '@/components/ui/badge';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { cn } from '@/lib/utils';
 import { OUTCOME_META, OUTCOME_SECTIONS, groupOutcomes, outcomesFor, rankHero, type Outcome } from '@/lib/newsOutcomes';
+import { OUTCOME_TOPIC_META, groupByOutcomeTopic, type TopicGroup } from '@/lib/newsOutcomeTopics';
+
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from 'recharts';
@@ -85,8 +87,9 @@ function extractDomain(d: NewsDoc): string {
 
 export default function NewsPage() {
   const [refreshing, setRefreshing] = useState(false);
-  const [lens, setLens] = useState<'topic' | 'outcome'>('topic');
+  const [sort, setSort] = useState<'count' | 'alpha'>('count');
   const { data: news = [], isLoading, refetch } = useQuery({ queryKey: ['news-gdelt'], queryFn: fetchNews });
+
 
   const refresh = async () => {
     setRefreshing(true);
@@ -209,9 +212,18 @@ export default function NewsPage() {
 
     const hero = rankHero(news);
     const outcomeGroups = groupOutcomes(news);
+    const topicGroups = groupByOutcomeTopic(news);
 
-    return { total, topics, last30, uniqueDomains, uniqueCountries, hnStories, hero, outcomeGroups };
+    return { total, topics, last30, uniqueDomains, uniqueCountries, hnStories, hero, outcomeGroups, topicGroups };
   }, [news]);
+
+  const outcomeTopics = useMemo(() => {
+    const g = [...stats.topicGroups];
+    return sort === 'alpha'
+      ? g.sort((a, b) => a.label.localeCompare(b.label))
+      : g.sort((a, b) => b.count - a.count);
+  }, [stats.topicGroups, sort]);
+
 
   return (
     <MainLayout>
@@ -255,129 +267,37 @@ export default function NewsPage() {
             {/* Hero highlight */}
             {stats.hero && <HeroHighlight hero={stats.hero} />}
 
-            {/* Lens toggle */}
+            {/* Sort toggle */}
             <div className="flex items-center gap-2 mb-4">
               <div className="inline-flex rounded-lg border border-border p-1 bg-muted/30">
                 <Button
                   size="sm"
-                  variant={lens === 'topic' ? 'default' : 'ghost'}
+                  variant={sort === 'count' ? 'default' : 'ghost'}
                   className="h-7 px-3 text-xs"
-                  onClick={() => setLens('topic')}
+                  onClick={() => setSort('count')}
                 >
-                  By Topic
+                  Most covered
                 </Button>
                 <Button
                   size="sm"
-                  variant={lens === 'outcome' ? 'default' : 'ghost'}
+                  variant={sort === 'alpha' ? 'default' : 'ghost'}
                   className="h-7 px-3 text-xs"
-                  onClick={() => setLens('outcome')}
+                  onClick={() => setSort('alpha')}
                 >
-                  By Outcome
+                  A–Z
                 </Button>
               </div>
               <span className="text-xs text-muted-foreground hidden sm:inline">
-                {lens === 'topic'
-                  ? 'Clusters with the hard numbers reported in each'
-                  : 'Same articles regrouped by what they report'}
+                Coverage grouped by the outcome each article reports
               </span>
             </div>
 
-            {lens === 'outcome' ? (
-              <OutcomeLens groups={stats.outcomeGroups} />
-            ) : (
-              <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4 mb-6">
-                {stats.topics.map((t) => {
-                  const share = stats.total ? Math.round((t.count / stats.total) * 100) : 0;
-                  const peak = t.trend.reduce((a, b) => (b.count > a.count ? b : a), { month: '', count: 0 });
-                  return (
-                    <Card key={t.name} className="flex flex-col">
-                      <CardHeader className="pb-3">
-                        <div className="flex items-start justify-between gap-2">
-                          <CardTitle className="text-sm leading-snug">{t.name}</CardTitle>
-                          <Badge variant="secondary" className="shrink-0">{t.count}</Badge>
-                        </div>
-                      </CardHeader>
-                      <CardContent className="pt-0 space-y-3">
-                        {t.outcomes.length > 0 ? (
-                          <div className="grid grid-cols-2 gap-2">
-                            {t.outcomes.map((o) => (
-                              <StatTile key={o.type} outcome={o} />
-                            ))}
-                          </div>
-                        ) : (
-                          <div className="text-xs text-muted-foreground">
-                            No hard numeric outcome reported yet in this cluster.
-                          </div>
-                        )}
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mb-6">
+              {outcomeTopics.map((g) => (
+                <OutcomeTopicCard key={g.topic} group={g} />
+              ))}
+            </div>
 
-                        {t.articles.length > 0 && (
-                          <div>
-                            <div className="text-[11px] uppercase tracking-wide text-muted-foreground mb-1">
-                              Example headlines
-                            </div>
-                            <ul className="space-y-1">
-                              {t.articles.map((a) => (
-                                <li key={a.id} className="text-xs leading-snug">
-                                  <a
-                                    href={a.url ?? '#'}
-                                    target="_blank"
-                                    rel="noreferrer noopener"
-                                    className="text-foreground hover:text-primary line-clamp-2"
-                                  >
-                                    {a.title}
-                                  </a>
-                                  <div className="text-[10px] text-muted-foreground">
-                                    {extractDomain(a)}{a.date ? ` · ${a.date}` : ''}
-                                  </div>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
-
-                        {/* Coverage stats demoted to a muted expander */}
-                        <Collapsible>
-                          <CollapsibleTrigger className="group/cov flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground pt-1 border-t border-border w-full mt-1">
-                            <ChevronDown className="w-3 h-3 transition-transform group-data-[state=open]/cov:rotate-180" />
-                            Coverage details · {share}% of coverage{peak.month ? ` · peak ${peak.month}` : ''}
-                          </CollapsibleTrigger>
-                          <CollapsibleContent className="pt-2 space-y-2">
-                            <ResponsiveContainer width="100%" height={64}>
-                              <AreaChart data={t.trend} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
-                                <XAxis dataKey="month" hide />
-                                <YAxis hide allowDecimals={false} />
-                                <Tooltip
-                                  contentStyle={{ fontSize: 11 }}
-                                  formatter={(v: number) => [v, 'articles']}
-                                  labelFormatter={(l) => String(l)}
-                                />
-                                <Area
-                                  type="monotone"
-                                  dataKey="count"
-                                  stroke="hsl(var(--muted-foreground))"
-                                  fill="hsl(var(--muted-foreground))"
-                                  fillOpacity={0.15}
-                                  strokeWidth={1.25}
-                                />
-                              </AreaChart>
-                            </ResponsiveContainer>
-                            {t.sources.length > 0 && (
-                              <div className="flex flex-wrap gap-1">
-                                {t.sources.map((s) => (
-                                  <Badge key={s.name} variant="outline" className="text-[11px] font-normal">
-                                    {s.name} <span className="ml-1 text-muted-foreground">{s.count}</span>
-                                  </Badge>
-                                ))}
-                              </div>
-                            )}
-                          </CollapsibleContent>
-                        </Collapsible>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-              </div>
-            )}
 
 
             {/* Hacker News discussion */}
@@ -589,5 +509,86 @@ function OutcomeLens({ groups }: { groups: Map<Outcome['type'], Outcome[]> }) {
         );
       })}
     </div>
+  );
+}
+
+function OutcomeTopicCard({ group }: { group: TopicGroup }) {
+  const meta = OUTCOME_TOPIC_META[group.topic];
+  return (
+    <Card className="flex flex-col">
+      <CardHeader className="pb-3">
+        <div className="flex items-start justify-between gap-2">
+          <div>
+            <CardTitle className={cn('text-sm leading-snug', meta.accent)}>{group.label}</CardTitle>
+            <div className="text-xs text-muted-foreground mt-0.5">{meta.description}</div>
+          </div>
+          <Badge variant="secondary" className="shrink-0">{group.count}</Badge>
+        </div>
+      </CardHeader>
+      <CardContent className="pt-0 space-y-3">
+        {/* Primary visual: coverage timeline for this outcome */}
+        <div>
+          <ResponsiveContainer width="100%" height={90}>
+            <AreaChart data={group.trend} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
+              <XAxis dataKey="month" hide />
+              <YAxis hide allowDecimals={false} />
+              <Tooltip
+                contentStyle={{ fontSize: 11 }}
+                formatter={(v: number) => [v, 'articles']}
+                labelFormatter={(l) => String(l)}
+              />
+              <Area
+                type="monotone"
+                dataKey="count"
+                stroke={meta.stroke}
+                fill={meta.stroke}
+                fillOpacity={0.18}
+                strokeWidth={1.5}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+          {group.peak.month && (
+            <div className="text-[10px] uppercase tracking-wide text-muted-foreground">
+              Peak coverage {group.peak.month} · {group.peak.count} articles
+            </div>
+          )}
+        </div>
+
+        {group.sources.length > 0 && (
+          <div className="flex flex-wrap gap-1">
+            {group.sources.map((s) => (
+              <Badge key={s.name} variant="outline" className="text-[11px] font-normal">
+                {s.name} <span className="ml-1 text-muted-foreground">{s.count}</span>
+              </Badge>
+            ))}
+          </div>
+        )}
+
+        {group.articles.length > 0 && (
+          <div>
+            <div className="text-[11px] uppercase tracking-wide text-muted-foreground mb-1">
+              Example headlines
+            </div>
+            <ul className="space-y-1">
+              {group.articles.map((a) => (
+                <li key={a.id} className="text-xs leading-snug">
+                  <a
+                    href={a.url ?? '#'}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="text-foreground hover:text-primary line-clamp-2"
+                  >
+                    {a.title}
+                  </a>
+                  <div className="text-[10px] text-muted-foreground">
+                    {extractDomain(a as NewsDoc)}{a.date ? ` · ${a.date}` : ''}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 }
