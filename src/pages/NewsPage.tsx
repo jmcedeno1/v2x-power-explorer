@@ -252,94 +252,133 @@ export default function NewsPage() {
           </Card>
         ) : (
           <>
-            {/* Topic breakdown cards */}
-            <div className="mb-4 flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-primary" />
-              <h2 className="text-base font-semibold">Most frequent topics in coverage</h2>
-              <span className="text-xs text-muted-foreground">
-                — one visual per topic, built from ingested article titles
+            {/* Hero highlight */}
+            {stats.hero && <HeroHighlight hero={stats.hero} />}
+
+            {/* Lens toggle */}
+            <div className="flex items-center gap-2 mb-4">
+              <div className="inline-flex rounded-lg border border-border p-1 bg-muted/30">
+                <Button
+                  size="sm"
+                  variant={lens === 'topic' ? 'default' : 'ghost'}
+                  className="h-7 px-3 text-xs"
+                  onClick={() => setLens('topic')}
+                >
+                  By Topic
+                </Button>
+                <Button
+                  size="sm"
+                  variant={lens === 'outcome' ? 'default' : 'ghost'}
+                  className="h-7 px-3 text-xs"
+                  onClick={() => setLens('outcome')}
+                >
+                  By Outcome
+                </Button>
+              </div>
+              <span className="text-xs text-muted-foreground hidden sm:inline">
+                {lens === 'topic'
+                  ? 'Clusters with the hard numbers reported in each'
+                  : 'Same articles regrouped by what they report'}
               </span>
             </div>
-            <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4 mb-6">
-              {stats.topics.map((t) => {
-                const share = stats.total ? Math.round((t.count / stats.total) * 100) : 0;
-                const peak = t.trend.reduce((a, b) => (b.count > a.count ? b : a), { month: '', count: 0 });
-                return (
-                  <Card key={t.name} className="flex flex-col">
-                    <CardHeader className="pb-2">
-                      <div className="flex items-start justify-between gap-2">
-                        <CardTitle className="text-sm leading-snug">{t.name}</CardTitle>
-                        <Badge variant="secondary" className="shrink-0">{t.count}</Badge>
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        {share}% of coverage{peak.month ? ` · peak ${peak.month}` : ''}
-                      </div>
-                    </CardHeader>
-                    <CardContent className="pt-0 space-y-3">
-                      <ResponsiveContainer width="100%" height={80}>
-                        <AreaChart data={t.trend} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
-                          <XAxis dataKey="month" hide />
-                          <YAxis hide allowDecimals={false} />
-                          <Tooltip
-                            contentStyle={{ fontSize: 11 }}
-                            formatter={(v: number) => [v, 'articles']}
-                            labelFormatter={(l) => String(l)}
-                          />
-                          <Area
-                            type="monotone"
-                            dataKey="count"
-                            stroke="hsl(var(--primary))"
-                            fill="hsl(var(--primary))"
-                            fillOpacity={0.2}
-                            strokeWidth={1.5}
-                          />
-                        </AreaChart>
-                      </ResponsiveContainer>
 
-                      {t.sources.length > 0 && (
-                        <div>
-                          <div className="text-[11px] uppercase tracking-wide text-muted-foreground mb-1">
-                            Top sources
-                          </div>
-                          <div className="flex flex-wrap gap-1">
-                            {t.sources.map((s) => (
-                              <Badge key={s.name} variant="outline" className="text-[11px] font-normal">
-                                {s.name} <span className="ml-1 text-muted-foreground">{s.count}</span>
-                              </Badge>
+            {lens === 'outcome' ? (
+              <OutcomeLens groups={stats.outcomeGroups} />
+            ) : (
+              <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4 mb-6">
+                {stats.topics.map((t) => {
+                  const share = stats.total ? Math.round((t.count / stats.total) * 100) : 0;
+                  const peak = t.trend.reduce((a, b) => (b.count > a.count ? b : a), { month: '', count: 0 });
+                  return (
+                    <Card key={t.name} className="flex flex-col">
+                      <CardHeader className="pb-3">
+                        <div className="flex items-start justify-between gap-2">
+                          <CardTitle className="text-sm leading-snug">{t.name}</CardTitle>
+                          <Badge variant="secondary" className="shrink-0">{t.count}</Badge>
+                        </div>
+                      </CardHeader>
+                      <CardContent className="pt-0 space-y-3">
+                        {t.outcomes.length > 0 ? (
+                          <div className="grid grid-cols-2 gap-2">
+                            {t.outcomes.map((o) => (
+                              <StatTile key={o.type} outcome={o} />
                             ))}
                           </div>
-                        </div>
-                      )}
-
-                      {t.articles.length > 0 && (
-                        <div>
-                          <div className="text-[11px] uppercase tracking-wide text-muted-foreground mb-1">
-                            Example headlines
+                        ) : (
+                          <div className="text-xs text-muted-foreground">
+                            No hard numeric outcome reported yet in this cluster.
                           </div>
-                          <ul className="space-y-1">
-                            {t.articles.map((a) => (
-                              <li key={a.id} className="text-xs leading-snug">
-                                <a
-                                  href={a.url ?? '#'}
-                                  target="_blank"
-                                  rel="noreferrer noopener"
-                                  className="text-foreground hover:text-primary line-clamp-2"
-                                >
-                                  {a.title}
-                                </a>
-                                <div className="text-[10px] text-muted-foreground">
-                                  {extractDomain(a)}{a.date ? ` · ${a.date}` : ''}
-                                </div>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
+                        )}
+
+                        {t.articles.length > 0 && (
+                          <div>
+                            <div className="text-[11px] uppercase tracking-wide text-muted-foreground mb-1">
+                              Example headlines
+                            </div>
+                            <ul className="space-y-1">
+                              {t.articles.map((a) => (
+                                <li key={a.id} className="text-xs leading-snug">
+                                  <a
+                                    href={a.url ?? '#'}
+                                    target="_blank"
+                                    rel="noreferrer noopener"
+                                    className="text-foreground hover:text-primary line-clamp-2"
+                                  >
+                                    {a.title}
+                                  </a>
+                                  <div className="text-[10px] text-muted-foreground">
+                                    {extractDomain(a)}{a.date ? ` · ${a.date}` : ''}
+                                  </div>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+
+                        {/* Coverage stats demoted to a muted expander */}
+                        <Collapsible>
+                          <CollapsibleTrigger className="group/cov flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground pt-1 border-t border-border w-full mt-1">
+                            <ChevronDown className="w-3 h-3 transition-transform group-data-[state=open]/cov:rotate-180" />
+                            Coverage details · {share}% of coverage{peak.month ? ` · peak ${peak.month}` : ''}
+                          </CollapsibleTrigger>
+                          <CollapsibleContent className="pt-2 space-y-2">
+                            <ResponsiveContainer width="100%" height={64}>
+                              <AreaChart data={t.trend} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
+                                <XAxis dataKey="month" hide />
+                                <YAxis hide allowDecimals={false} />
+                                <Tooltip
+                                  contentStyle={{ fontSize: 11 }}
+                                  formatter={(v: number) => [v, 'articles']}
+                                  labelFormatter={(l) => String(l)}
+                                />
+                                <Area
+                                  type="monotone"
+                                  dataKey="count"
+                                  stroke="hsl(var(--muted-foreground))"
+                                  fill="hsl(var(--muted-foreground))"
+                                  fillOpacity={0.15}
+                                  strokeWidth={1.25}
+                                />
+                              </AreaChart>
+                            </ResponsiveContainer>
+                            {t.sources.length > 0 && (
+                              <div className="flex flex-wrap gap-1">
+                                {t.sources.map((s) => (
+                                  <Badge key={s.name} variant="outline" className="text-[11px] font-normal">
+                                    {s.name} <span className="ml-1 text-muted-foreground">{s.count}</span>
+                                  </Badge>
+                                ))}
+                              </div>
+                            )}
+                          </CollapsibleContent>
+                        </Collapsible>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+            )}
+
 
             {/* Hacker News discussion */}
             {stats.hnStories.length > 0 && (
