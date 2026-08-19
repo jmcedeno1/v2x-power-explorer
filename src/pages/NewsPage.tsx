@@ -477,3 +477,117 @@ function ArticlesList({ news }: { news: NewsDoc[] }) {
     </Card>
   );
 }
+
+function DirectionIcon({ direction }: { direction?: Outcome['direction'] }) {
+  if (direction === 'up') return <TrendingUp className="w-3 h-3" />;
+  if (direction === 'down') return <TrendingDown className="w-3 h-3" />;
+  if (direction === 'flat') return <Minus className="w-3 h-3" />;
+  return null;
+}
+
+function StatTile({ outcome, size = 'sm' }: { outcome: Outcome; size?: 'sm' | 'lg' }) {
+  const meta = OUTCOME_META[outcome.type];
+  return (
+    <a
+      href={outcome.article.url ?? '#'}
+      target="_blank"
+      rel="noreferrer noopener"
+      className={cn('block rounded-lg border p-2.5 transition-colors hover:bg-muted/40', meta.ring)}
+    >
+      <div className={cn('font-bold leading-none', meta.accent, size === 'lg' ? 'text-2xl' : 'text-lg')}>
+        {outcome.value}
+      </div>
+      <div className="mt-1 text-[10px] uppercase tracking-wide text-muted-foreground line-clamp-1">
+        {outcome.label}
+      </div>
+      <div className="mt-0.5 flex items-center gap-1 text-[10px] text-muted-foreground line-clamp-1">
+        <DirectionIcon direction={outcome.direction} />
+        <span className="truncate">{outcome.note}</span>
+      </div>
+    </a>
+  );
+}
+
+function HeroHighlight({ hero }: { hero: { article: OutcomeArticleLike; outcomes: Outcome[] } }) {
+  const a = hero.article;
+  return (
+    <Card className="mb-6 overflow-hidden border-primary/30 bg-gradient-to-br from-primary/10 via-background to-background">
+      <CardContent className="p-5 md:p-6">
+        <div className="flex items-center gap-2 mb-3">
+          <Sparkles className="w-4 h-4 text-primary" />
+          <span className="text-[11px] uppercase tracking-wide text-muted-foreground">
+            Most important development
+          </span>
+        </div>
+        <a
+          href={a.url ?? '#'}
+          target="_blank"
+          rel="noreferrer noopener"
+          className="block text-lg md:text-2xl font-bold leading-snug text-foreground hover:text-primary"
+        >
+          {a.title}
+        </a>
+        <div className="mt-2 text-xs text-muted-foreground">
+          {extractDomain(a as NewsDoc)}{a.date ? ` · ${a.date}` : ''}
+        </div>
+        <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3">
+          {hero.outcomes.slice(0, 4).map((o) => (
+            <StatTile key={o.type} outcome={o} size="lg" />
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+type OutcomeArticleLike = { id: string; title: string | null; url: string | null; date: string | null; orgs?: string[] | null; raw?: any };
+
+function OutcomeLens({ groups }: { groups: Map<Outcome['type'], Outcome[]> }) {
+  const sections = OUTCOME_SECTIONS.filter((s) => (groups.get(s.type) ?? []).length > 0);
+  if (sections.length === 0) {
+    return <div className="text-sm text-muted-foreground mb-6">No numeric outcomes detected yet.</div>;
+  }
+  return (
+    <div className="grid md:grid-cols-2 gap-4 mb-6">
+      {sections.map((s) => {
+        const items = groups.get(s.type)!;
+        const meta = OUTCOME_META[s.type];
+        return (
+          <Card key={s.type}>
+            <CardHeader className="pb-3">
+              <div className="flex items-start justify-between gap-2">
+                <div>
+                  <CardTitle className={cn('text-sm', meta.accent)}>{s.title}</CardTitle>
+                  <div className="text-xs text-muted-foreground mt-0.5">{s.description}</div>
+                </div>
+                <Badge variant="secondary" className="shrink-0">{items.length}</Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-0 space-y-3">
+              <div className="grid grid-cols-2 gap-2">
+                {items.slice(0, 2).map((o) => (
+                  <StatTile key={o.article.id} outcome={o} size="lg" />
+                ))}
+              </div>
+              <ul className="space-y-1">
+                {items.slice(0, 2).map((o) => (
+                  <li key={`h-${o.article.id}`} className="text-xs leading-snug">
+                    <a
+                      href={o.article.url ?? '#'}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="text-foreground hover:text-primary line-clamp-2"
+                    >
+                      {o.article.title}
+                    </a>
+                    <div className="text-[10px] text-muted-foreground">{o.note}</div>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+        );
+      })}
+    </div>
+  );
+}
