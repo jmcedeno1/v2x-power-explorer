@@ -85,8 +85,9 @@ function extractDomain(d: NewsDoc): string {
 
 export default function NewsPage() {
   const [refreshing, setRefreshing] = useState(false);
-  const [lens, setLens] = useState<'topic' | 'outcome'>('topic');
+  const [sort, setSort] = useState<'count' | 'alpha'>('count');
   const { data: news = [], isLoading, refetch } = useQuery({ queryKey: ['news-gdelt'], queryFn: fetchNews });
+
 
   const refresh = async () => {
     setRefreshing(true);
