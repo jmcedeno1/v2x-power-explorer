@@ -1130,25 +1130,11 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
       { title: 'JUMPSmartMaui stakeholders announce successful completion of the project', url: 'https://www.medb.org/jumpsmartmaui-stakeholders-announce-successful-completion-of-the-project/', source: 'Maui Economic Development Board' },
     ],
   },
-  'bus2grid': {
-    references: [
-      { title: "BYD gears-up for Bus2Grid 'switch-on'", url: 'https://en.byd.com/news/byd-gears-up-for-bus2grid-switch-on/', source: 'BYD' },
-      { title: "London bus garage becomes world's largest V2G trial site", url: 'https://www.cittimagazine.co.uk/news/buses-commercial-vehicles/london-bus-garage-becomes-worlds-largest-v2g-trial-site.html', source: 'CiTTi Magazine' },
-      { title: 'Road to Renewables (Bus2Grid)', url: 'https://www.sseenergysolutions.co.uk/roadtorenewables', source: 'SSE Energy Solutions' },
-    ],
-  },
   'savona campus smart poly-generation micro-grid (spm)': {
     references: [
       { title: 'La Smart Polygeneration Microgrid (SPM) - Savona Campus', url: 'https://campus-savona.unige.it/en/progetti/Energia2020/SPM', source: 'University of Genoa' },
       { title: 'The University of Genoa smart polygeneration microgrid test-bed facility', url: 'https://www.sciencedirect.com/science/article/abs/pii/S1364032112005515', source: 'Renewable & Sustainable Energy Reviews' },
       { title: 'E-Mobility & Microgrid Laboratory at the Savona Campus of Genova University', url: 'https://www.researchgate.net/publication/346595922_E-Mobility_Microgrid_Laboratory_at_the_Savona_Campus_of_Genova_University', source: 'IEEE / ResearchGate' },
-    ],
-  },
-  'neverflat': {
-    references: [
-      { title: 'NEVERFLAT - Project Fact Sheet', url: 'https://cordis.europa.eu/project/id/101192973', source: 'CORDIS (Horizon Europe)' },
-      { title: 'iNnovative EV-charging EnviRonment for Future Low-cost mAss deploymenT (NEVERFLAT)', url: 'https://www.irec.cat/research/projects/neverflat/', source: 'IREC' },
-      { title: 'A warm welcome to the new 2Zero Partnership Projects (incl. NEVERFLAT)', url: 'https://www.2zeroemission.eu/mediaroom/a-warm-welcome-to-the-new-2zero-partnership-projects-epowermove-neverflat-gen1200-hivep-enlighten-s4mile-arise-flexmcs-macbeth-twin-loop-code4ev-and-shift2zero/', source: '2Zero' },
     ],
   },
   'oakland school district': {
@@ -1215,13 +1201,6 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
     references: [
       { title: 'AHEAD - AI-informed Holistic EVs integration Approaches for Distribution grids (Fact Sheet)', url: 'https://cordis.europa.eu/project/id/101160665', source: 'CORDIS (Horizon Europe)' },
       { title: 'AHEAD - Project Website', url: 'https://horizon-ahead.eu/', source: 'AHEAD' },
-    ],
-  },
-  'revs': {
-    references: [
-      { title: 'Realising Electric Vehicle-to-Grid Services', url: 'https://arena.gov.au/projects/realising-electric-vehicle-to-grid-services/', source: 'ARENA' },
-      { title: 'Realising Electric Vehicle to Grid Services', url: 'https://www.v2g-hub.com/projects/realising-electric-vehicle-to-grid-services/', source: 'V2G Hub' },
-      { title: 'Nissan LEAF to light up Australia: V2G launched at REVS in ACT', url: 'https://australia.nissannews.com/en-AU/releases/release-8ba3b7f411f6022703cfce0680027f92-nissan-leaf-to-light-up-australia-industry-first-vehicle-to-grid-charging-technology-launched-at-realising-electric-vehicles-services-revs-in-act', source: 'Nissan' },
     ],
   },
   'cajon valley school district': {
