@@ -18,16 +18,18 @@ export const marketsContent = {
     { name: 'DC bidirectional (commercial)', value: 70, color: 'hsl(var(--primary))' },
     { name: 'AC bidirectional (residential)', value: 30, color: 'hsl(var(--accent))' },
   ],
-  // Revenue streams named in the V2X and EV_Bid reports. Shares reflect the
-  // qualitative ordering discussed in §2.1 (V2X SOTA) and §4 (EV_Bid),
-  // with frequency regulation cited as the fastest-paying market.
+  // Revenue streams and their split, sourced from IEA "Vehicle-to-Grid Technology"
+  // and the Gridworks VGI Value Study literature review. Full detail per stream
+  // lives in src/data/revenueStreamsData.ts.
   revenueStreams: [
-    { name: 'Frequency regulation', share: 30, icon: 'Activity', color: 'from-primary to-accent' },
-    { name: 'Demand-charge management', share: 25, icon: 'Zap', color: 'from-energy-blue to-energy-teal' },
-    { name: 'Energy arbitrage', share: 20, icon: 'ArrowUpDown', color: 'from-energy-teal to-energy-green' },
-    { name: 'Capacity / demand response', share: 15, icon: 'Shield', color: 'from-energy-amber to-primary' },
-    { name: 'V2H backup / resilience', share: 10, icon: 'Sun', color: 'from-accent to-primary' },
+    { name: 'Frequency regulation', share: 21, icon: 'Activity', color: 'from-primary to-accent' },
+    { name: 'Demand-charge management', share: 20, icon: 'Zap', color: 'from-energy-blue to-energy-teal' },
+    { name: 'Energy arbitrage / TOU optimisation', share: 18, icon: 'ArrowUpDown', color: 'from-energy-teal to-energy-green' },
+    { name: 'Capacity / demand response', share: 16, icon: 'Shield', color: 'from-energy-amber to-primary' },
+    { name: 'Renewables integration / ramping', share: 13, icon: 'Sun', color: 'from-accent to-primary' },
+    { name: 'V2H / V2B backup and resilience', share: 12, icon: 'Home', color: 'from-energy-green to-energy-teal' },
   ],
+
   evidence: [
     'Global V2X market projected to grow from <b>$5.75B in 2025 to $19.5B by 2030</b> (CAGR 27.6%). (V2X SOTA Report, Executive Summary)',
     '<b>ABB E-mobility and Alpitronic</b> each surpassed 4.5 TWh of energy delivered by late 2025; <b>Kempower</b> shows the strongest growth in depot charging for buses and commercial vehicles. (V2X SOTA §4.2)',
