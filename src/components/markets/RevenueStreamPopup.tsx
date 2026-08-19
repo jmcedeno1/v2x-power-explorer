@@ -30,8 +30,8 @@ export function RevenueStreamPopup({ stream, children }: Props) {
             <DialogTitle className="text-xl font-bold text-foreground">{stream.name}</DialogTitle>
             <DialogDescription className="mt-1">{stream.tagline}</DialogDescription>
             <div className="flex flex-wrap items-center gap-2 mt-3">
-              <Badge variant="secondary">{stream.share}% of stacked revenue</Badge>
-              <Badge variant="outline">{stream.marketLevel}</Badge>
+              <Badge variant="secondary">{stream.marketLevel}</Badge>
+
               <Badge variant="outline" className="gap-1">
                 <Clock className="w-3 h-3" />
                 {stream.timescale}

@@ -124,9 +124,9 @@ export default function MarketsPage() {
                   <h3 className="text-lg font-semibold text-foreground mb-4">Revenue Stacking Portfolio</h3>
                   <div className="p-6 rounded-xl bg-card border h-full">
                     <p className="text-xs text-muted-foreground mb-4">
-                      Click any value stream for what the application consists of, main players and specific applications.
+                      Value streams identified in the IEA and Gridworks reviews. Click any stream for what the application consists of, main players and specific applications.
                     </p>
-                    <div className="space-y-4">
+                    <div className="space-y-2">
                       {revenueStreamDetails.map((stream, index) => {
                         const StreamIcon = iconMap[stream.icon] || Zap;
                         return (
@@ -136,24 +136,13 @@ export default function MarketsPage() {
                               initial={{ opacity: 0, x: -20 }}
                               animate={{ opacity: 1, x: 0 }}
                               transition={{ duration: 0.4, delay: index * 0.1 }}
-                              className="w-full text-left rounded-lg p-2 -m-2 hover:bg-muted/50 transition-colors"
+                              className="w-full text-left rounded-lg border bg-background/40 p-3 hover:bg-muted/50 transition-colors"
                             >
-                              <div className="flex justify-between mb-1 gap-3">
-                                <div className="flex items-center gap-2 min-w-0">
-                                  <div className={`w-6 h-6 shrink-0 rounded-md bg-gradient-to-br ${stream.color} flex items-center justify-center`}>
-                                    <StreamIcon className="w-3.5 h-3.5 text-primary-foreground" />
-                                  </div>
-                                  <span className="text-sm font-medium text-foreground">{stream.name}</span>
+                              <div className="flex items-center gap-2 min-w-0">
+                                <div className={`w-6 h-6 shrink-0 rounded-md bg-gradient-to-br ${stream.color} flex items-center justify-center`}>
+                                  <StreamIcon className="w-3.5 h-3.5 text-primary-foreground" />
                                 </div>
-                                <span className="text-sm font-bold text-primary shrink-0">{stream.share}%</span>
-                              </div>
-                              <div className="h-3 bg-muted rounded-full overflow-hidden">
-                                <motion.div
-                                  initial={{ width: 0 }}
-                                  animate={{ width: `${stream.share}%` }}
-                                  transition={{ duration: 0.8, delay: index * 0.1 + 0.3 }}
-                                  className="h-full bg-gradient-to-r from-primary to-accent rounded-full"
-                                />
+                                <span className="text-sm font-medium text-foreground">{stream.name}</span>
                               </div>
                               <p className="text-xs text-muted-foreground mt-1.5">{stream.tagline}</p>
                             </motion.button>
