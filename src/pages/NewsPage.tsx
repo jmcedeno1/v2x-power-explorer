@@ -85,6 +85,7 @@ function extractDomain(d: NewsDoc): string {
 
 export default function NewsPage() {
   const [refreshing, setRefreshing] = useState(false);
+  const [lens, setLens] = useState<'topic' | 'outcome'>('topic');
   const { data: news = [], isLoading, refetch } = useQuery({ queryKey: ['news-gdelt'], queryFn: fetchNews });
 
   const refresh = async () => {
@@ -143,6 +144,7 @@ export default function NewsPage() {
     const topicMonths = new Map<string, Map<string, number>>();
     const topicSources = new Map<string, Map<string, number>>();
     const topicArticles = new Map<string, NewsDoc[]>();
+    const topicAll = new Map<string, NewsDoc[]>();
 
     for (const n of news) {
       const month = n.date ? n.date.slice(0, 7) : null;
@@ -163,6 +165,9 @@ export default function NewsPage() {
         const arr = topicArticles.get(t.name) ?? [];
         if (arr.length < 3) arr.push(n);
         topicArticles.set(t.name, arr);
+        const all = topicAll.get(t.name) ?? [];
+        all.push(n);
+        topicAll.set(t.name, all);
       }
     }
 
@@ -177,7 +182,8 @@ export default function NewsPage() {
           .slice(0, 3)
           .map(([n, c]) => ({ name: n, count: c as number }));
         const articles = topicArticles.get(name) ?? [];
-        return { name, count, trend, sources, articles };
+        const outcomes = outcomesFor(topicAll.get(name) ?? [], 4);
+        return { name, count, trend, sources, articles, outcomes };
       });
 
     const last30 = news.filter((n) => {
@@ -201,7 +207,10 @@ export default function NewsPage() {
       }))
       .sort((a, b) => b.points - a.points);
 
-    return { total, topics, last30, uniqueDomains, uniqueCountries, hnStories };
+    const hero = rankHero(news);
+    const outcomeGroups = groupOutcomes(news);
+
+    return { total, topics, last30, uniqueDomains, uniqueCountries, hnStories, hero, outcomeGroups };
   }, [news]);
 
   return (
