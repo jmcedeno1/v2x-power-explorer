@@ -2,13 +2,12 @@
 // Sources: IEA, "Vehicle-to-Grid Technology" (https://www.iea.org/reports/vehicle-to-grid-technology)
 // and T. Lipman for Gridworks, "Vehicle-Grid Integration Value Study Literature Review Summary",
 // v3, Feb 2019 (https://gridworks.org/wp-content/uploads/2019/03/VGI-Value-Literature-Review-Final.pdf).
-// Share of stacked revenue reflects the relative ordering reported in those reviews, with
-// frequency regulation the single most lucrative application (Astute Analytica: 21.40% share).
+// Only the value streams named in those references are listed. No share-of-revenue split is
+// shown because neither reference publishes a verifiable revenue breakdown across streams.
 
 export type RevenueStreamDetail = {
   id: string;
   name: string;
-  share: number;
   icon: string;
   color: string;
   tagline: string;
@@ -39,7 +38,6 @@ export const revenueStreamDetails: RevenueStreamDetail[] = [
   {
     id: 'frequency-regulation',
     name: 'Frequency regulation',
-    share: 21,
     icon: 'Activity',
     color: 'from-primary to-accent',
     tagline: 'Fastest-paying wholesale product and the most studied V2G value stream',
@@ -78,7 +76,6 @@ export const revenueStreamDetails: RevenueStreamDetail[] = [
   {
     id: 'demand-charge-management',
     name: 'Demand-charge management',
-    share: 20,
     icon: 'Zap',
     color: 'from-energy-blue to-energy-teal',
     tagline: 'Behind-the-meter savings that need no market registration',
@@ -115,7 +112,6 @@ export const revenueStreamDetails: RevenueStreamDetail[] = [
   {
     id: 'energy-arbitrage',
     name: 'Energy arbitrage / TOU optimisation',
-    share: 18,
     icon: 'ArrowUpDown',
     color: 'from-energy-teal to-energy-green',
     tagline: 'Buy cheap, discharge or avoid expensive - the most consumer-visible stream',
@@ -153,7 +149,6 @@ export const revenueStreamDetails: RevenueStreamDetail[] = [
   {
     id: 'capacity-demand-response',
     name: 'Capacity / demand response',
-    share: 16,
     icon: 'Shield',
     color: 'from-energy-amber to-primary',
     tagline: 'Paid to be available when the system is tight',
@@ -190,7 +185,6 @@ export const revenueStreamDetails: RevenueStreamDetail[] = [
   {
     id: 'renewables-integration',
     name: 'Renewables integration / ramping',
-    share: 13,
     icon: 'Sun',
     color: 'from-accent to-primary',
     tagline: 'Duck-curve mitigation: the largest system-level value pool',
@@ -227,7 +221,6 @@ export const revenueStreamDetails: RevenueStreamDetail[] = [
   {
     id: 'backup-resilience',
     name: 'V2H / V2B backup and resilience',
-    share: 12,
     icon: 'Home',
     color: 'from-energy-green to-energy-teal',
     tagline: 'High willingness-to-pay, hard to monetise as a market product',
@@ -264,4 +257,4 @@ export const revenueStreamDetails: RevenueStreamDetail[] = [
 ];
 
 export const revenueStackingNote =
-  'Shares indicate the relative contribution of each stream to a stacked V2G revenue portfolio, not the size of an addressable market. Realised value is highly site- and market-specific: reviews of real pilots find net revenue positive in many cases but strongly dependent on fleet size, tariff design and market access costs.';
+  'These are the value streams identified in the IEA and Gridworks reviews. No share-of-revenue split is shown: neither reference publishes a verifiable breakdown, and realised value is highly site- and market-specific, depending on fleet size, tariff design and market access costs.';
