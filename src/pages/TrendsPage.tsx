@@ -199,7 +199,23 @@ export default function TrendsPage() {
           </Card>
         </div>
 
+        {/* Search Evidence */}
+        <section className="mb-6">
+          <h3 className="text-lg font-semibold text-foreground mb-4">Search Evidence</h3>
+          <div className="p-6 rounded-xl bg-gradient-to-br from-primary/5 to-accent/5 border border-primary/20">
+            <ul className="space-y-3">
+              {SEARCH_EVIDENCE.map((item, i) => (
+                <li key={i} className="flex items-start gap-3">
+                  <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2 shrink-0" />
+                  <p className="text-sm text-foreground" dangerouslySetInnerHTML={{ __html: item }} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
         {/* Commonly searched queries */}
+
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-base">Commonly searched queries</CardTitle>
