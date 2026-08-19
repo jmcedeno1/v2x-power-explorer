@@ -6,10 +6,11 @@
 
 export const marketsContent = {
   metrics: [
-    { title: 'Global V2X Market (2025)', value: '$5.75B', subtitle: '→ $19.5B by 2030 (CAGR 27.6%)', icon: 'DollarSign', color: 'from-primary to-accent' },
-    { title: 'Bidirectional Charger SW', value: '$0.6B', subtitle: '→ $8.2B by 2035 (CAGR 29.8%)', icon: 'TrendingUp', color: 'from-energy-blue to-energy-teal' },
-    { title: 'Bidirectional Charger HW', value: '$1.4B', subtitle: '→ $14.5B by 2035 (CAGR 21.3%)', icon: 'BarChart3', color: 'from-energy-teal to-energy-green' },
-    { title: 'US V2X Capacity', value: '20 MW', subtitle: '2024, doubling to 40 MW in 2025', icon: 'Zap', color: 'from-energy-amber to-primary' },
+    { title: 'Global V2G Market (2025)', value: '$6.27B', subtitle: '→ $65.84B by 2035 (CAGR 26.5%)', icon: 'DollarSign', color: 'from-primary to-accent' },
+    { title: 'North America Share', value: '38.22%', subtitle: 'Largest regional V2G market (Astute Analytica)', icon: 'BarChart3', color: 'from-energy-blue to-energy-teal' },
+    { title: 'Frequency Regulation', value: '21.40%', subtitle: 'Most lucrative V2G application by share', icon: 'TrendingUp', color: 'from-energy-teal to-energy-green' },
+    { title: 'US School Bus Capacity', value: '1.2 GW', subtitle: '10,000+ electric school buses by late 2025', icon: 'Zap', color: 'from-energy-amber to-primary' },
+
   ],
   // Share of V2G pilot deployments by charger type — the only quantitative
   // technical split cited in the source documents (EV_Bid §4.2).
