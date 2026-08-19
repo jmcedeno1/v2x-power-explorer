@@ -511,3 +511,84 @@ function OutcomeLens({ groups }: { groups: Map<Outcome['type'], Outcome[]> }) {
     </div>
   );
 }
+
+function OutcomeTopicCard({ group }: { group: TopicGroup }) {
+  const meta = OUTCOME_TOPIC_META[group.topic];
+  return (
+    <Card className="flex flex-col">
+      <CardHeader className="pb-3">
+        <div className="flex items-start justify-between gap-2">
+          <div>
+            <CardTitle className={cn('text-sm leading-snug', meta.accent)}>{group.label}</CardTitle>
+            <div className="text-xs text-muted-foreground mt-0.5">{meta.description}</div>
+          </div>
+          <Badge variant="secondary" className="shrink-0">{group.count}</Badge>
+        </div>
+      </CardHeader>
+      <CardContent className="pt-0 space-y-3">
+        {/* Primary visual: coverage timeline for this outcome */}
+        <div>
+          <ResponsiveContainer width="100%" height={90}>
+            <AreaChart data={group.trend} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
+              <XAxis dataKey="month" hide />
+              <YAxis hide allowDecimals={false} />
+              <Tooltip
+                contentStyle={{ fontSize: 11 }}
+                formatter={(v: number) => [v, 'articles']}
+                labelFormatter={(l) => String(l)}
+              />
+              <Area
+                type="monotone"
+                dataKey="count"
+                stroke={meta.stroke}
+                fill={meta.stroke}
+                fillOpacity={0.18}
+                strokeWidth={1.5}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+          {group.peak.month && (
+            <div className="text-[10px] uppercase tracking-wide text-muted-foreground">
+              Peak coverage {group.peak.month} · {group.peak.count} articles
+            </div>
+          )}
+        </div>
+
+        {group.sources.length > 0 && (
+          <div className="flex flex-wrap gap-1">
+            {group.sources.map((s) => (
+              <Badge key={s.name} variant="outline" className="text-[11px] font-normal">
+                {s.name} <span className="ml-1 text-muted-foreground">{s.count}</span>
+              </Badge>
+            ))}
+          </div>
+        )}
+
+        {group.articles.length > 0 && (
+          <div>
+            <div className="text-[11px] uppercase tracking-wide text-muted-foreground mb-1">
+              Example headlines
+            </div>
+            <ul className="space-y-1">
+              {group.articles.map((a) => (
+                <li key={a.id} className="text-xs leading-snug">
+                  <a
+                    href={a.url ?? '#'}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="text-foreground hover:text-primary line-clamp-2"
+                  >
+                    {a.title}
+                  </a>
+                  <div className="text-[10px] text-muted-foreground">
+                    {extractDomain(a as NewsDoc)}{a.date ? ` · ${a.date}` : ''}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
