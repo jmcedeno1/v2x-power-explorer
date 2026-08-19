@@ -1195,13 +1195,6 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
       { title: 'DriVe2X - Project Fact Sheet', url: 'https://cordis.europa.eu/project/id/101056934', source: 'CORDIS (Horizon Europe)' },
     ],
   },
-  'electric school bus v2g project (caiso/southern california edison)': {
-    references: [
-      { title: 'Case study (USA): Electric school bus vehicle-to-grid pilot in California', url: 'https://www.ofgem.gov.uk/publications/case-study-usa-electric-school-bus-vehicle-grid-pilot-california', source: 'Ofgem' },
-      { title: 'Vehicle-to-Grid Electric School Bus Commercialization Project', url: 'https://www.energy.gov/eere/vehicles/articles/vehicle-grid-electric-school-bus-commercialization-project', source: 'U.S. DOE' },
-      { title: 'SCE Receives State Approval for Four Electric Transportation Pilots', url: 'https://energized.edison.com/stories/sce-receives-state-approval-for-four-electric-transportation-pilots', source: 'Southern California Edison' },
-    ],
-  },
   'terni city centre (drive2x)': {
     references: [
       { title: 'Terni City Centre (V2G) - Demo Site', url: 'https://drive2x.eu/demo_sites/terni-city-centre-v2g/', source: 'DriVe2X' },
