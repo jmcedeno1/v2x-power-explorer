@@ -232,11 +232,13 @@ export default function NewsPage() {
     const byMonth = new Map<string, number>();
     const topicCounts = new Map<string, number>();
     const topicMonths = new Map<string, Map<string, number>>();
+    const topicQuarters = new Map<string, Map<string, number>>();
     const topicSources = new Map<string, Map<string, number>>();
     const topicArticles = new Map<string, NewsDoc[]>();
     // topic -> subtopic -> quarter -> count
     const topicSubs = new Map<string, Map<string, Map<string, number>>>();
     const allQuarters = new Set<string>();
+
 
     for (const n of news) {
       const month = n.date ? n.date.slice(0, 7) : null;
@@ -254,6 +256,12 @@ export default function NewsPage() {
           m.set(month, (m.get(month) ?? 0) + 1);
           topicMonths.set(t.name, m);
         }
+        if (quarter) {
+          const q = topicQuarters.get(t.name) ?? new Map<string, number>();
+          q.set(quarter, (q.get(quarter) ?? 0) + 1);
+          topicQuarters.set(t.name, q);
+        }
+
         const s = topicSources.get(t.name) ?? new Map<string, number>();
         s.set(dom, (s.get(dom) ?? 0) + 1);
         topicSources.set(t.name, s);
@@ -304,6 +312,40 @@ export default function NewsPage() {
         return { name, count, trend, sources, articles, subNames, subSeries, subTotals };
       });
 
+    // Summary view: how the leading topics evolve quarter over quarter, plus
+    // momentum (latest quarter vs the previous one) for narrative insights.
+    const leadTopics = topics.slice(0, 6).map((t) => t.name);
+    const summarySeries = quarters.map((q) => {
+      const row: Record<string, string | number> = { quarter: q };
+      for (const name of leadTopics) row[name] = topicQuarters.get(name)?.get(q) ?? 0;
+      row.Total = leadTopics.reduce((a, n) => a + (topicQuarters.get(n)?.get(q) ?? 0), 0);
+      return row;
+    });
+    const lastQ = quarters[quarters.length - 1];
+    const prevQ = quarters[quarters.length - 2];
+    const momentum = topics
+      .slice(0, 10)
+      .map((t) => {
+        const now = topicQuarters.get(t.name)?.get(lastQ) ?? 0;
+        const before = topicQuarters.get(t.name)?.get(prevQ) ?? 0;
+        return { name: t.name, now, before, delta: now - before };
+      })
+      .sort((a, b) => b.delta - a.delta);
+    const summary = {
+      series: summarySeries,
+      topics: leadTopics,
+      lastQ,
+      prevQ,
+      rising: momentum.slice(0, 3),
+      cooling: [...momentum].reverse().slice(0, 3),
+      leader: topics[0],
+      leadShare: total ? Math.round(((topics[0]?.count ?? 0) / total) * 100) : 0,
+      concentration: total
+        ? Math.round((topics.slice(0, 3).reduce((a, t) => a + t.count, 0) / total) * 100)
+        : 0,
+    };
+
+
     const last30 = news.filter((n) => {
       if (!n.date) return false;
       const dt = new Date(n.date).getTime();
@@ -325,7 +367,7 @@ export default function NewsPage() {
       }))
       .sort((a, b) => b.points - a.points);
 
-    return { total, topics, last30, uniqueDomains, uniqueCountries, hnStories };
+    return { total, topics, last30, uniqueDomains, uniqueCountries, hnStories, summary };
   }, [news]);
 
   return (
@@ -367,7 +409,85 @@ export default function NewsPage() {
           </Card>
         ) : (
           <>
+            {/* Coverage summary */}
+            <Card className="mb-8">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-base">Coverage summary: leading topics by quarter</CardTitle>
+                <p className="text-xs text-muted-foreground">
+                  Quarterly article counts for the six most covered topics, from {stats.total} ingested items
+                </p>
+              </CardHeader>
+              <CardContent className="grid lg:grid-cols-3 gap-6">
+                <div className="lg:col-span-2">
+                  <ResponsiveContainer width="100%" height={280}>
+                    <LineChart data={stats.summary.series} margin={{ top: 8, right: 8, left: -18, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                      <XAxis dataKey="quarter" tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }} />
+                      <YAxis allowDecimals={false} tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }} />
+                      <Tooltip contentStyle={{ fontSize: 11, background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: 8 }} />
+                      {stats.summary.topics.map((name, i) => (
+                        <Line
+                          key={name}
+                          type="monotone"
+                          dataKey={name}
+                          stroke={SUB_COLORS[i % SUB_COLORS.length]}
+                          strokeWidth={2}
+                          dot={{ r: 2 }}
+                        />
+                      ))}
+                    </LineChart>
+                  </ResponsiveContainer>
+                  <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2">
+                    {stats.summary.topics.map((name, i) => (
+                      <div key={name} className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
+                        <span className="w-3 h-0.5 rounded" style={{ background: SUB_COLORS[i % SUB_COLORS.length] }} />
+                        {name}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="space-y-3 text-sm">
+                  <div>
+                    <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">Where coverage concentrates</div>
+                    <p className="text-muted-foreground">
+                      {stats.summary.leader?.name} leads with {stats.summary.leadShare}% of all articles; the top three
+                      topics account for {stats.summary.concentration}% of coverage.
+                    </p>
+                  </div>
+                  <div>
+                    <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">
+                      Rising in {stats.summary.lastQ}
+                    </div>
+                    <ul className="space-y-1">
+                      {stats.summary.rising.map((r) => (
+                        <li key={r.name} className="flex items-center justify-between gap-2">
+                          <span className="text-muted-foreground">{r.name}</span>
+                          <Badge variant="secondary" className="shrink-0">
+                            {r.delta >= 0 ? '+' : ''}{r.delta} vs {stats.summary.prevQ}
+                          </Badge>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">Cooling off</div>
+                    <ul className="space-y-1">
+                      {stats.summary.cooling.map((r) => (
+                        <li key={r.name} className="flex items-center justify-between gap-2">
+                          <span className="text-muted-foreground">{r.name}</span>
+                          <Badge variant="outline" className="shrink-0">
+                            {r.delta >= 0 ? '+' : ''}{r.delta}
+                          </Badge>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Topic breakdown cards */}
+
             <div className="mb-4 flex items-center gap-2">
               <TrendingUp className="w-4 h-4 text-primary" />
               <h2 className="text-base font-semibold">Most frequent topics in coverage</h2>
