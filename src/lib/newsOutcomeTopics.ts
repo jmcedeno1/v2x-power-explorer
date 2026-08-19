@@ -129,11 +129,11 @@ export function classifyArticle(a: TopicArticle): OutcomeTopic[] {
   const full = `${title} ${a.abstract ?? ''}`;
   const topics = new Set<OutcomeTopic>();
 
-  // Broad/over-matching topics are restricted to the title.
-  if (RANGE_RE.test(title)) topics.add('range');
+  // Title first; fall back to the summary so sparse abstracts still classify.
+  if (RANGE_RE.test(title) || RANGE_RE.test(full)) topics.add('range');
   if (POWER_RE.test(full)) topics.add('power');
-  if (COMPENSATION_RE.test(title)) topics.add('compensation');
-  if (DEPLOYMENTS_RE.test(title)) topics.add('deployments');
+  if (COMPENSATION_RE.test(title) || COMPENSATION_RE.test(full)) topics.add('compensation');
+  if (DEPLOYMENTS_RE.test(title) || DEPLOYMENTS_RE.test(full)) topics.add('deployments');
   if (PILOTS_RE.test(full)) topics.add('pilots');
 
   const isSaving = REDUCTION_RE.test(full) && BILL_RE.test(full);
