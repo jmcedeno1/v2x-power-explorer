@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { Button } from '@/components/ui/button';
 import { Activity, TrendingUp, TrendingDown, Minus, Info } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { ModuleHeader } from '@/components/ui/module-header';
@@ -297,38 +298,77 @@ function FilterSelect({
   );
 }
 
+const PAGE_SIZE = 10;
+
 function QueryTable({ rows, type }: { rows: Row[]; type: 'top' | 'rising' }) {
+  const [page, setPage] = useState(0);
+  useEffect(() => { setPage(0); }, [rows]);
+
   if (!rows?.length) return <div className="text-sm text-muted-foreground">No data.</div>;
   const max = Math.max(...rows.map((r) => r.interest), 1);
+  const pageCount = Math.ceil(rows.length / PAGE_SIZE);
+  const current = Math.min(page, pageCount - 1);
+  const visible = rows.slice(current * PAGE_SIZE, current * PAGE_SIZE + PAGE_SIZE);
+
   return (
-    <div className="border rounded-lg overflow-hidden">
-      <div className="grid grid-cols-[40px_1fr_180px_120px] gap-3 px-4 py-2 bg-muted/40 text-[11px] uppercase tracking-wide text-muted-foreground">
-        <div>#</div>
-        <div>Query</div>
-        <div className="text-right">Search interest</div>
-        <div className="text-right">{type === 'top' ? 'Change (YoY)' : 'Growth'}</div>
-      </div>
-      {rows.map((r) => (
-        <div
-          key={`${r.rank}-${r.query}`}
-          className="grid grid-cols-[40px_1fr_180px_120px] gap-3 px-4 py-2 items-center text-sm border-t"
-        >
-          <div className="text-muted-foreground tabular-nums">{r.rank}</div>
-          <div className="truncate">{r.query}</div>
-          <div className="flex items-center gap-2 justify-end">
-            <div className="w-24 h-1.5 bg-muted rounded overflow-hidden">
-              <div className="h-full bg-primary" style={{ width: `${(r.interest / max) * 100}%` }} />
+    <div>
+      <div className="border rounded-lg overflow-hidden">
+        <div className="grid grid-cols-[40px_1fr_180px_120px] gap-3 px-4 py-2 bg-muted/40 text-[11px] uppercase tracking-wide text-muted-foreground">
+          <div>#</div>
+          <div>Query</div>
+          <div className="text-right">Search interest</div>
+          <div className="text-right">{type === 'top' ? 'Change (YoY)' : 'Growth'}</div>
+        </div>
+        {visible.map((r) => (
+          <div
+            key={`${r.rank}-${r.query}`}
+            className="grid grid-cols-[40px_1fr_180px_120px] gap-3 px-4 py-2 items-center text-sm border-t"
+          >
+            <div className="text-muted-foreground tabular-nums">{r.rank}</div>
+            <div className="truncate">{r.query}</div>
+            <div className="flex items-center gap-2 justify-end">
+              <div className="w-24 h-1.5 bg-muted rounded overflow-hidden">
+                <div className="h-full bg-primary" style={{ width: `${(r.interest / max) * 100}%` }} />
+              </div>
+              <span className="tabular-nums text-xs w-8 text-right">{r.interest}</span>
             </div>
-            <span className="tabular-nums text-xs w-8 text-right">{r.interest}</span>
+            <div className="text-right">
+              <ChangeBadge value={r.change} />
+            </div>
           </div>
-          <div className="text-right">
-            <ChangeBadge value={r.change} />
+        ))}
+      </div>
+
+      {pageCount > 1 && (
+        <div className="flex items-center justify-between mt-3">
+          <span className="text-xs text-muted-foreground">
+            Showing {current * PAGE_SIZE + 1}-{Math.min((current + 1) * PAGE_SIZE, rows.length)} of {rows.length}
+          </span>
+          <div className="flex items-center gap-1">
+            <Button variant="outline" size="sm" disabled={current === 0} onClick={() => setPage(current - 1)}>
+              Previous
+            </Button>
+            {Array.from({ length: pageCount }).map((_, i) => (
+              <Button
+                key={i}
+                variant={i === current ? 'default' : 'ghost'}
+                size="sm"
+                className="w-8 px-0"
+                onClick={() => setPage(i)}
+              >
+                {i + 1}
+              </Button>
+            ))}
+            <Button variant="outline" size="sm" disabled={current >= pageCount - 1} onClick={() => setPage(current + 1)}>
+              Next
+            </Button>
           </div>
         </div>
-      ))}
+      )}
     </div>
   );
 }
+
 
 function ChangeBadge({ value }: { value: string }) {
   const v = (value || '').trim();
