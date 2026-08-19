@@ -256,6 +256,12 @@ export default function NewsPage() {
           m.set(month, (m.get(month) ?? 0) + 1);
           topicMonths.set(t.name, m);
         }
+        if (quarter) {
+          const q = topicQuarters.get(t.name) ?? new Map<string, number>();
+          q.set(quarter, (q.get(quarter) ?? 0) + 1);
+          topicQuarters.set(t.name, q);
+        }
+
         const s = topicSources.get(t.name) ?? new Map<string, number>();
         s.set(dom, (s.get(dom) ?? 0) + 1);
         topicSources.set(t.name, s);
