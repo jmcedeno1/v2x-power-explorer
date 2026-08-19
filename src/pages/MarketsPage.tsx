@@ -123,9 +123,6 @@ export default function MarketsPage() {
                 <div>
                   <h3 className="text-lg font-semibold text-foreground mb-4">Revenue Stacking Portfolio</h3>
                   <div className="p-6 rounded-xl bg-card border h-full">
-                    <p className="text-xs text-muted-foreground mb-4">
-                      Value streams identified in the IEA and Gridworks reviews. Click any stream for what the application consists of, main players and specific applications.
-                    </p>
                     <div className="space-y-2">
                       {revenueStreamDetails.map((stream, index) => {
                         const StreamIcon = iconMap[stream.icon] || Zap;
@@ -150,7 +147,7 @@ export default function MarketsPage() {
                         );
                       })}
                     </div>
-                    <p className="text-xs text-muted-foreground mt-5 pt-4 border-t leading-relaxed">{revenueStackingNote}</p>
+                    
                   </div>
                 </div>
               </div>

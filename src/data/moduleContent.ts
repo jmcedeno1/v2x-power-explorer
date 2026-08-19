@@ -31,12 +31,13 @@ export const marketsContent = {
   ],
 
   evidence: [
-    'Global V2X market projected to grow from <b>$5.75B in 2025 to $19.5B by 2030</b> (CAGR 27.6%). (V2X SOTA Report, Executive Summary)',
-    '<b>ABB E-mobility and Alpitronic</b> each surpassed 4.5 TWh of energy delivered by late 2025; <b>Kempower</b> shows the strongest growth in depot charging for buses and commercial vehicles. (V2X SOTA §4.2)',
-    'Octopus Energy <b>Powerloop (UK)</b> demonstrated that residential participants can earn <b>up to £800/year</b> through arbitrage and grid services with a Nissan Leaf and bidirectional charger. (EV_Bid §4.1)',
-    '<b>DC bidirectional chargers dominate the commercial V2G market (>70% of pilots)</b>; AC solutions are projected to gain share in residential post-2027 as Renault and Volvo standardize on AC V2G. (EV_Bid §4.2)',
-    'North America propelled by <b>NEVI federal funding</b> mandating high-power, reliable, and increasingly V2X-capable infrastructure. (V2X SOTA §4.1)',
-    'Bifurcated market: <b>Pure Players</b> (Nuvve, Fermata Energy, The Mobility House) vs. <b>Traditional OEMs</b> (Nissan, Ford, Renault, Hyundai/Kia). (EV_Bid §4.4)',
+    'Global V2G market valued at <b>US$6.27B in 2025</b>, forecast to reach <b>US$65.84B by 2035</b> at a <b>CAGR of 26.50%</b>. (Astute Analytica, Vehicle-to-Grid Market)',
+    '<b>North America held 38.22%</b> of global V2G revenue in 2025, the largest regional share. (Astute Analytica)',
+    '<b>Frequency regulation accounted for 21.40%</b> of V2G application revenue, the single most lucrative service. (Astute Analytica)',
+    'More than <b>10,000 electric school buses</b> were ordered or deployed in the US by late 2025, representing roughly <b>1.2 GW</b> of dispatchable bidirectional capacity. (Astute Analytica)',
+    'V2G can support the grid through <b>frequency response, capacity and demand response, energy arbitrage and local network deferral</b>, with the greatest near-term value where fleets have predictable dwell times. (IEA, Vehicle-to-Grid Technology)',
+    'Realised V2G value is highly <b>site- and market-specific</b>: reviewed studies report net benefits ranging from tens of dollars to several thousand dollars per vehicle per year depending on tariff design, market access and charger cost. (Gridworks, VGI Value Literature Review, 2019)',
+    '<b>Demand-charge management</b> is the most accessible behind-the-meter value stream because it requires no wholesale market registration, whereas frequency regulation pays most but needs aggregation and market qualification. (IEA; Gridworks VGI Value Literature Review)',
   ],
 };
 
