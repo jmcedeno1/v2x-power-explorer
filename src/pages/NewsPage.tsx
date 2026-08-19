@@ -9,6 +9,8 @@ import { Badge } from '@/components/ui/badge';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { cn } from '@/lib/utils';
 import { OUTCOME_META, OUTCOME_SECTIONS, groupOutcomes, outcomesFor, rankHero, type Outcome } from '@/lib/newsOutcomes';
+import { OUTCOME_TOPIC_META, groupByOutcomeTopic, type TopicGroup } from '@/lib/newsOutcomeTopics';
+
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from 'recharts';
