@@ -1,14 +1,18 @@
 import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Newspaper, Globe, Radio, TrendingUp, ExternalLink, RefreshCw, Calendar } from 'lucide-react';
+import { Newspaper, Globe, Radio, TrendingUp, TrendingDown, Minus, ExternalLink, RefreshCw, Calendar, ChevronDown, Sparkles } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { ModuleHeader } from '@/components/ui/module-header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { cn } from '@/lib/utils';
+import { OUTCOME_META, OUTCOME_SECTIONS, groupOutcomes, outcomesFor, rankHero, type Outcome } from '@/lib/newsOutcomes';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from 'recharts';
+
 
 type NewsDoc = {
   id: string;
