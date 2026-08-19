@@ -96,7 +96,9 @@ const marketClaim = (() => {
   return m ? `${m.title}: ${m.value} ${m.subtitle ?? ''}`.trim() : null;
 })();
 
-const researchClaim = `Research output keeps climbing: ${publicationsSummary.perYear.at(-2)?.count ?? 0} papers and ${patentsSummary.perYear.at(-2)?.count ?? 0} patent records in ${publicationsSummary.peakYear}`;
+const pubPeak = publicationsSummary.perYear.find((p) => p.year === publicationsSummary.peakYear)?.count ?? 0;
+const patPeak = patentsSummary.perYear.find((p) => p.year === patentsSummary.peakYear)?.count ?? 0;
+const researchClaim = `Research output keeps climbing: ${pubPeak} papers and ${patPeak} patent records in ${publicationsSummary.peakYear}`;
 
 export default function NewsPage() {
   const [refreshing, setRefreshing] = useState(false);
