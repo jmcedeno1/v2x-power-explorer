@@ -41,6 +41,101 @@ const TOPIC_PATTERNS: { name: string; re: RegExp }[] = [
   { name: 'Charger / Hardware Vendors', re: /\b(wallbox|dcbel|enphase|emporia|fermata|the mobility house|nuvve|indra|delta)/i },
 ];
 
+// Sub-themes inside each topic - what the coverage is actually about.
+const SUBTOPIC_PATTERNS: Record<string, { name: string; re: RegExp }[]> = {
+  'V2G Pilots & Deployments': [
+    { name: 'New pilot launches', re: /\b(launch|kick[- ]?off|begins|starts|unveil)/i },
+    { name: 'Fleet / depot trials', re: /\b(fleet|depot|bus|truck|van)/i },
+    { name: 'Utility partnerships', re: /\b(utility|utilities|partner|collaborat|agreement)/i },
+    { name: 'Results & scale-up', re: /\b(result|expand|scale|success|milestone|complete)/i },
+  ],
+  'Investment & Funding': [
+    { name: 'Venture rounds', re: /\b(series [a-e]\b|round|venture|vc\b|seed)/i },
+    { name: 'Public / grant funding', re: /\b(grant|doe\b|government|public funding|subsidy|award)/i },
+    { name: 'Large capex', re: /\b(billion|\$\d{3,}|plant|factory|gigafactory)/i },
+    { name: 'M&A / partnerships', re: /\b(acquir|merger|stake|joint venture|partnership)/i },
+  ],
+  'Vehicle-to-Home (V2H)': [
+    { name: 'Backup power / outages', re: /\b(backup|outage|blackout|resilien|storm|hurricane)/i },
+    { name: 'Home energy management', re: /\b(hems|home energy|smart home|heat pump|tariff)/i },
+    { name: 'Solar + home battery', re: /\b(solar|pv\b|home battery|powerwall)/i },
+    { name: 'Products & wallboxes', re: /\b(wallbox|charger|inverter|launch|product)/i },
+  ],
+  'Vehicle-to-Grid (V2G)': [
+    { name: 'Regulation & mandates', re: /\b(regulat|mandate|rule|law|directive|ferc|ofgem|permit)/i },
+    { name: 'Agreements & partnerships', re: /\b(agreement|partner|deal|mou|contract|collaborat)/i },
+    { name: 'Market participation', re: /\b(market|frequency|ancillary|balancing|bid|revenue|earn)/i },
+    { name: 'Technology & standards', re: /\b(iso ?15118|chademo|ccs|standard|protocol|software|platform)/i },
+  ],
+  'Bidirectional Chargers': [
+    { name: 'Product launches', re: /\b(launch|unveil|introduc|new charger|available)/i },
+    { name: 'Certification & standards', re: /\b(certif|approv|ul ?9741|standard|compliance)/i },
+    { name: 'Pricing & availability', re: /\b(price|cost|\$\d|affordab|order|ship)/i },
+    { name: 'OEM integration', re: /\b(nissan|ford|hyundai|kia|bmw|volkswagen|tesla|renault|volvo|gm\b)/i },
+  ],
+  'Grid Services & Flexibility': [
+    { name: 'Frequency response', re: /\b(frequency|fcas|primary reserve|regulation service)/i },
+    { name: 'Demand response', re: /\b(demand response|peak|load shift|curtail|event)/i },
+    { name: 'Market rules & access', re: /\b(market rule|prequalif|aggregat|regulat|tariff)/i },
+    { name: 'Grid congestion', re: /\b(congestion|redispatch|constraint|capacity|connection queue)/i },
+  ],
+  'Fleet & Bus Depots': [
+    { name: 'School buses', re: /\b(school bus)/i },
+    { name: 'Transit buses', re: /\b(transit|city bus|coach|public transport)/i },
+    { name: 'Logistics & delivery', re: /\b(logistic|delivery|last[- ]mile|parcel|van)/i },
+    { name: 'Depot charging tech', re: /\b(depot|charging hub|smart charg|managed charg)/i },
+  ],
+  'Utilities & DSOs': [
+    { name: 'Utility programs', re: /\b(program|pilot|tariff|rate|enroll|incentive)/i },
+    { name: 'Grid operator rules', re: /\b(tso|iso|dso|grid operator|interconnect|prequalif)/i },
+    { name: 'Regional deployments', re: /\b(ercot|caiso|pjm|national grid|state of|county)/i },
+    { name: 'Flexibility procurement', re: /\b(procure|tender|auction|contract|flexibility market)/i },
+  ],
+  'Policy & Regulation': [
+    { name: 'Mandates & standards', re: /\b(mandate|require|standard|directive|law)/i },
+    { name: 'Incentives & subsidies', re: /\b(incentive|subsid|rebate|tax credit|grant)/i },
+    { name: 'Tariffs & market design', re: /\b(tariff|rate design|market design|net metering|pricing)/i },
+    { name: 'Permitting & interconnection', re: /\b(permit|interconnect|approval|code|inspection)/i },
+  ],
+  'Battery & Degradation': [
+    { name: 'Degradation studies', re: /\b(degrad|state of health|soh|cycl|lifetime|wear)/i },
+    { name: 'Warranty concerns', re: /\b(warrant|guarantee|liability)/i },
+    { name: 'Second-life storage', re: /\b(second[- ]life|repurpos|stationary storage|recycl)/i },
+    { name: 'Chemistry & performance', re: /\b(lfp|nmc|solid[- ]state|energy density|chemistry)/i },
+  ],
+  'Renewables Integration': [
+    { name: 'Solar pairing', re: /\b(solar|pv\b|photovoltaic|rooftop)/i },
+    { name: 'Wind & curtailment', re: /\b(wind|curtail|negative price|surplus)/i },
+    { name: 'Microgrids & islanding', re: /\b(microgrid|island|off[- ]grid|resilien)/i },
+    { name: 'Storage & balancing', re: /\b(storage|battery|balanc|flexibility|dispatch)/i },
+  ],
+  'OEMs & Automakers': [
+    { name: 'Model announcements', re: /\b(new|launch|unveil|model|202\d [a-z]+|debut)/i },
+    { name: 'Software / OTA features', re: /\b(software|ota|update|app|enable)/i },
+    { name: 'Home energy ecosystems', re: /\b(home|wallbox|energy service|ecosystem|solar)/i },
+    { name: 'Grid partnerships', re: /\b(partner|utility|aggregat|grid|pilot)/i },
+  ],
+  'Standards (ISO 15118, CHAdeMO)': [
+    { name: 'ISO 15118 / -20', re: /\b(iso ?15118|15118[- ]?20)/i },
+    { name: 'CHAdeMO & DC', re: /\b(chademo|dc\b|chaoji)/i },
+    { name: 'CCS & AC bidirectional', re: /\b(ccs|combo|ac bidirectional|type 2)/i },
+    { name: 'OCPP / interoperability', re: /\b(ocpp|open ?charge|interoperab|plug ?and ?charge)/i },
+  ],
+  'Charger / Hardware Vendors': [
+    { name: 'Product releases', re: /\b(launch|release|unveil|new|announc)/i },
+    { name: 'Certification', re: /\b(certif|ul ?9741|approv|listed)/i },
+    { name: 'Partnerships', re: /\b(partner|deal|agreement|collaborat|integrat)/i },
+    { name: 'Funding & growth', re: /\b(funding|raise|round|expand|invest)/i },
+  ],
+};
+
+const SUB_COLORS = [
+  'hsl(var(--primary))',
+  'hsl(var(--energy-amber))',
+  'hsl(var(--energy-blue))',
+  'hsl(var(--energy-green))',
+];
+
 const COMPANIES = ['Nuvve', 'Wallbox', 'Fermata', 'The Mobility House', 'dcbel', 'Enphase', 'ChargePoint', 'Emporia', 'Indra'];
 
 const RELEVANCE_RE = /\b(v2g|v2h|v2b|v2l|v2x|vehicle[- ]to[- ](grid|home|building|load|everything|x)|bidirectional (charg|ev|inverter|power)|two[- ]way charg|reverse charg)\b/i;
