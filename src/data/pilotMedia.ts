@@ -1101,13 +1101,6 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
     ],
     partnerLead: 'Lawrence Berkeley National Laboratory (DER-CAM and project lead); Bosch Software Innovations (eMobility Solution); Akuacom (OpenADR DRAS); Olivine (regulatory and interconnection); U.S. DoD ESTCP; California Energy Commission; Southern California Edison; CAISO.',
   },
-  'invent': {
-    references: [
-      { title: 'INVENT - UCSD / Nissan / Nuvve', url: 'https://www.v2g-hub.com/projects/invent-ucsd-nissan-nuvve/', source: 'V2G Hub' },
-      { title: 'Nuvve and UC San Diego to Demonstrate Vehicle-to-Grid Technology Through Energy Commission Grant', url: 'https://today.ucsd.edu/story/nuvve_and_uc_san_diego_to_demonstrate_vehicle_to_grid_technology', source: 'UC San Diego' },
-      { title: 'Nuvve Announces Vehicle-to-Grid (V2G) Pilot Programs', url: 'https://insideevs.com/news/341858/nuvve-announces-vehicle-to-grid-v2g-pilot-programs/', source: 'InsideEVs' },
-    ],
-  },
   'jumpsmart maui': {
     references: [
       { title: 'JUMPSmartMaui Announces Successful Completion of Project', url: 'https://mauinow.com/2017/05/05/jumpsmartmaui-announces-successful-completion-of-project/', source: 'Maui Now', date: '2017' },
