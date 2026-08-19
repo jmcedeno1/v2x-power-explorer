@@ -368,6 +368,51 @@ export default function NewsPage() {
           </Card>
         ) : (
           <>
+            {/* News Evidence */}
+            <section className="mb-10">
+              <h3 className="text-lg font-semibold text-foreground mb-4">News Evidence</h3>
+              <div className="p-6 rounded-xl bg-gradient-to-br from-primary/5 to-accent/5 border border-primary/20">
+                <ul className="space-y-3">
+                  <li className="flex items-start gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
+                    <p className="text-sm text-foreground"><strong>News is driven by business models, not engineering:</strong> <strong>V2G is the biggest cluster (68 articles, 35%)</strong>, where <strong>"Market participation" (25) dwarfs regulation (2) and technology (2)</strong>. <span className="text-muted-foreground">(News &amp; Media)</span></p>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
+                    <p className="text-sm text-foreground"><strong>Coverage is accelerating</strong> — sub-theme timelines peak in <strong>2026 Q3</strong>, with <strong>16 articles (8%) in the last 30 days</strong>, a leading signal ahead of market and pilot data. <span className="text-muted-foreground">(News &amp; Media)</span></p>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
+                    <p className="text-sm text-foreground"><strong>Automakers set the agenda:</strong> <strong>OEMs are the 2nd-largest cluster (52 articles, 27%)</strong>, led by <strong>GM (250,000 EVs, ~$2,750/vehicle, $7B/yr grid savings)</strong> and <strong>Hyundai (₩78.5tn saved)</strong>. <span className="text-muted-foreground">(The Cool Down/MSN 2026-08-03; pv magazine USA 2026-07-29; Herald Business 2026-07-08)</span></p>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
+                    <p className="text-sm text-foreground">The dominant frame is <strong>owner compensation as the adoption gate</strong>, reframing the market's value range as a consumer-incentive question. <span className="text-muted-foreground">(The Cool Down/MSN 2026-08-03)</span></p>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
+                    <p className="text-sm text-foreground"><strong>Regulation is under-covered relative to its market weight</strong> (only <strong>2 of 68 V2G items</strong>); the <strong>EU V2G mandate is the loudest policy signal</strong>. <span className="text-muted-foreground">(heise online 2026-08-03)</span></p>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
+                    <p className="text-sm text-foreground">A parallel <strong>home-energy narrative is building</strong> across <strong>Bidirectional Chargers (32)</strong>, <strong>V2H (27)</strong> and <strong>Charger/Hardware Vendors (19)</strong>, led by product launches and backup-power resilience. <span className="text-muted-foreground">(autoevolution, MSN, techtimes)</span></p>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
+                    <p className="text-sm text-foreground"><strong>Pilots corroborate the fleet thesis</strong> — Fleet &amp; Bus Depots and V2G Pilots clusters are led by <strong>electric school buses</strong>. <span className="text-muted-foreground">(Electrek 2025-03-27; news.ycombinator.com 2025-10-21)</span></p>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
+                    <p className="text-sm text-foreground"><strong>Still pre-mainstream:</strong> only <strong>3 countries and 53 outlets</strong>, with <strong>Hacker News the top source in the two largest clusters</strong>. <span className="text-muted-foreground">(News &amp; Media, N=195)</span></p>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
+                    <p className="text-sm text-foreground"><strong>Blind spots:</strong> <strong>Battery &amp; Degradation shows "no sub-theme signal,"</strong> and <strong>Investment &amp; Funding and Renewables Integration stay small</strong> — both material to the market case. <span className="text-muted-foreground">(News &amp; Media)</span></p>
+                  </li>
+                </ul>
+              </div>
+            </section>
+
             {/* Topic breakdown cards */}
 
             <div className="mb-4 flex items-center gap-2">
