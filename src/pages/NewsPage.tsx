@@ -1,46 +1,11 @@
 import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
-import {
-  Newspaper,
-  Radio,
-  TrendingUp,
-  TrendingDown,
-  Minus,
-  ExternalLink,
-  RefreshCw,
-  Zap,
-  Flame,
-  Users,
-  MessageSquare,
-  ArrowRight,
-  ScanSearch,
-  Sparkles,
-} from 'lucide-react';
+import { Newspaper, Globe, Radio, TrendingUp, ExternalLink, RefreshCw, Calendar } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { ModuleHeader } from '@/components/ui/module-header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
-import {
-  buildActorMoves,
-  buildCommunityThreads,
-  buildMomentum,
-  buildNarratives,
-  buildSignalRows,
-  domainOf,
-  type CommunityThread,
-  type Direction,
-  type Narrative,
-  type NewsItem,
-  type SignalRow,
-} from '@/lib/newsNarratives';
-import { rankHero, type Outcome } from '@/lib/newsOutcomes';
-import { marketsContent } from '@/data/moduleContent';
-import { publicationsSummary } from '@/data/publicationsSummary';
-import { patentsSummary } from '@/data/patentsSummary';
-
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from 'recharts';
@@ -56,6 +21,27 @@ type NewsDoc = {
   countries: string[] | null;
   raw: any;
 };
+
+// Topics detected from article titles. Grouped so charts communicate more than
+// generic terms — each group counts an article once per group.
+const TOPIC_PATTERNS: { name: string; re: RegExp }[] = [
+  { name: 'V2G Pilots & Deployments', re: /\b(pilot|trial|deploy|launch|rollout|demonstrat)/i },
+  { name: 'Investment & Funding', re: /\b(invest|funding|raise|series [a-e]\b|round|million|billion|\$\d)/i },
+  { name: 'Vehicle-to-Home (V2H)', re: /\b(v2h|vehicle[- ]to[- ]home|home backup|power outage|blackout)/i },
+  { name: 'Vehicle-to-Grid (V2G)', re: /\b(v2g|vehicle[- ]to[- ]grid)/i },
+  { name: 'Bidirectional Chargers', re: /\b(bidirectional|two[- ]way|reverse)\b.*(charg|inverter|power)/i },
+  { name: 'Grid Services & Flexibility', re: /\b(grid service|flexibility|frequency|balancing|ancillary|redispatch|demand response)/i },
+  { name: 'Fleet & Bus Depots', re: /\b(fleet|bus depot|school bus|logistics|delivery)/i },
+  { name: 'Utilities & DSOs', re: /\b(utility|utilities|dso|tso|grid operator|iso[- ]ne|ercot|caiso)/i },
+  { name: 'Policy & Regulation', re: /\b(regulation|policy|tariff|incentive|subsidy|mandate|ferc|doe)/i },
+  { name: 'Battery & Degradation', re: /\b(battery|degradation|state of health|soh|cycl|second[- ]life)/i },
+  { name: 'Renewables Integration', re: /\b(solar|wind|renewable|pv|photovoltaic|microgrid)/i },
+  { name: 'OEMs & Automakers', re: /\b(nissan|ford|hyundai|kia|bmw|volkswagen|\bgm\b|tesla|renault|volvo|stellantis|honda|mercedes)/i },
+  { name: 'Standards (ISO 15118, CHAdeMO)', re: /\b(iso ?15118|chademo|ccs|open ?charge|ocpp)/i },
+  { name: 'Charger / Hardware Vendors', re: /\b(wallbox|dcbel|enphase|emporia|fermata|the mobility house|nuvve|indra|delta)/i },
+];
+
+const COMPANIES = ['Nuvve', 'Wallbox', 'Fermata', 'The Mobility House', 'dcbel', 'Enphase', 'ChargePoint', 'Emporia', 'Indra'];
 
 const RELEVANCE_RE = /\b(v2g|v2h|v2b|v2l|v2x|vehicle[- ]to[- ](grid|home|building|load|everything|x)|bidirectional (charg|ev|inverter|power)|two[- ]way charg|reverse charg)\b/i;
 const OFF_TOPIC_RE = /\b(business jet|private jet|bombardier|saudi contract|aviation|airline|aircraft|football|soccer|basketball|baseball|celebrity|movie|film festival)\b/i;
@@ -76,14 +62,6 @@ async function fetchNews(): Promise<NewsDoc[]> {
   });
 }
 
-async function fetchPilotCounts() {
-  const { data, error } = await supabase.from('pilots').select('status');
-  if (error) return null;
-  const rows = data ?? [];
-  const active = rows.filter((r: any) => (r.status || 'active') === 'active').length;
-  return { total: rows.length, active };
-}
-
 function extractCountry(d: NewsDoc): string | null {
   const c = d.countries?.[0];
   if (c) return c;
@@ -91,28 +69,41 @@ function extractCountry(d: NewsDoc): string | null {
   return raw?.sourcecountry || raw?.country || null;
 }
 
-const marketClaim = (() => {
-  const m = marketsContent.metrics?.find((x: any) => /market/i.test(x.title));
-  return m ? `${m.title}: ${m.value} ${m.subtitle ?? ''}`.trim() : null;
-})();
-
-const pubPeak = publicationsSummary.perYear.find((p) => p.year === publicationsSummary.peakYear)?.count ?? 0;
-const patPeak = patentsSummary.perYear.find((p) => p.year === patentsSummary.peakYear)?.count ?? 0;
-const researchClaim = `Research output keeps climbing: ${pubPeak} papers and ${patPeak} patent records in ${publicationsSummary.peakYear}`;
+function extractDomain(d: NewsDoc): string {
+  const o = d.orgs?.[0];
+  if (o) return o;
+  try {
+    return d.url ? new URL(d.url).hostname.replace(/^www\./, '') : 'unknown';
+  } catch {
+    return 'unknown';
+  }
+}
 
 export default function NewsPage() {
   const [refreshing, setRefreshing] = useState(false);
   const { data: news = [], isLoading, refetch } = useQuery({ queryKey: ['news-gdelt'], queryFn: fetchNews });
-  const { data: pilotCounts } = useQuery({ queryKey: ['pilot-counts'], queryFn: fetchPilotCounts });
 
   const refresh = async () => {
     setRefreshing(true);
+    // Bidirectional charging taxonomy — Bing News RSS. Uses individual terms
+    // (Bing's OR/quotes handling is weaker than Google's).
     const queries = [
-      'V2G', 'V2H', 'V2B', 'V2L', 'V2X charging',
-      '"vehicle-to-grid"', '"vehicle-to-home"', '"vehicle-to-building"', '"vehicle-to-load"',
-      '"vehicle-to-everything"', '"bidirectional charging"', '"bidirectional charger"',
-      '"bidirectional EV charger"', '"bidirectional inverter" electric vehicle',
-      '"two-way charging" EV', '"reverse charging" electric vehicle',
+      'V2G',
+      'V2H',
+      'V2B',
+      'V2L',
+      'V2X charging',
+      '"vehicle-to-grid"',
+      '"vehicle-to-home"',
+      '"vehicle-to-building"',
+      '"vehicle-to-load"',
+      '"vehicle-to-everything"',
+      '"bidirectional charging"',
+      '"bidirectional charger"',
+      '"bidirectional EV charger"',
+      '"bidirectional inverter" electric vehicle',
+      '"two-way charging" EV',
+      '"reverse charging" electric vehicle',
     ];
     let fetched = 0, upserted = 0, failed = 0;
     try {
@@ -126,6 +117,7 @@ export default function NewsPage() {
           upserted += data?.upserted ?? 0;
         } catch { failed++; }
       }
+      // Hacker News (Algolia) — one call sweeps the taxonomy internally.
       try {
         const { data } = await supabase.functions.invoke('import-hn', { body: {} });
         fetched += data?.fetched ?? 0;
@@ -140,43 +132,73 @@ export default function NewsPage() {
     await refetch();
   };
 
-  const derived = useMemo(() => {
-    const items = news as unknown as NewsItem[];
-    const narratives = buildNarratives(items);
-    const momentum = buildMomentum(items, narratives);
-    const moves = buildActorMoves(items);
-    const threads = buildCommunityThreads(items);
-    const hero = rankHero(items as any);
-    const signals = buildSignalRows(items, {
-      marketClaim,
-      pilotClaim: pilotCounts ? `${pilotCounts.total} pilots tracked, ${pilotCounts.active} active` : null,
-      researchClaim,
-    });
-    return { narratives, momentum, moves, threads, hero, signals };
-  }, [news, pilotCounts]);
+  const stats = useMemo(() => {
+    const total = news.length;
+    const byMonth = new Map<string, number>();
+    const topicCounts = new Map<string, number>();
+    const topicMonths = new Map<string, Map<string, number>>();
+    const topicSources = new Map<string, Map<string, number>>();
+    const topicArticles = new Map<string, NewsDoc[]>();
 
-  const heroWhyMatters = useMemo(() => {
-    const o = derived.hero?.outcomes?.[0];
-    if (!o) return null;
-    switch (o.type) {
-      case 'cost':
-        return `Reads against the Markets forecast of ${marketsContent.metrics?.[0]?.value ?? 'the global V2G market'} growing to $65.84B by 2035.`;
-      case 'deployments':
-      case 'pilots':
-        return pilotCounts
-          ? `Adds to the ${pilotCounts.total} pilots tracked in the Pilots module (${pilotCounts.active} active).`
-          : 'Adds to the deployment base tracked in the Pilots module.';
-      case 'compensation':
-      case 'savings':
-        return 'Tests the revenue-stacking assumptions behind the Markets module.';
-      case 'power':
-      case 'efficiency':
-      case 'range':
-        return 'Puts a field number against the engineering figures in the Patents and Publications modules.';
-      default:
-        return null;
+    for (const n of news) {
+      const month = n.date ? n.date.slice(0, 7) : null;
+      if (month) byMonth.set(month, (byMonth.get(month) ?? 0) + 1);
+      const title = n.title ?? '';
+      const dom = extractDomain(n);
+      for (const t of TOPIC_PATTERNS) {
+        if (!t.re.test(title)) continue;
+        topicCounts.set(t.name, (topicCounts.get(t.name) ?? 0) + 1);
+        if (month) {
+          const m = topicMonths.get(t.name) ?? new Map<string, number>();
+          m.set(month, (m.get(month) ?? 0) + 1);
+          topicMonths.set(t.name, m);
+        }
+        const s = topicSources.get(t.name) ?? new Map<string, number>();
+        s.set(dom, (s.get(dom) ?? 0) + 1);
+        topicSources.set(t.name, s);
+        const arr = topicArticles.get(t.name) ?? [];
+        if (arr.length < 3) arr.push(n);
+        topicArticles.set(t.name, arr);
+      }
     }
-  }, [derived.hero, pilotCounts]);
+
+    const allMonths = [...byMonth.keys()].sort();
+    const topics = [...topicCounts.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .map(([name, count]) => {
+        const monthMap = topicMonths.get(name) ?? new Map<string, number>();
+        const trend = allMonths.map((m) => ({ month: m, count: monthMap.get(m) ?? 0 }));
+        const sources = [...(topicSources.get(name) ?? new Map<string, number>()).entries()]
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 3)
+          .map(([n, c]) => ({ name: n, count: c as number }));
+        const articles = topicArticles.get(name) ?? [];
+        return { name, count, trend, sources, articles };
+      });
+
+    const last30 = news.filter((n) => {
+      if (!n.date) return false;
+      const dt = new Date(n.date).getTime();
+      return Date.now() - dt < 30 * 24 * 3600 * 1000;
+    }).length;
+
+    const uniqueDomains = new Set(news.map(extractDomain)).size;
+    const uniqueCountries = new Set(news.map(extractCountry).filter(Boolean) as string[]).size;
+
+    const hnStories = news
+      .filter((n) => (n.raw as any)?.provider === 'hn')
+      .map((n) => ({
+        id: n.id,
+        title: n.title ?? '',
+        url: n.url ?? '#',
+        date: n.date,
+        points: Number((n.raw as any)?.points ?? 0),
+        num_comments: Number((n.raw as any)?.num_comments ?? 0),
+      }))
+      .sort((a, b) => b.points - a.points);
+
+    return { total, topics, last30, uniqueDomains, uniqueCountries, hnStories };
+  }, [news]);
 
   return (
     <MainLayout>
@@ -184,7 +206,7 @@ export default function NewsPage() {
         <ModuleHeader
           icon={<Newspaper className="w-7 h-7 text-white" />}
           title="News & Media Landscape"
-          description="The real-time narrative layer - momentum, framing, and community signal behind bidirectional charging, read against the app's data."
+          description="Bidirectional charging news and discussion aggregated from Bing News and Hacker News - all charts derived from ingested items"
           badge={<Badge variant="outline">Bing News + Hacker News</Badge>}
         />
 
@@ -195,45 +217,17 @@ export default function NewsPage() {
           </Button>
         </div>
 
-        {/* 1. Momentum band */}
+        {/* Metrics */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <MomentumTile
-            icon={<TrendingUp className="w-4 h-4" />}
-            label="Coverage momentum"
-            value={derived.momentum.changePct === null ? '-' : `${derived.momentum.changePct > 0 ? '+' : ''}${derived.momentum.changePct}%`}
-            note={`${derived.momentum.label} vs prior 30 days`}
-            tone={derived.momentum.label === 'heating up' ? 'up' : derived.momentum.label === 'cooling' ? 'down' : 'flat'}
-          />
-          <MomentumTile
-            icon={<Zap className="w-4 h-4" />}
-            label="Breaking (7 days)"
-            value={derived.momentum.breaking7}
-            note="items published this week"
-          />
-          <MomentumTile
-            icon={<Flame className="w-4 h-4" />}
-            label="Fastest-rising narrative"
-            value={derived.momentum.fastestNarrative ?? '-'}
-            note={derived.momentum.fastestChangePct !== null ? `+${derived.momentum.fastestChangePct}% last quarter` : 'newly emerging'}
-            small
-          />
-          <MomentumTile
-            icon={<MessageSquare className="w-4 h-4" />}
-            label="Community heat"
-            value={derived.momentum.communityHeat?.title ?? '-'}
-            note={
-              derived.momentum.communityHeat
-                ? `${derived.momentum.communityHeat.points} pts · ${derived.momentum.communityHeat.comments} comments`
-                : 'no discussion yet'
-            }
-            small
-            href={derived.momentum.communityHeat?.url}
-          />
+          <MetricTile icon={<Newspaper className="w-4 h-4" />} label="Total Articles" value={stats.total} />
+          <MetricTile icon={<Calendar className="w-4 h-4" />} label="Last 30 Days" value={stats.last30} />
+          <MetricTile icon={<Radio className="w-4 h-4" />} label="Media Sources" value={stats.uniqueDomains} />
+          <MetricTile icon={<Globe className="w-4 h-4" />} label="Countries" value={stats.uniqueCountries} />
         </div>
 
         {isLoading ? (
           <div className="text-muted-foreground">Loading…</div>
-        ) : news.length === 0 ? (
+        ) : stats.total === 0 ? (
           <Card>
             <CardContent className="py-12 text-center">
               <Newspaper className="w-10 h-10 mx-auto mb-3 text-muted-foreground" />
@@ -245,100 +239,123 @@ export default function NewsPage() {
           </Card>
         ) : (
           <>
-            {/* 2. Most important development */}
-            {derived.hero && <HeroHighlight hero={derived.hero} whyMatters={heroWhyMatters} />}
+            {/* Topic breakdown cards */}
+            <div className="mb-4 flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-primary" />
+              <h2 className="text-base font-semibold">Most frequent topics in coverage</h2>
+              <span className="text-xs text-muted-foreground">
+                — one visual per topic, built from ingested article titles
+              </span>
+            </div>
+            <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4 mb-6">
+              {stats.topics.map((t) => {
+                const share = stats.total ? Math.round((t.count / stats.total) * 100) : 0;
+                const peak = t.trend.reduce((a, b) => (b.count > a.count ? b : a), { month: '', count: 0 });
+                return (
+                  <Card key={t.name} className="flex flex-col">
+                    <CardHeader className="pb-2">
+                      <div className="flex items-start justify-between gap-2">
+                        <CardTitle className="text-sm leading-snug">{t.name}</CardTitle>
+                        <Badge variant="secondary" className="shrink-0">{t.count}</Badge>
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        {share}% of coverage{peak.month ? ` · peak ${peak.month}` : ''}
+                      </div>
+                    </CardHeader>
+                    <CardContent className="pt-0 space-y-3">
+                      <ResponsiveContainer width="100%" height={80}>
+                        <AreaChart data={t.trend} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
+                          <XAxis dataKey="month" hide />
+                          <YAxis hide allowDecimals={false} />
+                          <Tooltip
+                            contentStyle={{ fontSize: 11 }}
+                            formatter={(v: number) => [v, 'articles']}
+                            labelFormatter={(l) => String(l)}
+                          />
+                          <Area
+                            type="monotone"
+                            dataKey="count"
+                            stroke="hsl(var(--primary))"
+                            fill="hsl(var(--primary))"
+                            fillOpacity={0.2}
+                            strokeWidth={1.5}
+                          />
+                        </AreaChart>
+                      </ResponsiveContainer>
 
-            {/* 3. Emerging narratives */}
-            {derived.narratives.length > 0 && (
-              <section className="mb-8">
-                <SectionTitle
-                  icon={<Sparkles className="w-4 h-4 text-primary" />}
-                  title="Emerging narratives"
-                  subtitle="How the story is being framed, not how much is written"
-                />
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                  {derived.narratives.map((n) => (
-                    <NarrativeCard key={n.key} narrative={n} />
-                  ))}
-                </div>
-              </section>
-            )}
+                      {t.sources.length > 0 && (
+                        <div>
+                          <div className="text-[11px] uppercase tracking-wide text-muted-foreground mb-1">
+                            Top sources
+                          </div>
+                          <div className="flex flex-wrap gap-1">
+                            {t.sources.map((s) => (
+                              <Badge key={s.name} variant="outline" className="text-[11px] font-normal">
+                                {s.name} <span className="ml-1 text-muted-foreground">{s.count}</span>
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      )}
 
-            {/* 4 + 5 side by side */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-8">
-              <Card>
-                <CardHeader className="pb-3">
+                      {t.articles.length > 0 && (
+                        <div>
+                          <div className="text-[11px] uppercase tracking-wide text-muted-foreground mb-1">
+                            Example headlines
+                          </div>
+                          <ul className="space-y-1">
+                            {t.articles.map((a) => (
+                              <li key={a.id} className="text-xs leading-snug">
+                                <a
+                                  href={a.url ?? '#'}
+                                  target="_blank"
+                                  rel="noreferrer noopener"
+                                  className="text-foreground hover:text-primary line-clamp-2"
+                                >
+                                  {a.title}
+                                </a>
+                                <div className="text-[10px] text-muted-foreground">
+                                  {extractDomain(a)}{a.date ? ` · ${a.date}` : ''}
+                                </div>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+
+            {/* Hacker News discussion */}
+            {stats.hnStories.length > 0 && (
+              <Card className="mb-6">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0">
                   <CardTitle className="text-base flex items-center gap-2">
-                    <Users className="w-4 h-4 text-primary" />
-                    Who's making moves
+                    <Radio className="w-4 h-4 text-primary" />
+                    Hacker News discussion
                   </CardTitle>
-                  <div className="text-xs text-muted-foreground">Organizations and the action they announced</div>
+                  <Badge variant="secondary">{stats.hnStories.length} stories</Badge>
                 </CardHeader>
                 <CardContent className="space-y-2">
-                  {derived.moves.length === 0 && (
-                    <div className="text-sm text-muted-foreground">No named-actor announcements in the current window.</div>
-                  )}
-                  {derived.moves.map((m) => (
-                    <a
-                      key={`${m.id}-${m.actor}`}
-                      href={m.url}
-                      target="_blank"
-                      rel="noreferrer noopener"
-                      className="block rounded-lg px-2 py-2 hover:bg-muted/40 border-b border-border last:border-0"
-                    >
-                      <div className="text-sm">
-                        <span className="font-semibold text-foreground">{m.actor}</span>
-                        <span className="text-muted-foreground"> - {m.action}</span>
-                      </div>
-                      <div className="text-[11px] text-muted-foreground line-clamp-1">{m.title}</div>
-                      <div className="text-[10px] text-muted-foreground">
-                        {m.source}{m.date ? ` · ${m.date}` : ''}
+                  {stats.hnStories.slice(0, 10).map((s) => (
+                    <a key={s.id} href={s.url} target="_blank" rel="noreferrer noopener"
+                       className="block hover:bg-muted/40 rounded px-2 py-1.5">
+                      <div className="text-sm font-medium line-clamp-2">{s.title}</div>
+                      <div className="text-[11px] text-muted-foreground">
+                        {s.points} pts · {s.num_comments} comments{s.date ? ` · ${s.date}` : ''}
                       </div>
                     </a>
                   ))}
                 </CardContent>
               </Card>
-
-              <Card>
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base flex items-center gap-2">
-                    <Radio className="w-4 h-4 text-primary" />
-                    Community signal
-                  </CardTitle>
-                  <div className="text-xs text-muted-foreground">What the practitioner community on Hacker News argues</div>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {derived.threads.length === 0 && (
-                    <div className="text-sm text-muted-foreground">No Hacker News discussion ingested yet.</div>
-                  )}
-                  {derived.threads.map((t) => (
-                    <CommunityRow key={t.id} thread={t} />
-                  ))}
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* 6. Signal vs. data */}
-            {derived.signals.length > 0 && (
-              <Card className="mb-8 border-primary/25 bg-gradient-to-br from-primary/5 via-background to-background">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base flex items-center gap-2">
-                    <ScanSearch className="w-4 h-4 text-primary" />
-                    Signal vs. data
-                  </CardTitle>
-                  <div className="text-xs text-muted-foreground">
-                    Does the news flow support the conclusions the other modules draw?
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {derived.signals.map((r) => (
-                    <SignalRowCard key={r.module} row={r} />
-                  ))}
-                </CardContent>
-              </Card>
             )}
 
+            {/* Latest articles */}
             <ArticlesList news={news} />
+
+
           </>
         )}
       </div>
@@ -346,221 +363,12 @@ export default function NewsPage() {
   );
 }
 
-function SectionTitle({ icon, title, subtitle }: { icon: React.ReactNode; title: string; subtitle: string }) {
+function MetricTile({ icon, label, value }: { icon: React.ReactNode; label: string; value: number | string }) {
   return (
-    <div className="mb-3">
-      <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">{icon}{title}</h2>
-      <p className="text-xs text-muted-foreground">{subtitle}</p>
-    </div>
-  );
-}
-
-function MomentumTile({
-  icon, label, value, note, tone = 'flat', small, href,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: number | string;
-  note?: string;
-  tone?: 'up' | 'down' | 'flat';
-  small?: boolean;
-  href?: string;
-}) {
-  const body = (
-    <CardContent className="p-4">
-      <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">{icon}{label}</div>
-      <div
-        className={cn(
-          'font-bold text-foreground',
-          small ? 'text-sm leading-snug line-clamp-2' : 'text-2xl',
-          !small && tone === 'up' && 'text-energy-green',
-          !small && tone === 'down' && 'text-energy-red',
-        )}
-      >
-        {value}
-      </div>
-      {note && (
-        <div className="text-[11px] text-muted-foreground mt-1 flex items-center gap-1">
-          {tone === 'up' && <TrendingUp className="w-3 h-3" />}
-          {tone === 'down' && <TrendingDown className="w-3 h-3" />}
-          <span className="line-clamp-1">{note}</span>
-        </div>
-      )}
-    </CardContent>
-  );
-  return href ? (
-    <Card className="hover:border-primary/40 transition-colors">
-      <a href={href} target="_blank" rel="noreferrer noopener">{body}</a>
-    </Card>
-  ) : (
-    <Card>{body}</Card>
-  );
-}
-
-const DIRECTION_META: Record<Direction, { label: string; className: string; icon: React.ElementType }> = {
-  gaining: { label: 'Gaining', className: 'border-energy-green/40 text-energy-green bg-energy-green/10', icon: TrendingUp },
-  steady: { label: 'Steady', className: 'border-border text-muted-foreground bg-muted/40', icon: Minus },
-  fading: { label: 'Fading', className: 'border-energy-red/40 text-energy-red bg-energy-red/10', icon: TrendingDown },
-};
-
-function NarrativeCard({ narrative }: { narrative: Narrative }) {
-  const dir = DIRECTION_META[narrative.direction];
-  const DirIcon = dir.icon;
-  return (
-    <Card className="flex flex-col">
-      <CardHeader className="pb-2">
-        <div className="flex items-start justify-between gap-2">
-          <CardTitle className="text-sm leading-snug">{narrative.name}</CardTitle>
-          <Badge variant="outline" className={cn('shrink-0 text-[11px] font-normal gap-1', dir.className)}>
-            <DirIcon className="w-3 h-3" />
-            {dir.label}
-          </Badge>
-        </div>
-        <p className="text-xs text-muted-foreground leading-relaxed">{narrative.claim}</p>
-      </CardHeader>
-      <CardContent className="pt-0 space-y-3">
-        <ResponsiveContainer width="100%" height={64}>
-          <AreaChart data={narrative.trend} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
-            <XAxis dataKey="month" hide />
-            <YAxis hide allowDecimals={false} />
-            <Tooltip contentStyle={{ fontSize: 11 }} formatter={(v: number) => [v, 'articles']} />
-            <Area
-              type="monotone"
-              dataKey="count"
-              stroke="hsl(var(--primary))"
-              fill="hsl(var(--primary))"
-              fillOpacity={0.15}
-              strokeWidth={1.5}
-            />
-          </AreaChart>
-        </ResponsiveContainer>
-        <ul className="space-y-1">
-          {narrative.headlines.map((a) => (
-            <li key={a.id} className="text-xs leading-snug">
-              <a
-                href={a.url ?? '#'}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="text-foreground hover:text-primary line-clamp-2"
-              >
-                {a.title}
-              </a>
-              <div className="text-[10px] text-muted-foreground">
-                {domainOf(a)}{a.date ? ` · ${a.date}` : ''}
-              </div>
-            </li>
-          ))}
-        </ul>
-      </CardContent>
-    </Card>
-  );
-}
-
-const SENTIMENT_META: Record<CommunityThread['sentiment'], string> = {
-  enthusiastic: 'border-energy-green/40 text-energy-green bg-energy-green/10',
-  skeptical: 'border-energy-red/40 text-energy-red bg-energy-red/10',
-  mixed: 'border-energy-amber/40 text-energy-amber bg-energy-amber/10',
-};
-
-function CommunityRow({ thread }: { thread: CommunityThread }) {
-  return (
-    <a
-      href={thread.url}
-      target="_blank"
-      rel="noreferrer noopener"
-      className="block rounded-lg border border-border p-3 hover:bg-muted/40 transition-colors"
-    >
-      <div className="flex items-start justify-between gap-2">
-        <div className="text-sm font-medium text-foreground line-clamp-2">{thread.title}</div>
-        <Badge variant="outline" className={cn('shrink-0 text-[10px] font-normal capitalize', SENTIMENT_META[thread.sentiment])}>
-          {thread.sentiment}
-        </Badge>
-      </div>
-      <p className="text-xs text-muted-foreground mt-1">{thread.takeaway}</p>
-      <div className="text-[10px] text-muted-foreground mt-1">
-        {thread.points} pts · {thread.comments} comments{thread.date ? ` · ${thread.date}` : ''}
-      </div>
-    </a>
-  );
-}
-
-const SIGNAL_META: Record<SignalRow['signal'], { label: string; className: string }> = {
-  strengthening: { label: 'Strengthening', className: 'border-energy-green/40 text-energy-green bg-energy-green/10' },
-  mixed: { label: 'Mixed', className: 'border-energy-amber/40 text-energy-amber bg-energy-amber/10' },
-  weakening: { label: 'Weakening', className: 'border-energy-red/40 text-energy-red bg-energy-red/10' },
-};
-
-function SignalRowCard({ row }: { row: SignalRow }) {
-  const meta = SIGNAL_META[row.signal];
-  return (
-    <div className="rounded-xl border border-border bg-card p-4">
-      <div className="flex flex-wrap items-start justify-between gap-2">
-        <div>
-          <div className="text-[10px] uppercase tracking-wide text-muted-foreground">{row.module} says</div>
-          <div className="text-sm font-semibold text-foreground">{row.claim}</div>
-        </div>
-        <Badge variant="outline" className={cn('shrink-0 text-[11px] font-normal', meta.className)}>
-          News signal: {meta.label}
-        </Badge>
-      </div>
-      <p className="text-xs text-muted-foreground mt-2 leading-relaxed">{row.reason}</p>
-      <div className="mt-2 space-y-1">
-        {row.headlines.map((a) => (
-          <a
-            key={a.id}
-            href={a.url ?? '#'}
-            target="_blank"
-            rel="noreferrer noopener"
-            className="block text-xs text-foreground hover:text-primary line-clamp-1"
-          >
-            {a.title}
-          </a>
-        ))}
-      </div>
-      <Link
-        to={row.route}
-        className="mt-3 inline-flex items-center gap-1 text-xs text-primary hover:underline"
-      >
-        Open {row.module} module <ArrowRight className="w-3 h-3" />
-      </Link>
-    </div>
-  );
-}
-
-function HeroHighlight({
-  hero,
-  whyMatters,
-}: {
-  hero: { article: { id: string; title: string | null; url: string | null; date: string | null; orgs?: string[] | null; raw?: any }; outcomes: Outcome[] };
-  whyMatters: string | null;
-}) {
-  const a = hero.article;
-  return (
-    <Card className="mb-8 overflow-hidden border-primary/30 bg-gradient-to-br from-primary/10 via-background to-background">
-      <CardContent className="p-5 md:p-6">
-        <div className="flex items-center gap-2 mb-3">
-          <Sparkles className="w-4 h-4 text-primary" />
-          <span className="text-[11px] uppercase tracking-wide text-muted-foreground">
-            Most important development
-          </span>
-        </div>
-        <a
-          href={a.url ?? '#'}
-          target="_blank"
-          rel="noreferrer noopener"
-          className="block text-lg md:text-2xl font-bold leading-snug text-foreground hover:text-primary"
-        >
-          {a.title}
-        </a>
-        <div className="mt-2 text-xs text-muted-foreground">
-          {domainOf(a as NewsItem)}{a.date ? ` · ${a.date}` : ''}
-        </div>
-        {whyMatters && (
-          <p className="mt-3 text-sm text-muted-foreground">
-            <span className="font-semibold text-foreground">Why it matters: </span>
-            {whyMatters}
-          </p>
-        )}
+    <Card>
+      <CardContent className="p-4">
+        <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">{icon}{label}</div>
+        <div className="text-2xl font-bold text-foreground">{value}</div>
       </CardContent>
     </Card>
   );
@@ -594,7 +402,7 @@ function ArticlesList({ news }: { news: NewsDoc[] }) {
             <div className="flex-1">
               <div className="font-medium text-sm text-foreground line-clamp-2">{n.title}</div>
               <div className="text-xs text-muted-foreground mt-1 flex items-center gap-3 flex-wrap">
-                <span>{domainOf(n as unknown as NewsItem)}</span>
+                <span>{extractDomain(n)}</span>
                 {extractCountry(n) && <span>· {extractCountry(n)}</span>}
                 {n.date && <span>· {n.date}</span>}
               </div>

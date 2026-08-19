@@ -55,12 +55,12 @@ const SOURCES = [
 // Conclusions derived from the Google Trends export in this module
 // (7 terms, 53 weekly points, worldwide, Jul 2025 - Jul 2026).
 const SEARCH_EVIDENCE = [
-  '<strong>Consumers search outcomes, not engineering.</strong> "Vehicle to home" runs ~10x "bidirectional charging" (avg 49 vs 4.5). People search the benefit, not the mechanism. Lead with the outcome.',
-  '<strong>One trigger, two audiences.</strong> All seven terms rose together, but grid terms are near-collinear (r ≈ 0.92) while home terms track them loosely (r ≈ 0.71). Treat grid and consumer as separate clusters.',
-  '<strong>V2L sells today, V2H/V2G sells the vision.</strong> Consumer entry runs through "v2l" hardware queries (adapters, brands, EV models). V2H and V2G sit further up the funnel as aspiration.',
-  '<strong>Still an awareness market.</strong> Definitional queries ("what is v2g") are up 70–110% while generic hardware queries fall. Top of funnel is growing faster than the audience deepens.',
-  '<strong>Unmet explainer demand.</strong> That surge in "what is" searches is direct demand for plain-language content this site can own.',
-  '<strong>Volume sits in one head term.</strong> A single consumer term carries most of the interest; the other six are a long tail. Concentrate strategy there.',
+  '<strong>Consumer use cases dominate search demand.</strong> "vehicle to home" leads (avg 49, peak 100) while the technical label "bidirectional charging" lags (avg 4.5).',
+  '<strong>Interest is rising across all seven terms</strong> in the second half of the period, and the terms move together (r = 0.62-0.94), pointing to shared external triggers rather than isolated spikes.',
+  '<strong>Grid-side and home-side audiences are partially separate.</strong> Grid terms cluster tightly (r ≈ 0.92-0.93) but correlate more weakly with home-side terms (r ≈ 0.71).',
+  '<strong>"v2l" is the consumer entry point.</strong> Searches focus on adapters, brands and specific EV models, treating discharge capability as a purchase criterion.',
+  '<strong>New entrants are arriving faster than the existing audience deepens.</strong> Definitional queries ("what is v2g", "what is bidirectional charging") rise 70-110%, while generic hardware queries fall and attention shifts from simple V2L toward coupled V2H/V2G applications.',
+  '<strong>Filter the noise.</strong> Generic breakout queries in rising lists are mostly artefacts of low volume; the V2X label itself is drifting toward connected-car topics, so energy interest is better tracked through V2G, V2H and V2L.',
 ];
 
 export default function TrendsPage() {
