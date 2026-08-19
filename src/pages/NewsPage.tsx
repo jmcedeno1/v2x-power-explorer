@@ -375,41 +375,58 @@ export default function NewsPage() {
                 <ul className="space-y-3">
                   <li className="flex items-start gap-3">
                     <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
-                    <p className="text-sm text-foreground"><strong>News is driven by business models, not engineering:</strong> <strong>V2G is the biggest cluster (68 articles, 35%)</strong>, where <strong>"Market participation" (25) dwarfs regulation (2) and technology (2)</strong>. <span className="text-muted-foreground">(News &amp; Media)</span></p>
+                    <p className="text-sm text-foreground"><strong>Coverage is at an all-time high:</strong> <strong>2026 Q3 alone holds 26 of 191 articles (13%)</strong> - the largest quarter on record and roughly <strong>3x the 2025 quarterly average (7)</strong>. <span className="text-muted-foreground">(News &amp; Media, N=191)</span></p>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
-                    <p className="text-sm text-foreground"><strong>Coverage is accelerating</strong> — sub-theme timelines peak in <strong>2026 Q3</strong>, with <strong>16 articles (8%) in the last 30 days</strong>, a leading signal ahead of market and pilot data. <span className="text-muted-foreground">(News &amp; Media)</span></p>
+                    <p className="text-sm text-foreground"><strong>The narrative has rotated from product to grid.</strong> The earlier peak (<strong>2023 Q3, 19 articles</strong>) was driven by OEMs (14) and V2H (13); the current peak is driven by <strong>V2G (20 of 26 items in 2026 Q3)</strong>. <span className="text-muted-foreground">(News &amp; Media)</span></p>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
-                    <p className="text-sm text-foreground"><strong>Automakers set the agenda:</strong> <strong>OEMs are the 2nd-largest cluster (52 articles, 27%)</strong>, led by <strong>GM (250,000 EVs, ~$2,750/vehicle, $7B/yr grid savings)</strong> and <strong>Hyundai (₩78.5tn saved)</strong>. <span className="text-muted-foreground">(The Cool Down/MSN 2026-08-03; pv magazine USA 2026-07-29; Herald Business 2026-07-08)</span></p>
+                    <p className="text-sm text-foreground"><strong>Two independent storylines, not one topic.</strong> The home cluster moves together (<strong>OEM-Bidirectional chargers r = 0.86, chargers-V2H r = 0.78, OEM-V2H r = 0.70</strong>) while the grid cluster moves separately (<strong>V2G-Pilots r = 0.72</strong>); <strong>V2G and V2H are uncorrelated (r = -0.08)</strong>. <span className="text-muted-foreground">(News &amp; Media, quarterly series)</span></p>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
-                    <p className="text-sm text-foreground">The dominant frame is <strong>owner compensation as the adoption gate</strong>, reframing the market's value range as a consumer-incentive question. <span className="text-muted-foreground">(The Cool Down/MSN 2026-08-03)</span></p>
+                    <p className="text-sm text-foreground"><strong>Pilots are the news engine of V2G:</strong> <strong>17 of 36 pilot items also mention V2G</strong>, and pilot announcements lead V2G coverage peaks - deployments, not policy, generate the headlines. <span className="text-muted-foreground">(News &amp; Media)</span></p>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
-                    <p className="text-sm text-foreground"><strong>Regulation is under-covered relative to its market weight</strong> (only <strong>2 of 68 V2G items</strong>); the <strong>EU V2G mandate is the loudest policy signal</strong>. <span className="text-muted-foreground">(heise online 2026-08-03)</span></p>
+                    <p className="text-sm text-foreground"><strong>Automakers set the agenda:</strong> OEMs are the second-largest cluster (<strong>64 articles, 34%</strong>) and appear alongside <strong>V2H in 25 items and bidirectional hardware in 23</strong> - the OEM is the gateway through which home energy reaches the mainstream press. <span className="text-muted-foreground">(News &amp; Media)</span></p>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
-                    <p className="text-sm text-foreground">A parallel <strong>home-energy narrative is building</strong> across <strong>Bidirectional Chargers (32)</strong>, <strong>V2H (27)</strong> and <strong>Charger/Hardware Vendors (19)</strong>, led by product launches and backup-power resilience. <span className="text-muted-foreground">(autoevolution, MSN, techtimes)</span></p>
+                    <p className="text-sm text-foreground"><strong>The dominant frame is owner compensation as the adoption gate</strong>, turning market sizing into a consumer-incentive question rather than a technology question. <span className="text-muted-foreground">(The Cool Down/MSN 2026-08-03)</span></p>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
-                    <p className="text-sm text-foreground"><strong>Pilots corroborate the fleet thesis</strong> — Fleet &amp; Bus Depots and V2G Pilots clusters are led by <strong>electric school buses</strong>. <span className="text-muted-foreground">(Electrek 2025-03-27; news.ycombinator.com 2025-10-21)</span></p>
+                    <p className="text-sm text-foreground"><strong>Renewables integration is the fastest-emerging theme:</strong> <strong>7 of its 8 articles land in 2026 Q3</strong>, arriving only once V2G volumes scaled - an early sign the framing is shifting to solar and surplus absorption. <span className="text-muted-foreground">(News &amp; Media)</span></p>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
-                    <p className="text-sm text-foreground"><strong>Still pre-mainstream:</strong> only <strong>3 countries and 53 outlets</strong>, with <strong>Hacker News the top source in the two largest clusters</strong>. <span className="text-muted-foreground">(News &amp; Media, N=195)</span></p>
+                    <p className="text-sm text-foreground"><strong>Money follows the grid case, not the home case:</strong> investment items correlate with <strong>V2G (r = 0.43)</strong> and <strong>battery/degradation (r = 0.49)</strong>, and only <strong>5 of 21 funding items</strong> touch V2H. <span className="text-muted-foreground">(News &amp; Media)</span></p>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
-                    <p className="text-sm text-foreground"><strong>Blind spots:</strong> <strong>Battery &amp; Degradation shows "no sub-theme signal,"</strong> and <strong>Investment &amp; Funding and Renewables Integration stay small</strong> — both material to the market case. <span className="text-muted-foreground">(News &amp; Media)</span></p>
+                    <p className="text-sm text-foreground"><strong>Biggest blind spot - the buyer of flexibility.</strong> <strong>Grid services appear in 1 article (0.5%)</strong> and <strong>utilities/DSOs in 4 (2%)</strong>, despite frequency regulation and demand-charge management carrying most of the modelled revenue. <span className="text-muted-foreground">(News &amp; Media vs. Markets module)</span></p>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
+                    <p className="text-sm text-foreground"><strong>Regulation and standards are under-covered:</strong> policy appears in <strong>9 articles (5%)</strong> and <strong>ISO 15118 / CHAdeMO / OCPP in effectively none</strong> - interoperability, the main deployment bottleneck cited in the Engineering module, is invisible in the press. <span className="text-muted-foreground">(News &amp; Media vs. Standards module)</span></p>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
+                    <p className="text-sm text-foreground"><strong>Battery degradation stays a footnote (15 articles, 8%)</strong> and is discussed mainly next to funding rather than as a consumer risk - the most common owner objection is the least covered. <span className="text-muted-foreground">(News &amp; Media)</span></p>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
+                    <p className="text-sm text-foreground"><strong>Fleets are under-reported relative to pilot reality:</strong> only <strong>9 fleet/depot articles (5%)</strong> against <strong>57 pilots in the database</strong>, most of them fleet-scale - press attention lags the deployment base. <span className="text-muted-foreground">(News &amp; Media vs. Pilots module)</span></p>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2" />
+                    <p className="text-sm text-foreground"><strong>Coverage quality is thin and finance-heavy:</strong> <strong>Hacker News is the single largest source (27 items, 14%)</strong> and newswire/finance outlets (Business Wire, Yahoo Finance, Nasdaq) add <strong>42 more (22%)</strong> - a market still narrated by press releases and aggregators, not trade reporting. <span className="text-muted-foreground">(News &amp; Media)</span></p>
                   </li>
                 </ul>
+
               </div>
             </section>
 
