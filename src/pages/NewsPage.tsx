@@ -312,6 +312,40 @@ export default function NewsPage() {
         return { name, count, trend, sources, articles, subNames, subSeries, subTotals };
       });
 
+    // Summary view: how the leading topics evolve quarter over quarter, plus
+    // momentum (latest quarter vs the previous one) for narrative insights.
+    const leadTopics = topics.slice(0, 6).map((t) => t.name);
+    const summarySeries = quarters.map((q) => {
+      const row: Record<string, string | number> = { quarter: q };
+      for (const name of leadTopics) row[name] = topicQuarters.get(name)?.get(q) ?? 0;
+      row.Total = leadTopics.reduce((a, n) => a + (topicQuarters.get(n)?.get(q) ?? 0), 0);
+      return row;
+    });
+    const lastQ = quarters[quarters.length - 1];
+    const prevQ = quarters[quarters.length - 2];
+    const momentum = topics
+      .slice(0, 10)
+      .map((t) => {
+        const now = topicQuarters.get(t.name)?.get(lastQ) ?? 0;
+        const before = topicQuarters.get(t.name)?.get(prevQ) ?? 0;
+        return { name: t.name, now, before, delta: now - before };
+      })
+      .sort((a, b) => b.delta - a.delta);
+    const summary = {
+      series: summarySeries,
+      topics: leadTopics,
+      lastQ,
+      prevQ,
+      rising: momentum.slice(0, 3),
+      cooling: [...momentum].reverse().slice(0, 3),
+      leader: topics[0],
+      leadShare: total ? Math.round(((topics[0]?.count ?? 0) / total) * 100) : 0,
+      concentration: total
+        ? Math.round((topics.slice(0, 3).reduce((a, t) => a + t.count, 0) / total) * 100)
+        : 0,
+    };
+
+
     const last30 = news.filter((n) => {
       if (!n.date) return false;
       const dt = new Date(n.date).getTime();
