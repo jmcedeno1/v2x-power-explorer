@@ -52,6 +52,20 @@ const SOURCES = [
   { code: 'youtube', label: 'YouTube Search', available: false },
 ];
 
+// Conclusions derived from the Google Trends export in this module
+// (7 terms, 53 weekly points, worldwide, Jul 2025 - Jul 2026).
+const SEARCH_EVIDENCE = [
+  '<strong>Consumer-facing use cases dominate the demand side.</strong> "vehicle to home" averages an interest index of 49 and is the only term touching the 100 peak, while the industry label "bidirectional charging" averages just 4.5. Public attention is organised around what the car powers, not around the technical name of the function.',
+  '<strong>Every term is trending up in the second half of the period.</strong> Comparing the first and last 26 weeks, interest grows for all 7 terms: "vehicle to home" +59% (38 to 60), "v2l" +54% (11 to 17), "bidirectional charging" +54% (3.5 to 5.4), "Vehicle-to-grid" +41% (22 to 31) and "v2g" +37% (10 to 13). The rise is a category-wide shift, not a single viral spike.',
+  '<strong>The terms move as one topic.</strong> Pairwise correlations across the weekly series are strongly positive (r = 0.62 to 0.94), with "Vehicle-to-grid" and "v2g" at r = 0.93 and "vehicle to home" and "vehicle to load" at r = 0.94. Search demand responds to shared external triggers (model launches, tariff and policy news) rather than to term-specific events.',
+  '<strong>Grid-side and home-side interest are coupled but weaker across the divide.</strong> "Vehicle-to-grid" correlates more tightly with "bidirectional charging" (r = 0.92) and "v2g" (r = 0.93) than with "vehicle to home" (r = 0.71), evidence of two audiences (professional/grid and consumer/backup) reading the same news cycle at different intensities.',
+  '<strong>Vehicle-to-load is the entry point into bidirectional power.</strong> Top queries for "v2l" are dominated by hardware and brands ("v2l adapter" 100, "byd" 82, "v2l byd" 79, "tesla" 61), and "kia pv5" and "bmw ix3" are breakout risers. Discharge capability is being searched as a purchase criterion attached to specific models, not as an abstract grid service.',
+  '<strong>Definitional demand is still growing, which signals an early-stage market.</strong> "what is v2g" is up 110% year over year and "what is bidirectional charging" up 70%, while established hardware queries decline ("bidirectional charger" -50%, "ev bidirectional charging" -40%). New entrants are arriving faster than the existing audience deepens.',
+  '<strong>V2H is the fastest-rising sub-concept inside grid terminology.</strong> Within both "Vehicle-to-grid" and "v2g", the query "v2h" grows 60% year over year and "v2g charging" grows 200%, while "v2l" declines 5 to 20%. Attention is migrating from simple appliance discharge toward home and grid coupled applications.',
+  '<strong>The V2X label is drifting away from energy.</strong> For "Vehicle-to-everything", the communication-oriented queries move in opposite directions ("c-v2x" +90%, "5g v2x" +70%, but "car2x" -40% and "v2x technology" -20%), and the parent term averages only 7.3. The energy conversation is better tracked through V2G, V2H and V2L than through V2X.',
+  '<strong>Treat generic breakout queries as noise, not signal.</strong> Rising lists for nearly every term are topped by unrelated news-cycle queries ("ai news today", "openai news", "new york times", "fifa world cup 2026"), an artefact of low absolute volume on niche terms. Only model-specific and application-specific risers ("kia pv5", "bmw ix3", "tesla v2l adapter australia", "dubai rta v2x smart traffic system") carry interpretable meaning.',
+];
+
 export default function TrendsPage() {
   const [location, setLocation] = useState('WW');
   const [time, setTime] = useState('12m');
@@ -199,7 +213,23 @@ export default function TrendsPage() {
           </Card>
         </div>
 
+        {/* Search Evidence */}
+        <section className="mb-6">
+          <h3 className="text-lg font-semibold text-foreground mb-4">Search Evidence</h3>
+          <div className="p-6 rounded-xl bg-gradient-to-br from-primary/5 to-accent/5 border border-primary/20">
+            <ul className="space-y-3">
+              {SEARCH_EVIDENCE.map((item, i) => (
+                <li key={i} className="flex items-start gap-3">
+                  <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2 shrink-0" />
+                  <p className="text-sm text-foreground" dangerouslySetInnerHTML={{ __html: item }} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
         {/* Commonly searched queries */}
+
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-base">Commonly searched queries</CardTitle>
