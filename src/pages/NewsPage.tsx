@@ -210,9 +210,18 @@ export default function NewsPage() {
 
     const hero = rankHero(news);
     const outcomeGroups = groupOutcomes(news);
+    const topicGroups = groupByOutcomeTopic(news);
 
-    return { total, topics, last30, uniqueDomains, uniqueCountries, hnStories, hero, outcomeGroups };
+    return { total, topics, last30, uniqueDomains, uniqueCountries, hnStories, hero, outcomeGroups, topicGroups };
   }, [news]);
+
+  const outcomeTopics = useMemo(() => {
+    const g = [...stats.topicGroups];
+    return sort === 'alpha'
+      ? g.sort((a, b) => a.label.localeCompare(b.label))
+      : g.sort((a, b) => b.count - a.count);
+  }, [stats.topicGroups, sort]);
+
 
   return (
     <MainLayout>
