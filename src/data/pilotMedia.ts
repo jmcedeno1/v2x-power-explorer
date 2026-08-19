@@ -1101,21 +1101,6 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
     ],
     partnerLead: 'Lawrence Berkeley National Laboratory (DER-CAM and project lead); Bosch Software Innovations (eMobility Solution); Akuacom (OpenADR DRAS); Olivine (regulatory and interconnection); U.S. DoD ESTCP; California Energy Commission; Southern California Edison; CAISO.',
   },
-  'korean v2g pilot': {
-    references: [
-      { title: 'VGI core component development and V2G demonstration using CCS Type 1 standard (KEPCO)', url: 'https://www.v2g-hub.com/projects/vgi-core-component-development-and-v2g-demonstration-using-ccs-type-1-standard-kepco/', source: 'V2G Hub' },
-      { title: 'A Grid-Friendly Electric Vehicle Infrastructure: The Korean Approach', url: 'https://www.researchgate.net/publication/375176279_A_Grid-Friendly_Electric_Vehicle_Infrastructure_The_Korean_Approach', source: 'ResearchGate' },
-      { title: 'Smart managed charging (V1G) field demonstration in KEPCO', url: 'https://ieeexplore.ieee.org/document/9841761/', source: 'IEEE Xplore' },
-      { title: 'Vehicle-to-grid technology - Analysis', url: 'https://www.iea.org/reports/vehicle-to-grid-technology', source: 'IEA' },
-    ],
-  },
-  'merge - mobile energy resources in grids of electricity': {
-    references: [
-      { title: 'Mobile Energy Resources in Grids of Electricity (MERGE)', url: 'https://cordis.europa.eu/project/id/241399', source: 'CORDIS (FP7)' },
-      { title: 'MERGE - Mobile Energy Resources in Grids of Electricity', url: 'https://www.iit.comillas.edu/publicacion/proyecto/en/MERGE_EU_FP7/MERGE_-_Mobile_Energy_Resources_in_Grids_of_Electricity', source: 'IIT Comillas' },
-      { title: 'MERGE (Portugal) - Smart Grid Project', url: 'https://openei.org/wiki/MERGE_Mobile_Energy_Resources_in_Grids_of_Electricity_(Smart_Grid_Project)_(Portugal)', source: 'OpenEI' },
-    ],
-  },
   'invent': {
     references: [
       { title: 'INVENT - UCSD / Nissan / Nuvve', url: 'https://www.v2g-hub.com/projects/invent-ucsd-nissan-nuvve/', source: 'V2G Hub' },
