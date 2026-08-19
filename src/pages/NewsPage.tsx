@@ -234,11 +234,17 @@ export default function NewsPage() {
     const topicMonths = new Map<string, Map<string, number>>();
     const topicSources = new Map<string, Map<string, number>>();
     const topicArticles = new Map<string, NewsDoc[]>();
+    // topic -> subtopic -> quarter -> count
+    const topicSubs = new Map<string, Map<string, Map<string, number>>>();
+    const allQuarters = new Set<string>();
 
     for (const n of news) {
       const month = n.date ? n.date.slice(0, 7) : null;
+      const quarter = month ? `${month.slice(0, 4)} Q${Math.floor((Number(month.slice(5, 7)) - 1) / 3) + 1}` : null;
+      if (quarter) allQuarters.add(quarter);
       if (month) byMonth.set(month, (byMonth.get(month) ?? 0) + 1);
       const title = n.title ?? '';
+      const text = `${title} ${n.abstract ?? ''}`;
       const dom = extractDomain(n);
       for (const t of TOPIC_PATTERNS) {
         if (!t.re.test(title)) continue;
@@ -254,10 +260,23 @@ export default function NewsPage() {
         const arr = topicArticles.get(t.name) ?? [];
         if (arr.length < 3) arr.push(n);
         topicArticles.set(t.name, arr);
+
+        const subs = SUBTOPIC_PATTERNS[t.name] ?? [];
+        if (quarter && subs.length) {
+          const bySub = topicSubs.get(t.name) ?? new Map<string, Map<string, number>>();
+          for (const sub of subs) {
+            if (!sub.re.test(text)) continue;
+            const q = bySub.get(sub.name) ?? new Map<string, number>();
+            q.set(quarter, (q.get(quarter) ?? 0) + 1);
+            bySub.set(sub.name, q);
+          }
+          topicSubs.set(t.name, bySub);
+        }
       }
     }
 
     const allMonths = [...byMonth.keys()].sort();
+    const quarters = [...allQuarters].sort();
     const topics = [...topicCounts.entries()]
       .sort((a, b) => b[1] - a[1])
       .map(([name, count]) => {
@@ -268,7 +287,21 @@ export default function NewsPage() {
           .slice(0, 3)
           .map(([n, c]) => ({ name: n, count: c as number }));
         const articles = topicArticles.get(name) ?? [];
-        return { name, count, trend, sources, articles };
+
+        const bySub = topicSubs.get(name) ?? new Map<string, Map<string, number>>();
+        const subNames = (SUBTOPIC_PATTERNS[name] ?? [])
+          .map((s) => s.name)
+          .filter((s) => (bySub.get(s)?.size ?? 0) > 0);
+        const subSeries = quarters.map((q) => {
+          const row: Record<string, string | number> = { quarter: q };
+          for (const s of subNames) row[s] = bySub.get(s)?.get(q) ?? 0;
+          return row;
+        });
+        const subTotals = subNames
+          .map((s) => ({ name: s, count: [...(bySub.get(s) ?? new Map()).values()].reduce((a, b) => a + b, 0) }))
+          .sort((a, b) => b.count - a.count);
+
+        return { name, count, trend, sources, articles, subNames, subSeries, subTotals };
       });
 
     const last30 = news.filter((n) => {
