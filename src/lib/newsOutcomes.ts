@@ -232,8 +232,9 @@ export function groupOutcomes(articles: OutcomeArticle[]): Map<OutcomeType, Outc
     // one entry per article per outcome type: keep the strongest
     const byArticle = new Map<string, Outcome>();
     for (const o of list) {
-      const prev = byArticle.get(o.article.id);
-      if (!prev || o.weight > prev.weight) byArticle.set(o.article.id, o);
+      const key = (o.article.title ?? o.article.id).toLowerCase().slice(0, 90);
+      const prev = byArticle.get(key);
+      if (!prev || o.weight > prev.weight) byArticle.set(key, o);
     }
     const arr = [...byArticle.values()];
     arr.sort((x, y) => {
