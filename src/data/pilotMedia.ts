@@ -1101,6 +1101,183 @@ export const pilotMediaMap: Record<string, PilotMedia> = {
     ],
     partnerLead: 'Lawrence Berkeley National Laboratory (DER-CAM and project lead); Bosch Software Innovations (eMobility Solution); Akuacom (OpenADR DRAS); Olivine (regulatory and interconnection); U.S. DoD ESTCP; California Energy Commission; Southern California Edison; CAISO.',
   },
+  'korean v2g pilot': {
+    references: [
+      { title: 'VGI core component development and V2G demonstration using CCS Type 1 standard (KEPCO)', url: 'https://www.v2g-hub.com/projects/vgi-core-component-development-and-v2g-demonstration-using-ccs-type-1-standard-kepco/', source: 'V2G Hub' },
+      { title: 'A Grid-Friendly Electric Vehicle Infrastructure: The Korean Approach', url: 'https://www.researchgate.net/publication/375176279_A_Grid-Friendly_Electric_Vehicle_Infrastructure_The_Korean_Approach', source: 'ResearchGate' },
+      { title: 'Smart managed charging (V1G) field demonstration in KEPCO', url: 'https://ieeexplore.ieee.org/document/9841761/', source: 'IEEE Xplore' },
+      { title: 'Vehicle-to-grid technology - Analysis', url: 'https://www.iea.org/reports/vehicle-to-grid-technology', source: 'IEA' },
+    ],
+  },
+  'merge - mobile energy resources in grids of electricity': {
+    references: [
+      { title: 'Mobile Energy Resources in Grids of Electricity (MERGE)', url: 'https://cordis.europa.eu/project/id/241399', source: 'CORDIS (FP7)' },
+      { title: 'MERGE - Mobile Energy Resources in Grids of Electricity', url: 'https://www.iit.comillas.edu/publicacion/proyecto/en/MERGE_EU_FP7/MERGE_-_Mobile_Energy_Resources_in_Grids_of_Electricity', source: 'IIT Comillas' },
+      { title: 'MERGE (Portugal) - Smart Grid Project', url: 'https://openei.org/wiki/MERGE_Mobile_Energy_Resources_in_Grids_of_Electricity_(Smart_Grid_Project)_(Portugal)', source: 'OpenEI' },
+    ],
+  },
+  'invent': {
+    references: [
+      { title: 'INVENT - UCSD / Nissan / Nuvve', url: 'https://www.v2g-hub.com/projects/invent-ucsd-nissan-nuvve/', source: 'V2G Hub' },
+      { title: 'Nuvve and UC San Diego to Demonstrate Vehicle-to-Grid Technology Through Energy Commission Grant', url: 'https://today.ucsd.edu/story/nuvve_and_uc_san_diego_to_demonstrate_vehicle_to_grid_technology', source: 'UC San Diego' },
+      { title: 'Nuvve Announces Vehicle-to-Grid (V2G) Pilot Programs', url: 'https://insideevs.com/news/341858/nuvve-announces-vehicle-to-grid-v2g-pilot-programs/', source: 'InsideEVs' },
+    ],
+  },
+  'jumpsmart maui': {
+    references: [
+      { title: 'JUMPSmartMaui Announces Successful Completion of Project', url: 'https://mauinow.com/2017/05/05/jumpsmartmaui-announces-successful-completion-of-project/', source: 'Maui Now', date: '2017' },
+      { title: 'U.S.-Japan Collaborative Smart Grid Demonstration Project in Maui (final report)', url: 'https://www.nedo.go.jp/content/100864936.pdf', source: 'NEDO' },
+      { title: 'JUMPSmartMaui stakeholders announce successful completion of the project', url: 'https://www.medb.org/jumpsmartmaui-stakeholders-announce-successful-completion-of-the-project/', source: 'Maui Economic Development Board' },
+    ],
+  },
+  'savona campus smart poly-generation micro-grid (spm)': {
+    references: [
+      { title: 'La Smart Polygeneration Microgrid (SPM) - Savona Campus', url: 'https://campus-savona.unige.it/en/progetti/Energia2020/SPM', source: 'University of Genoa' },
+      { title: 'The University of Genoa smart polygeneration microgrid test-bed facility', url: 'https://www.sciencedirect.com/science/article/abs/pii/S1364032112005515', source: 'Renewable & Sustainable Energy Reviews' },
+      { title: 'E-Mobility & Microgrid Laboratory at the Savona Campus of Genova University', url: 'https://www.researchgate.net/publication/346595922_E-Mobility_Microgrid_Laboratory_at_the_Savona_Campus_of_Genova_University', source: 'IEEE / ResearchGate' },
+    ],
+  },
+  'oakland school district': {
+    references: [
+      { title: "Zum Launches Nation's First School District with 100% Electric, Bidirectional V2G School Bus Fleet in Oakland", url: 'https://www.ridezum.com/press-release/zum-launches-nations-first-school-district-with-100-electric-bidirectional-v2g-school-bus-fleet-in-oakland/', source: 'Zum' },
+      { title: 'OUSD Becomes First Major District in Nation to Have an All-Electric Student Bus Fleet', url: 'https://www.ousd.org/communications-public-affairs/newsroom/news/~board/ousd-news/post/ousd-becomes-first-major-district-in-nation-to-have-an-all-electric-student-bus-fleet-through-partnership-with-zm', source: 'Oakland USD' },
+      { title: 'The biggest electric school-bus-as-grid-battery project in the US goes live', url: 'https://www.canarymedia.com/articles/clean-fleets/the-biggest-electric-school-bus-as-grid-battery-project-in-the-us-goes-live', source: 'Canary Media' },
+    ],
+  },
+  'aces project': {
+    references: [
+      { title: 'ACES - Across Continents Electric Vehicle Services', url: 'https://www.aces-bornholm.eu/', source: 'ACES Project' },
+      { title: 'Across Continents Electric Vehicle Services', url: 'https://orbit.dtu.dk/en/projects/across-continents-electric-vehicle-services', source: 'DTU' },
+      { title: 'ACES Project Final Report', url: 'https://eudp.dk/files/media/document/ACES_project_final_report_-_04-11-2020_1_05112020_0829.pdf', source: 'EUDP', date: '2020' },
+    ],
+  },
+  'xl-connect': {
+    references: [
+      { title: 'XL-Connect - Large scale system approach for advanced charging solutions', url: 'https://cordis.europa.eu/project/id/101056756', source: 'CORDIS (Horizon Europe)' },
+      { title: 'V2X Cluster', url: 'https://ev4eu.eu/v2xcluster/', source: 'EU V2X Cluster' },
+    ],
+  },
+  'drive2x': {
+    references: [
+      { title: 'DriVe2X - Project Fact Sheet', url: 'https://cordis.europa.eu/project/id/101056934', source: 'CORDIS (Horizon Europe)' },
+      { title: 'DriVe2X - Homepage', url: 'https://drive2x.eu/', source: 'DriVe2X' },
+      { title: 'DriVe2X - Demo Sites', url: 'https://drive2x.eu/demo-sites/', source: 'DriVe2X' },
+    ],
+  },
+  'scale': {
+    references: [
+      { title: 'SCALE - Smart Charging ALignment for Europe (Fact Sheet)', url: 'https://cordis.europa.eu/project/id/101056874', source: 'CORDIS (Horizon Europe)' },
+      { title: 'SCALE - Smart Charging ALignment for Europe', url: 'https://scale-horizon.eu/', source: 'SCALE' },
+      { title: 'SCALE project', url: 'https://www.2zeroemission.eu/research-project/scale/', source: '2Zero' },
+    ],
+  },
+  'flow': {
+    references: [
+      { title: 'FLOW - Flexible energy systems Leveraging the Optimal integration of EVs (Fact Sheet)', url: 'https://cordis.europa.eu/project/id/101056730', source: 'CORDIS (Horizon Europe)' },
+      { title: 'Flow Project', url: 'https://theflowproject.eu/', source: 'FLOW' },
+      { title: 'FLOW project', url: 'https://www.2zeroemission.eu/research-project/flow/', source: '2Zero' },
+    ],
+  },
+  'ev4eu': {
+    references: [
+      { title: 'EV4EU - Electric Vehicles Management for carbon neutrality in Europe (Fact Sheet)', url: 'https://cordis.europa.eu/project/id/101056765', source: 'CORDIS (Horizon Europe)' },
+      { title: 'EV4EU - Home', url: 'https://ev4eu.eu/', source: 'EV4EU' },
+    ],
+  },
+  'epowermove': {
+    references: [
+      { title: 'ePowerMove - Project Fact Sheet', url: 'https://cordis.europa.eu/project/id/101192753', source: 'CORDIS (Horizon Europe)' },
+      { title: 'ePowerMove project', url: 'https://www.2zeroemission.eu/research-project/epowermove/', source: '2Zero' },
+    ],
+  },
+  'nio v2g & battery swap': {
+    references: [
+      { title: 'Nio participates in large-scale V2G trial in Jiangsu, testing power supply to grid', url: 'https://cnevpost.com/2026/01/27/nio-participates-in-large-scale-v2g-trial-jiangsu/', source: 'CnEVPost', date: '2026' },
+      { title: 'Nio puts 10 charging stations supporting vehicle-to-grid into operation in Shanghai', url: 'https://cnevpost.com/2024/01/09/nio-puts-10-v2g-charging-stations-into-operation-shanghai/', source: 'CnEVPost', date: '2024' },
+      { title: 'How Chinese EV owners are profiting from powering the grid with V2G', url: 'https://carnewschina.com/2025/06/05/how-chinese-ev-owners-are-profiting-from-powering-the-grid-with-v2g/', source: 'CarNewsChina' },
+    ],
+  },
+  'ahead': {
+    references: [
+      { title: 'AHEAD - AI-informed Holistic EVs integration Approaches for Distribution grids (Fact Sheet)', url: 'https://cordis.europa.eu/project/id/101160665', source: 'CORDIS (Horizon Europe)' },
+      { title: 'AHEAD - Project Website', url: 'https://horizon-ahead.eu/', source: 'AHEAD' },
+    ],
+  },
+  'cajon valley school district': {
+    references: [
+      { title: 'Cajon Valley Union School District - V2G Project', url: 'https://nuvve.com/projects/cajon-valley-v2g-project/', source: 'Nuvve' },
+      { title: "SDG&E and Cajon Valley Flip the Switch on Region's First Vehicle-to-Grid Project", url: 'https://www.sempra.com/sdge-and-cajon-valley-union-school-district-flip-switch-regions-first-vehicle-grid-project', source: 'Sempra / SDG&E' },
+      { title: 'The Electric School Bus Series: Powering the Grid with Cajon Valley USD', url: 'https://www.wri.org/update/electric-school-bus-series-powering-grid-cajon-valley-union-school-district', source: 'World Resources Institute' },
+    ],
+  },
+  'california school bus v2g': {
+    references: [
+      { title: 'Ramona Unified, Blue Bird and Nuvve Unveil 8 New V2G-Enabled Electric School Buses', url: 'https://www.prnewswire.com/news-releases/san-diego-countys-ramona-unified-school-district-blue-bird-and-nuvve-unveil-8-new-v2g-enabled-and-qualified-electric-school-buses-301645407.html', source: 'PR Newswire', date: '2022' },
+      { title: 'Vehicle-to-Grid Electric School Bus Commercialization Project', url: 'https://www.energy.gov/eere/vehicles/articles/vehicle-grid-electric-school-bus-commercialization-project', source: 'U.S. DOE' },
+      { title: 'Nuvve and Blue Bird Announce Availability of Nationwide V2G School Bus Offer', url: 'https://www.prnewswire.com/news-releases/nuvve-and-blue-bird-announce-availability-of-nationwide-vehicle-to-grid-v2g-school-bus-offer-301131309.html', source: 'PR Newswire' },
+    ],
+  },
+  'porto airport & amsterdam arena (drive2x)': {
+    references: [
+      { title: 'Porto Airport (V2B) - Demo Site', url: 'https://drive2x.eu/demo_sites/porto-airport-v2b/', source: 'Drive2X' },
+      { title: 'Amsterdam (V2B) - Demo Site', url: 'https://drive2x.eu/demo_sites/amsterdam/', source: 'DriVe2X' },
+      { title: 'DriVe2X - Project Fact Sheet', url: 'https://cordis.europa.eu/project/id/101056934', source: 'CORDIS (Horizon Europe)' },
+    ],
+  },
+  'electric school bus v2g project (caiso/southern california edison)': {
+    references: [
+      { title: 'Case study (USA): Electric school bus vehicle-to-grid pilot in California', url: 'https://www.ofgem.gov.uk/publications/case-study-usa-electric-school-bus-vehicle-grid-pilot-california', source: 'Ofgem' },
+      { title: 'Vehicle-to-Grid Electric School Bus Commercialization Project', url: 'https://www.energy.gov/eere/vehicles/articles/vehicle-grid-electric-school-bus-commercialization-project', source: 'U.S. DOE' },
+      { title: 'SCE Receives State Approval for Four Electric Transportation Pilots', url: 'https://energized.edison.com/stories/sce-receives-state-approval-for-four-electric-transportation-pilots', source: 'Southern California Edison' },
+    ],
+  },
+  'terni city centre (drive2x)': {
+    references: [
+      { title: 'Terni City Centre (V2G) - Demo Site', url: 'https://drive2x.eu/demo_sites/terni-city-centre-v2g/', source: 'DriVe2X' },
+      { title: 'DriVe2X - Project Fact Sheet', url: 'https://cordis.europa.eu/project/id/101056934', source: 'CORDIS (Horizon Europe)' },
+    ],
+  },
+  'v2x suisse': {
+    references: [
+      { title: 'V2X: Bidirectional Charging for Future Mobility', url: 'https://mobility.ch/en/carsharing/mobility-of-the-future/v2x', source: 'Mobility' },
+      { title: 'V2X Suisse', url: 'https://www.v2g-hub.com/projects/v2x-suisse/', source: 'V2G Hub' },
+      { title: 'Honda and V2X Suisse Consortium to Advance V2G Charging in Switzerland', url: 'https://global.honda/en/newsroom/news/2022/c220119beng.html', source: 'Honda' },
+    ],
+  },
+  'smart solar charging': {
+    references: [
+      { title: "Utrecht becomes Europe's first city with a vehicle-to-grid (V2G) car-sharing service", url: 'https://media.renaultgroup.com/utrecht-becomes-europes-first-city-with-a-vehicletogrid-v2g-carsharing-service/', source: 'Renault Group' },
+      { title: "Europe's first V2G ecosystem in Utrecht", url: 'https://www.lastmilesolutions.com/insights/cases/v2g-utrecht-last-mile-solutions-we-drive-solar/', source: 'Last Mile Solutions' },
+      { title: 'We Drive Solar', url: 'https://wedrivesolar.com/', source: 'We Drive Solar' },
+    ],
+  },
+  'isle of wight car club (drive2x)': {
+    references: [
+      { title: 'Isle of Wight (V2G) - Demo Site', url: 'https://drive2x.eu/demo_sites/isle-of-wight-v2g/', source: 'DriVe2X' },
+      { title: 'DriVe2X - Project Fact Sheet', url: 'https://cordis.europa.eu/project/id/101056934', source: 'CORDIS (Horizon Europe)' },
+    ],
+  },
+  'grid motion': {
+    references: [
+      { title: 'Grid Motion', url: 'https://www.v2g-hub.com/projects/grid-motion/', source: 'V2G Hub' },
+      { title: 'GridMotion Project: reducing electric vehicle usage cost thanks to smart charging', url: 'https://www.enel.com/media/explore/search-press-releases/press/2017/05/gridmotion-project-reducing-electric-vehicle-usage-cost-thanks-to-smart-charging-process', source: 'Enel', date: '2017' },
+      { title: 'Groupe PSA and partners launch GridMotion', url: 'https://www.greencarcongress.com/2017/05/20170512-psa.html', source: 'Green Car Congress' },
+    ],
+  },
+  'octopus powerloop': {
+    references: [
+      { title: 'Powerloop | V2G', url: 'https://octopusev.com/powerloop', source: 'Octopus Electric Vehicles' },
+      { title: 'Bundled vehicle-to-grid (V2G) charging can benefit EV users', url: 'https://www.ukri.org/who-we-are/how-we-are-doing/research-outcomes-and-impact/innovate-uk/bundled-vehicle-to-grid-v2g-charging-can-benefit-ev-users/', source: 'UKRI' },
+      { title: 'Powerloop: Trialling Vehicle-to-Grid technology (ESO & Octopus)', url: 'https://www.neso.energy/document/281316/download', source: 'National Energy System Operator' },
+    ],
+  },
+  'm-tech labo': {
+    references: [
+      { title: 'MC, MMC and Mitsubishi Electric begin EV-Smart Grid Demonstration Project', url: 'https://www.mitsubishielectric.com/news/2012/0412.html', source: 'Mitsubishi Electric', date: '2012' },
+      { title: 'Mitsubishi companies launch smart grid demonstration system using EVs and used battery packs', url: 'https://www.greencarcongress.com/2012/04/mlabo-20120412.html', source: 'Green Car Congress', date: '2012' },
+      { title: 'Electric vehicle smart grid demonstration project at M-tech Labo', url: 'https://www.ebmag.com/electric-vehicle-smart-grid-demonstration-project-at-m-tech-labo-12242/', source: 'Electrical Business' },
+    ],
+  },
 };
 
 
