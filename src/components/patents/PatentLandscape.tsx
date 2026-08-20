@@ -1,4 +1,4 @@
-import { FileText, TrendingUp, Calendar, Building2, Sparkles, Award, ScrollText } from 'lucide-react';
+import { FileText, TrendingUp, Calendar, Building2, Sparkles, Award, ScrollText, Lightbulb } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { patentsSummary } from '@/data/patentsSummary';
 import {
