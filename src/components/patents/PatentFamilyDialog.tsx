@@ -1,8 +1,8 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Building2, Lightbulb, Target, TrendingUp } from 'lucide-react';
-import type { PatentFamily, PatentFamilyStatus } from '@/data/patentFamilies';
+import { Building2, Cpu, Lightbulb, Target, TrendingUp } from 'lucide-react';
+import type { PatentFamily, PatentFamilyStatus, PatentSubTech } from '@/data/patentFamilies';
 import { cn } from '@/lib/utils';
 
 const SUB_COLORS = ['hsl(var(--foreground))', 'hsl(var(--primary))', 'hsl(var(--accent))', 'hsl(var(--energy-amber))'];
