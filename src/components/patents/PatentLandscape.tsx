@@ -5,6 +5,9 @@ import {
   ResponsiveContainer,
   AreaChart,
   Area,
+  LineChart,
+  Line,
+  Legend,
   XAxis,
   YAxis,
   Tooltip,
@@ -13,6 +16,8 @@ import {
   CartesianGrid,
 } from 'recharts';
 import { GrowingTopicPopup } from './GrowingTopicPopup';
+import { PatentFamilies } from './PatentFamilies';
+
 
 const StatCard = ({ icon: Icon, value, label }: { icon: any; value: string | number; label: string }) => (
   <div className="p-4 rounded-xl bg-card border flex flex-col gap-2">
@@ -46,25 +51,24 @@ export function PatentLandscape() {
         </div>
 
         <Card className="mb-6">
-          <CardHeader className="pb-2"><CardTitle className="text-sm">Patent filings per year</CardTitle></CardHeader>
+          <CardHeader className="pb-2"><CardTitle className="text-sm">Patent filings and grants per year</CardTitle></CardHeader>
           <CardContent className="h-72">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={data?.perYear ?? []}>
-                <defs>
-                  <linearGradient id="patFill" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.35} />
-                    <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
+              <LineChart data={data?.perYear ?? []} margin={{ top: 5, right: 10, left: -18, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                 <XAxis dataKey="year" stroke="hsl(var(--muted-foreground))" fontSize={11} />
                 <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} />
                 <Tooltip contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: 8, fontSize: 12 }} />
-                <Area type="monotone" dataKey="count" stroke="hsl(var(--primary))" strokeWidth={2} fill="url(#patFill)" />
-              </AreaChart>
+                <Legend wrapperStyle={{ fontSize: 11 }} />
+                <Line type="monotone" dataKey="apps" name="Patent filings (applications)" stroke="hsl(var(--primary))" strokeWidth={2} dot={false} />
+                <Line type="monotone" dataKey="grants" name="Granted patents" stroke="hsl(var(--energy-amber))" strokeWidth={2} dot={false} />
+              </LineChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
+
+        <PatentFamilies />
+
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Card>
