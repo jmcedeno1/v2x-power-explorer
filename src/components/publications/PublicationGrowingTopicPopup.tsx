@@ -1,8 +1,9 @@
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { TrendingUp, Lightbulb, Target, Layers } from 'lucide-react';
+import { TrendingUp, Lightbulb, Target, Layers, Quote, ExternalLink } from 'lucide-react';
 import { ReactNode, useState } from 'react';
+import { PUBLICATION_TOP_PAPERS, paperLink } from '@/data/publicationTopPapers';
 
 // Brief tooltip text for scope tags used across publication topics.
 const SCOPE_DESCRIPTIONS: Record<string, string> = {
@@ -152,6 +153,7 @@ interface Props {
 export function PublicationGrowingTopicPopup({ topic, y2020, y2025, growthAbs, growthPct, total, children }: Props) {
   const [open, setOpen] = useState(false);
   const info = PUBLICATION_TOPIC_INFO[topic];
+  const topPapers = PUBLICATION_TOP_PAPERS[topic] ?? [];
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -229,7 +231,7 @@ export function PublicationGrowingTopicPopup({ topic, y2020, y2025, growthAbs, g
               </ul>
             </div>
 
-            <div className="p-4 bg-gradient-to-br from-primary/5 to-accent/5">
+            <div className="p-4 border-b bg-gradient-to-br from-primary/5 to-accent/5">
               <h5 className="text-sm font-medium text-foreground mb-2 flex items-center gap-2">
                 <Lightbulb className="w-4 h-4 text-energy-amber" /> Strategic Opportunities
               </h5>
@@ -243,6 +245,37 @@ export function PublicationGrowingTopicPopup({ topic, y2020, y2025, growthAbs, g
               </ul>
             </div>
           </>
+        )}
+
+        {topPapers.length > 0 && (
+          <div className="p-4 bg-card">
+            <h5 className="text-sm font-medium text-foreground mb-2 flex items-center gap-2">
+              <Quote className="w-4 h-4 text-primary" /> Top 5 most cited papers
+            </h5>
+            <ul className="space-y-2">
+              {topPapers.map((p, i) => (
+                <li key={p.title + i} className="flex items-start gap-2">
+                  <span className="text-[11px] font-bold text-muted-foreground tabular-nums w-4 shrink-0 mt-0.5">
+                    {i + 1}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <a
+                      href={paperLink(p)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs font-medium text-foreground hover:text-primary hover:underline inline-flex items-start gap-1"
+                    >
+                      <span>{p.title}</span>
+                      <ExternalLink className="w-3 h-3 shrink-0 mt-0.5 opacity-60" />
+                    </a>
+                    <div className="text-[11px] text-muted-foreground mt-0.5">
+                      {p.year ? `${p.year} - ` : ''}{p.citations.toLocaleString()} citations
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
 
         <div className="p-3 border-t bg-muted/30 text-center text-[11px] text-muted-foreground">
