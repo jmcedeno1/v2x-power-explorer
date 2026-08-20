@@ -25,7 +25,7 @@ const BODIES: (StandardBody | 'All Bodies')[] = [
 ];
 
 
-function Chip({ children, tone = 'muted' }: { children: React.ReactNode; tone?: 'muted' | 'primary' | 'warning' }) {
+function Chip({ children, tone = 'muted' }: { children: React.ReactNode; tone?: 'muted' | 'primary' | 'warning' | 'info' }) {
   return (
     <span
       className={cn(
@@ -34,7 +34,9 @@ function Chip({ children, tone = 'muted' }: { children: React.ReactNode; tone?: 
           ? 'bg-primary text-primary-foreground'
           : tone === 'warning'
             ? 'bg-energy-amber/15 text-energy-amber border border-energy-amber/25'
-            : 'bg-muted text-muted-foreground'
+            : tone === 'info'
+              ? 'bg-energy-purple/15 text-energy-purple border border-energy-purple/25'
+              : 'bg-muted text-muted-foreground'
       )}
     >
       {children}
@@ -141,7 +143,7 @@ export function StandardsCatalog() {
               <p className="text-xs text-muted-foreground mb-3 flex-1">{s.description}</p>
               <div className="flex items-center justify-between gap-2">
                 <div className="flex flex-wrap items-center gap-2">
-                  <Chip tone={s.status === 'Under revision' ? 'warning' : 'primary'}>{s.status}</Chip>
+                  <Chip tone={s.status === 'Under revision' ? 'warning' : s.status === 'Under development' ? 'info' : 'primary'}>{s.status}</Chip>
                   <Chip>{s.year}</Chip>
                   <Chip>{s.region}</Chip>
                 </div>
