@@ -153,6 +153,7 @@ interface Props {
 export function PublicationGrowingTopicPopup({ topic, y2020, y2025, growthAbs, growthPct, total, children }: Props) {
   const [open, setOpen] = useState(false);
   const info = PUBLICATION_TOPIC_INFO[topic];
+  const topPapers = PUBLICATION_TOP_PAPERS[topic] ?? [];
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
