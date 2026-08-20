@@ -65,8 +65,8 @@ export const revenueStreamDetails: RevenueStreamDetail[] = [
       { name: 'Hitachi', role: 'Bidirectional chargers and control platform (JUMPSmartMaui)', url: 'https://www.hitachi.com' },
       { name: 'CAISO / PJM / NYISO', role: 'Market operators defining Reg Up/Down products and telemetry rules', url: 'https://www.caiso.com' },
       { name: 'Olivine', role: 'Scheduling-coordinator and market-access services for V2G fleets', url: 'https://olivineinc.com' },
-      { name: 'Fingrid', role: 'Finnish TSO; FCR-N, FCR-D and aFRR reserve markets that a V2G aggregator bids into', url: 'https://www.fingrid.fi/en/electricity-market/reserves_and_balancing/', region: 'Finland' },
-      { name: 'Fortum Spring', role: 'Finnish aggregator pooling distributed flexibility into Fingrid reserve markets', url: 'https://www.fortum.com/services/fortum-spring', region: 'Finland' },
+      { name: 'Fingrid', role: 'Finnish TSO; FCR-N, FCR-D and aFRR reserve markets that a V2G aggregator bids into', url: 'https://www.fingrid.fi/en/electricity-market/reserves/', region: 'Finland' },
+      { name: 'Fortum Spring', role: 'Finnish aggregator pooling distributed flexibility into Fingrid reserve markets', url: 'https://www.fortum.com/services', region: 'Finland' },
     ],
     evidence: [
       'Early fleet modelling (Tomic and Kempton) estimated net profits of $70-700/vehicle/year for a 100-vehicle regulation-down fleet, and $95-1,030/vehicle/year for a 252-vehicle regulation up-and-down fleet. (Gridworks review)',
@@ -184,7 +184,7 @@ export const revenueStreamDetails: RevenueStreamDetail[] = [
       { name: 'Honda', role: 'SmartCharge residential DR and renewable-acceptance study', url: 'https://global.honda' },
       { name: 'Highland Electric Fleets', role: 'School-bus subscription model offering summer V2G capacity', url: 'https://highlandfleets.com' },
       { name: 'National Grid / utility programs', role: 'Program design and capacity payments', url: 'https://www.nationalgrid.com' },
-      { name: 'Fingrid', role: 'Finnish counterpart: peak-load reserve and mFRR energy/capacity products for demand-side resources', url: 'https://www.fingrid.fi/en/electricity-market/reserves_and_balancing/', region: 'Finland' },
+      { name: 'Fingrid', role: 'Finnish counterpart: peak-load reserve and mFRR energy/capacity products for demand-side resources', url: 'https://www.fingrid.fi/en/electricity-market/reserves/', region: 'Finland' },
       { name: 'Fingrid Datahub', role: 'National metering data platform enabling independent aggregators to enrol Finnish sites', url: 'https://www.fingrid.fi/en/electricity-market/datahub/', region: 'Finland' },
     ],
     evidence: [
@@ -259,9 +259,9 @@ export const revenueStreamDetails: RevenueStreamDetail[] = [
       { name: 'Nissan / CHAdeMO ecosystem', role: 'Longest-running V2H deployments', url: 'https://www.chademo.com/' },
       { name: 'Hitachi', role: 'Residential bidirectional chargers with IEEE 2030.5 control', url: 'https://www.hitachi.com' },
       { name: 'Fermata Energy', role: 'Certified bidirectional hardware for buildings and critical loads', url: 'https://www.fermataenergy.com' },
-      { name: 'Ford / Sunrun', role: 'Home integration packaging of vehicle backup power', url: 'https://www.sunrun.com/ford-charge-station-pro' },
+      { name: 'Ford / Sunrun', role: 'Home integration packaging of vehicle backup power', url: 'https://www.sunrun.com/' },
       { name: 'Tukes', role: 'Finnish safety authority; electrical installation rules for islanded V2H connections', url: 'https://tukes.fi/en/frontpage', region: 'Finland' },
-      { name: 'Parkkisahko / Finnish installers', role: 'Local bidirectional wallbox supply and certified installation for V2H', url: 'https://www.parkkisahko.fi/en/', region: 'Finland' },
+      { name: 'Plugit Finland / Finnish installers', role: 'Local bidirectional wallbox supply and certified installation for V2H', url: 'https://www.plugit.fi/en/', region: 'Finland' },
     ],
     evidence: [
       'Resilience value is real but not traded: it appears in customer willingness-to-pay and utility incentive design, not in ISO revenue stacks. (IEA, Vehicle-to-Grid Technology)',
