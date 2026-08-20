@@ -5,6 +5,7 @@ export type PatentFamilyStatus = 'growing' | 'active' | 'saturated' | 'emerging'
 
 export type PatentSubTech = {
   name: string;
+  description: string;
   total: number;
   status: PatentFamilyStatus;
   perYear: { year: number; count: number }[];
@@ -97,6 +98,7 @@ export const patentFamilies: PatentFamily[] = [
     "subs": [
       {
         "name": "On-board charger (OBC)",
+        "description": "Integrated AC-DC power electronics inside the vehicle that converts grid AC power to battery DC and, when bidirectional, feeds energy back to the grid or home.",
         "total": 94,
         "status": "growing",
         "perYear": [
@@ -148,6 +150,7 @@ export const patentFamilies: PatentFamily[] = [
       },
       {
         "name": "Dual-active-bridge",
+        "description": "A resonant or phase-shifted DC-DC topology using two active H-bridges to transfer power across a high-frequency transformer with galvanic isolation and soft switching.",
         "total": 13,
         "status": "emerging",
         "perYear": [
@@ -199,6 +202,7 @@ export const patentFamilies: PatentFamily[] = [
       },
       {
         "name": "Bidirectional inverter",
+        "description": "A stand-alone or integrated inverter that converts DC battery voltage to AC for grid export or home backup, and reverses the flow to recharge the battery.",
         "total": 131,
         "status": "growing",
         "perYear": [
@@ -250,6 +254,7 @@ export const patentFamilies: PatentFamily[] = [
       },
       {
         "name": "Wide-bandgap (SiC/GaN)",
+        "description": "Power semiconductor devices built from silicon carbide or gallium nitride that enable higher efficiency, faster switching, and smaller magnetics than silicon IGBTs or MOSFETs.",
         "total": 1,
         "status": "emerging",
         "perYear": [
@@ -414,6 +419,7 @@ export const patentFamilies: PatentFamily[] = [
     "subs": [
       {
         "name": "Depot & fleet charging",
+        "description": "Charging systems and site layouts designed for fleets of electric vans, buses, or trucks, often combining multiple bidirectional dispensers with load management.",
         "total": 16,
         "status": "emerging",
         "perYear": [
@@ -465,6 +471,7 @@ export const patentFamilies: PatentFamily[] = [
       },
       {
         "name": "Residential wallbox",
+        "description": "A compact AC or DC charging unit installed at a home or apartment parking spot, increasingly supporting V2H or V2G communication and control.",
         "total": 22,
         "status": "emerging",
         "perYear": [
@@ -516,6 +523,7 @@ export const patentFamilies: PatentFamily[] = [
       },
       {
         "name": "DC fast charging hubs",
+        "description": "High-power public or commercial stations with multiple DC dispensers, shared rectifiers, and grid-interaction features for demand response or ancillary services.",
         "total": 24,
         "status": "emerging",
         "perYear": [
@@ -567,6 +575,7 @@ export const patentFamilies: PatentFamily[] = [
       },
       {
         "name": "Connectors & cables",
+        "description": "Physical plugs, inlets, cables, and cooling systems that carry high current between the vehicle and charger, including CCS, CHAdeMO, and NACS variants.",
         "total": 53,
         "status": "growing",
         "perYear": [
@@ -731,6 +740,7 @@ export const patentFamilies: PatentFamily[] = [
     "subs": [
       {
         "name": "SoC / SoH estimation",
+        "description": "Algorithms and sensors that estimate the battery state-of-charge and state-of-health to enable safe bidirectional operation and warranty-aware dispatch.",
         "total": 181,
         "status": "growing",
         "perYear": [
@@ -782,6 +792,7 @@ export const patentFamilies: PatentFamily[] = [
       },
       {
         "name": "Degradation & ageing models",
+        "description": "Models that predict capacity fade and power loss from cycling, calendar ageing, temperature, and bidirectional current profiles.",
         "total": 280,
         "status": "growing",
         "perYear": [
@@ -833,6 +844,7 @@ export const patentFamilies: PatentFamily[] = [
       },
       {
         "name": "Cell balancing",
+        "description": "Circuitry and control methods that equalize voltage or state-of-charge across series cells to maximize usable capacity and avoid premature failure.",
         "total": 46,
         "status": "growing",
         "perYear": [
@@ -884,6 +896,7 @@ export const patentFamilies: PatentFamily[] = [
       },
       {
         "name": "Thermal & safety",
+        "description": "Heating, cooling, and protection systems that keep the pack within safe temperature and voltage limits during both charging and discharging.",
         "total": 50,
         "status": "growing",
         "perYear": [
@@ -1048,6 +1061,7 @@ export const patentFamilies: PatentFamily[] = [
     "subs": [
       {
         "name": "Market bidding & aggregation",
+        "description": "Software and protocols that pool many EVs into a virtual resource and bid their aggregated capacity into electricity markets or grid programs.",
         "total": 18,
         "status": "emerging",
         "perYear": [
@@ -1099,6 +1113,7 @@ export const patentFamilies: PatentFamily[] = [
       },
       {
         "name": "Dispatch & scheduling control",
+        "description": "Real-time algorithms that decide when each vehicle charges or discharges based on prices, grid signals, user needs, and battery constraints.",
         "total": 55,
         "status": "growing",
         "perYear": [
@@ -1150,6 +1165,7 @@ export const patentFamilies: PatentFamily[] = [
       },
       {
         "name": "Grid support services",
+        "description": "Use of EV battery power to provide frequency response, voltage support, spinning reserves, or other ancillary services to the power system.",
         "total": 77,
         "status": "growing",
         "perYear": [
@@ -1201,6 +1217,7 @@ export const patentFamilies: PatentFamily[] = [
       },
       {
         "name": "Battery-aware V2G",
+        "description": "Control strategies that explicitly limit cycling depth, power, and temperature to reduce degradation while still delivering grid services.",
         "total": 12,
         "status": "emerging",
         "perYear": [
@@ -1365,6 +1382,7 @@ export const patentFamilies: PatentFamily[] = [
     "subs": [
       {
         "name": "Tariff & price optimization",
+        "description": "Charge scheduling that minimizes energy cost by shifting consumption to low-price periods and, when allowed, selling back at high-price periods.",
         "total": 18,
         "status": "emerging",
         "perYear": [
@@ -1416,6 +1434,7 @@ export const patentFamilies: PatentFamily[] = [
       },
       {
         "name": "Fleet / multi-vehicle scheduling",
+        "description": "Optimization across many vehicles and chargers subject to departure times, route energy needs, site power limits, and operational priorities.",
         "total": 15,
         "status": "emerging",
         "perYear": [
@@ -1467,6 +1486,7 @@ export const patentFamilies: PatentFamily[] = [
       },
       {
         "name": "Demand response",
+        "description": "Automated reduction or delay of charging demand in response to grid operator or utility signals to relieve peak load or price spikes.",
         "total": 30,
         "status": "growing",
         "perYear": [
@@ -1518,6 +1538,7 @@ export const patentFamilies: PatentFamily[] = [
       },
       {
         "name": "Renewable-aware charging",
+        "description": "Scheduling that aligns charging with local solar or wind generation and uses the EV battery to absorb renewable surplus or fill production gaps.",
         "total": 16,
         "status": "emerging",
         "perYear": [
@@ -1682,6 +1703,7 @@ export const patentFamilies: PatentFamily[] = [
     "subs": [
       {
         "name": "Coil & compensation design",
+        "description": "Magnetic coils, ferrites, resonant tanks, and compensation networks that transfer power across an air gap with high efficiency and low losses.",
         "total": 37,
         "status": "growing",
         "perYear": [
@@ -1733,6 +1755,7 @@ export const patentFamilies: PatentFamily[] = [
       },
       {
         "name": "Alignment & positioning",
+        "description": "Methods and sensors that guide the vehicle into the correct position over a ground pad so the coils couple strongly and safely.",
         "total": 24,
         "status": "emerging",
         "perYear": [
@@ -1784,6 +1807,7 @@ export const patentFamilies: PatentFamily[] = [
       },
       {
         "name": "Dynamic (in-road) charging",
+        "description": "Systems that charge or power vehicles while in motion through embedded road coils or overhead conductive rails.",
         "total": 2,
         "status": "emerging",
         "perYear": [
@@ -1948,6 +1972,7 @@ export const patentFamilies: PatentFamily[] = [
     "subs": [
       {
         "name": "User / vehicle authentication",
+        "description": "Methods to verify the driver, vehicle, or account before allowing charging, discharging, or payment transactions.",
         "total": 60,
         "status": "growing",
         "perYear": [
@@ -1999,6 +2024,7 @@ export const patentFamilies: PatentFamily[] = [
       },
       {
         "name": "Certificates & PKI",
+        "description": "Public-key infrastructure, digital certificates, and certificate provisioning used to establish trusted identities between vehicles, chargers, and backends.",
         "total": 16,
         "status": "emerging",
         "perYear": [
@@ -2050,6 +2076,7 @@ export const patentFamilies: PatentFamily[] = [
       },
       {
         "name": "Encryption & secure channels",
+        "description": "TLS, application-layer encryption, and secure messaging that protect data confidentiality and integrity between EV and grid systems.",
         "total": 31,
         "status": "growing",
         "perYear": [
@@ -2101,6 +2128,7 @@ export const patentFamilies: PatentFamily[] = [
       },
       {
         "name": "Intrusion & anomaly detection",
+        "description": "Monitoring, logging, and machine-learning techniques that detect unauthorized access attempts or abnormal behavior in charging sessions.",
         "total": 1,
         "status": "emerging",
         "perYear": [
@@ -2265,6 +2293,7 @@ export const patentFamilies: PatentFamily[] = [
     "subs": [
       {
         "name": "Frequency regulation",
+        "description": "Fast upward or downward power adjustments that help keep grid frequency within its target band, typically the highest-value V2G service.",
         "total": 4,
         "status": "emerging",
         "perYear": [
@@ -2316,6 +2345,7 @@ export const patentFamilies: PatentFamily[] = [
       },
       {
         "name": "VPP orchestration",
+        "description": "Cloud platforms that coordinate thousands of distributed EVs as a single virtual power plant for wholesale markets or distribution services.",
         "total": 18,
         "status": "emerging",
         "perYear": [
@@ -2367,6 +2397,7 @@ export const patentFamilies: PatentFamily[] = [
       },
       {
         "name": "Voltage & reactive power",
+        "description": "Use of the inverter to inject or absorb reactive power and help manage local voltage levels on distribution feeders.",
         "total": 39,
         "status": "growing",
         "perYear": [
@@ -2531,6 +2562,7 @@ export const patentFamilies: PatentFamily[] = [
     "subs": [
       {
         "name": "ISO 15118 / Plug and Charge",
+        "description": "The international standard defining vehicle-to-charger communication, including automatic authentication and high-level charging control.",
         "total": 13,
         "status": "emerging",
         "perYear": [
@@ -2582,6 +2614,7 @@ export const patentFamilies: PatentFamily[] = [
       },
       {
         "name": "OCPP & backend APIs",
+        "description": "Open Charge Point Protocol and related backend interfaces used by charging network operators to manage stations, pricing, and sessions remotely.",
         "total": 2,
         "status": "emerging",
         "perYear": [
@@ -2633,6 +2666,7 @@ export const patentFamilies: PatentFamily[] = [
       },
       {
         "name": "CHAdeMO / CCS",
+        "description": "DC fast-charging connector and communication standards; CHAdeMO has historically led bidirectional certification, while CCS is widely adopted in Europe and North America.",
         "total": 5,
         "status": "emerging",
         "perYear": [
@@ -2684,6 +2718,7 @@ export const patentFamilies: PatentFamily[] = [
       },
       {
         "name": "Wireless / cellular links",
+        "description": "Remote connectivity over Wi-Fi, cellular, or other networks that enables firmware updates, telemetry, and cloud-based dispatch.",
         "total": 3,
         "status": "emerging",
         "perYear": [
@@ -2848,6 +2883,7 @@ export const patentFamilies: PatentFamily[] = [
     "subs": [
       {
         "name": "EV-to-EV rescue charging",
+        "description": "Direct vehicle-to-vehicle power transfer to rescue a stranded EV with a depleted battery, using either conductive or wireless links.",
         "total": 2,
         "status": "emerging",
         "perYear": [
@@ -2899,6 +2935,7 @@ export const patentFamilies: PatentFamily[] = [
       },
       {
         "name": "Connector & cable systems",
+        "description": "Specialized plugs, adapters, and cables that enable safe V2V energy sharing between vehicles with different inlet types.",
         "total": 11,
         "status": "emerging",
         "perYear": [
@@ -3063,6 +3100,7 @@ export const patentFamilies: PatentFamily[] = [
     "subs": [
       {
         "name": "Portable AC outlets",
+        "description": "On-board AC sockets that let the EV power tools, appliances, or campsites directly from the high-voltage battery.",
         "total": 1,
         "status": "emerging",
         "perYear": [
@@ -3114,6 +3152,7 @@ export const patentFamilies: PatentFamily[] = [
       },
       {
         "name": "Tool & appliance supply",
+        "description": "Power electronics and control that provide stable AC output for construction equipment, household devices, or emergency loads.",
         "total": 5,
         "status": "emerging",
         "perYear": [
@@ -3278,6 +3317,7 @@ export const patentFamilies: PatentFamily[] = [
     "subs": [
       {
         "name": "Home backup & islanding",
+        "description": "Systems that disconnect the home from the grid during outages and power critical loads from the EV battery in islanded mode.",
         "total": 2,
         "status": "emerging",
         "perYear": [
@@ -3329,6 +3369,7 @@ export const patentFamilies: PatentFamily[] = [
       },
       {
         "name": "Building / demand charges",
+        "description": "Use of the EV battery to reduce a building's peak demand and associated demand charges from the utility tariff.",
         "total": 9,
         "status": "emerging",
         "perYear": [
@@ -3380,6 +3421,7 @@ export const patentFamilies: PatentFamily[] = [
       },
       {
         "name": "PV coupling",
+        "description": "Integration with rooftop solar so the EV stores daytime solar generation for evening self-consumption or grid export.",
         "total": 1,
         "status": "emerging",
         "perYear": [
@@ -3431,6 +3473,7 @@ export const patentFamilies: PatentFamily[] = [
       },
       {
         "name": "Home energy management",
+        "description": "Controllers that coordinate the EV, heat pump, solar inverter, battery, and loads to minimize cost or maximize self-sufficiency.",
         "total": 1,
         "status": "emerging",
         "perYear": [
