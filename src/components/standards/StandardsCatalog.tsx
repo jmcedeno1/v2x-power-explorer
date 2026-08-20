@@ -25,12 +25,16 @@ const BODIES: (StandardBody | 'All Bodies')[] = [
 ];
 
 
-function Chip({ children, tone = 'muted' }: { children: React.ReactNode; tone?: 'muted' | 'primary' }) {
+function Chip({ children, tone = 'muted' }: { children: React.ReactNode; tone?: 'muted' | 'primary' | 'warning' }) {
   return (
     <span
       className={cn(
         'px-2 py-0.5 rounded-full text-[11px] font-medium',
-        tone === 'primary' ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'
+        tone === 'primary'
+          ? 'bg-primary text-primary-foreground'
+          : tone === 'warning'
+            ? 'bg-energy-amber/15 text-energy-amber border border-energy-amber/25'
+            : 'bg-muted text-muted-foreground'
       )}
     >
       {children}
