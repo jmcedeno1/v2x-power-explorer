@@ -5,6 +5,8 @@ import { MainLayout } from '@/components/layout/MainLayout';
 import { ModuleHeader } from '@/components/ui/module-header';
 import { EmptyModuleState } from '@/components/ui/empty-module-state';
 import { standardsContent } from '@/data/moduleContent';
+import { StandardsCatalog } from '@/components/standards/StandardsCatalog';
+
 import { cn } from '@/lib/utils';
 
 export default function StandardsPage() {
