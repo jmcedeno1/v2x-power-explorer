@@ -1,8 +1,9 @@
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { TrendingUp, Lightbulb, Target, Layers } from 'lucide-react';
+import { TrendingUp, Lightbulb, Target, Layers, Quote, ExternalLink } from 'lucide-react';
 import { ReactNode, useState } from 'react';
+import { PUBLICATION_TOP_PAPERS, paperLink } from '@/data/publicationTopPapers';
 
 // Brief tooltip text for scope tags used across publication topics.
 const SCOPE_DESCRIPTIONS: Record<string, string> = {
