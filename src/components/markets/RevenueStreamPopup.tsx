@@ -71,7 +71,7 @@ export function RevenueStreamPopup({ stream, children }: Props) {
         </div>
 
         {/* Applications + players */}
-        <div className="grid md:grid-cols-2 gap-4">
+        <div className="space-y-6">
           <div>
             <h4 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-2">
               <Target className="w-4 h-4 text-primary" /> Specific applications
