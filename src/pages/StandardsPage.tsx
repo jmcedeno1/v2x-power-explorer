@@ -5,6 +5,8 @@ import { MainLayout } from '@/components/layout/MainLayout';
 import { ModuleHeader } from '@/components/ui/module-header';
 import { EmptyModuleState } from '@/components/ui/empty-module-state';
 import { standardsContent } from '@/data/moduleContent';
+import { StandardsCatalog } from '@/components/standards/StandardsCatalog';
+
 import { cn } from '@/lib/utils';
 
 export default function StandardsPage() {
@@ -27,49 +29,11 @@ export default function StandardsPage() {
           <EmptyModuleState moduleName="Standards" />
         ) : (
           <>
-            {/* Standards overview */}
+            {/* Standards catalogue */}
             <section className="mb-10">
-              <h3 className="text-lg font-semibold text-foreground mb-4">Key Standards</h3>
-              <div className="grid md:grid-cols-2 gap-4">
-                {((content?.standards as any[]) || []).map((standard: any, index: number) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, delay: index * 0.1 }}
-                    className="p-5 rounded-xl bg-card border hover:border-primary/40 transition-all"
-                  >
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                          <FileCheck className="w-5 h-5 text-primary" />
-                        </div>
-                        <div>
-                          <h4 className="font-semibold text-foreground">{standard.name}</h4>
-                          <p className="text-xs text-muted-foreground">{standard.year}</p>
-                        </div>
-                      </div>
-                      <span className={cn(
-                        'px-2 py-1 rounded-full text-xs font-medium',
-                        standard.status === 'active' 
-                          ? 'bg-energy-green/10 text-energy-green' 
-                          : 'bg-energy-amber/10 text-energy-amber'
-                      )}>
-                        {standard.status}
-                      </span>
-                    </div>
-                    <p className="text-sm text-muted-foreground mb-3">{standard.description}</p>
-                    <div className="flex flex-wrap gap-1.5">
-                      {(standard.features || []).map((feature: string, i: number) => (
-                        <span key={i} className="px-2 py-0.5 rounded-full bg-muted text-xs text-muted-foreground">
-                          {feature}
-                        </span>
-                      ))}
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
+              <StandardsCatalog />
             </section>
+
 
             {/* Grid code challenges */}
             <section className="mb-10">
