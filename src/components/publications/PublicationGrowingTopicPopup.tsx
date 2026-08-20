@@ -250,7 +250,7 @@ export function PublicationGrowingTopicPopup({ topic, y2020, y2025, growthAbs, g
         {topPapers.length > 0 && (
           <div className="p-4 bg-card">
             <h5 className="text-sm font-medium text-foreground mb-2 flex items-center gap-2">
-              <Quote className="w-4 h-4 text-primary" /> Top 5 most cited papers
+              <Quote className="w-4 h-4 text-primary" /> Top 5 most cited papers (last 5 years)
             </h5>
             <ul className="space-y-2">
               {topPapers.map((p, i) => (
