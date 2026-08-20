@@ -92,7 +92,26 @@ export function RevenueStreamPopup({ stream, children }: Props) {
             <div className="space-y-2">
               {stream.players.map((p) => (
                 <div key={p.name} className="p-2.5 rounded-lg border bg-card">
-                  <p className="text-sm font-medium text-foreground">{p.name}</p>
+                  <div className="flex items-start justify-between gap-2">
+                    {p.url ? (
+                      <a
+                        href={p.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm font-medium text-foreground hover:text-primary transition-colors inline-flex items-center gap-1"
+                      >
+                        {p.name}
+                        <ExternalLink className="w-3 h-3 shrink-0 opacity-60" />
+                      </a>
+                    ) : (
+                      <p className="text-sm font-medium text-foreground">{p.name}</p>
+                    )}
+                    {p.region && (
+                      <span className="text-[10px] px-1.5 py-0.5 rounded border text-muted-foreground shrink-0">
+                        {p.region}
+                      </span>
+                    )}
+                  </div>
                   <p className="text-xs text-muted-foreground mt-0.5">{p.role}</p>
                 </div>
               ))}
