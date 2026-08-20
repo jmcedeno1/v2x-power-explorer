@@ -8,6 +8,7 @@ import EngineeringPage from "./pages/EngineeringPage";
 import PatentsPage from "./pages/PatentsPage";
 import MarketsPage from "./pages/MarketsPage";
 import StandardsPage from "./pages/StandardsPage";
+import TechnologyOverviewPage from "./pages/TechnologyOverviewPage";
 import ArchitecturesPage from "./pages/ArchitecturesPage";
 import PilotsPage from "./pages/PilotsPage";
 import RisksPage from "./pages/RisksPage";

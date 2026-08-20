@@ -22,6 +22,7 @@ import {
   BookOpen,
   Newspaper,
   Activity,
+  Lightbulb,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -42,6 +43,7 @@ const navItems: NavItem[] = [
   { id: 'markets', label: 'Markets & Business', icon: TrendingUp, path: '/markets' },
   { id: 'pilots', label: 'Pilots & Demonstrators', icon: FlaskConical, path: '/pilots' },
   { id: 'engineering', label: 'Engineering & Research', icon: Cpu, path: '/engineering' },
+  { id: 'technology', label: 'Technology Overview', icon: Lightbulb, path: '/technology' },
   { id: 'standards', label: 'Standards & Regulation', icon: Scale, path: '/standards' },
   { id: 'architectures', label: 'System Architectures', icon: Network, path: '/architectures' },
   { id: 'risks', label: 'Risks & Stability', icon: ShieldAlert, path: '/risks' },
