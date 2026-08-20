@@ -5,12 +5,8 @@ import { MainLayout } from '@/components/layout/MainLayout';
 import { ModuleHeader } from '@/components/ui/module-header';
 import { EmptyModuleState } from '@/components/ui/empty-module-state';
 import { useModuleContent } from '@/hooks/useGeneratedContent';
-import { patentAreasData } from '@/data/patentAreasData';
-import { InnovationAreaPopup } from '@/components/patents/InnovationAreaPopup';
-import { PatentEvolutionChart } from '@/components/patents/PatentEvolutionChart';
 import { PatentBreakthroughTimeline } from '@/components/patents/PatentBreakthroughTimeline';
 import { PatentLandscape } from '@/components/patents/PatentLandscape';
-import { cn } from '@/lib/utils';
 
 export default function PatentsPage() {
   const { data: content, isLoading } = useModuleContent('patents');
