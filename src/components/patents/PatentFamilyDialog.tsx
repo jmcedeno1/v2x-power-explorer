@@ -167,15 +167,7 @@ export function PatentFamilyDialog({ family, children }: { family: PatentFamily;
           </div>
           <div className="grid sm:grid-cols-2 gap-2">
             {family.subs.map((s, i) => (
-              <div key={s.name} className="flex items-center gap-2 p-2 rounded-lg bg-muted/40">
-                <span
-                  className="w-2.5 h-2.5 rounded-full shrink-0"
-                  style={{ backgroundColor: SUB_COLORS[i % SUB_COLORS.length] }}
-                />
-                <span className="text-xs font-medium text-foreground flex-1 truncate">{s.name}</span>
-                <span className="text-xs tabular-nums text-muted-foreground">{s.total}</span>
-                <StatusBadge status={s.status} />
-              </div>
+              <SubTechPopup key={s.name} sub={s} color={SUB_COLORS[i % SUB_COLORS.length]} />
             ))}
           </div>
         </div>
