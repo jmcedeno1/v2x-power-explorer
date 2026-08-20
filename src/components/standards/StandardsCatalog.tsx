@@ -18,7 +18,12 @@ const BODIES: (StandardBody | 'All Bodies')[] = [
   'UL',
   'OCA',
   'CHAdeMO',
+  'CENELEC',
+  'VDE/FNN',
+  'Standards Australia',
+  'SAC (China)',
 ];
+
 
 function Chip({ children, tone = 'muted' }: { children: React.ReactNode; tone?: 'muted' | 'primary' }) {
   return (
