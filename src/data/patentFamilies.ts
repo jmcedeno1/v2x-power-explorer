@@ -1832,57 +1832,6 @@ export const patentFamilies: PatentFamily[] = [
             "count": 0
           }
         ]
-      },
-      {
-        "name": "Foreign object detection",
-        "total": 0,
-        "status": "emerging",
-        "perYear": [
-          {
-            "year": 2016,
-            "count": 0
-          },
-          {
-            "year": 2017,
-            "count": 0
-          },
-          {
-            "year": 2018,
-            "count": 0
-          },
-          {
-            "year": 2019,
-            "count": 0
-          },
-          {
-            "year": 2020,
-            "count": 0
-          },
-          {
-            "year": 2021,
-            "count": 0
-          },
-          {
-            "year": 2022,
-            "count": 0
-          },
-          {
-            "year": 2023,
-            "count": 0
-          },
-          {
-            "year": 2024,
-            "count": 0
-          },
-          {
-            "year": 2025,
-            "count": 0
-          },
-          {
-            "year": 2026,
-            "count": 0
-          }
-        ]
       }
     ],
     "players": [
@@ -2358,57 +2307,6 @@ export const patentFamilies: PatentFamily[] = [
           {
             "year": 2025,
             "count": 1
-          },
-          {
-            "year": 2026,
-            "count": 0
-          }
-        ]
-      },
-      {
-        "name": "Peak shaving",
-        "total": 0,
-        "status": "emerging",
-        "perYear": [
-          {
-            "year": 2016,
-            "count": 0
-          },
-          {
-            "year": 2017,
-            "count": 0
-          },
-          {
-            "year": 2018,
-            "count": 0
-          },
-          {
-            "year": 2019,
-            "count": 0
-          },
-          {
-            "year": 2020,
-            "count": 0
-          },
-          {
-            "year": 2021,
-            "count": 0
-          },
-          {
-            "year": 2022,
-            "count": 0
-          },
-          {
-            "year": 2023,
-            "count": 0
-          },
-          {
-            "year": 2024,
-            "count": 0
-          },
-          {
-            "year": 2025,
-            "count": 0
           },
           {
             "year": 2026,
@@ -3049,57 +2947,6 @@ export const patentFamilies: PatentFamily[] = [
             "count": 0
           }
         ]
-      },
-      {
-        "name": "Peer-to-peer energy trading",
-        "total": 0,
-        "status": "emerging",
-        "perYear": [
-          {
-            "year": 2016,
-            "count": 0
-          },
-          {
-            "year": 2017,
-            "count": 0
-          },
-          {
-            "year": 2018,
-            "count": 0
-          },
-          {
-            "year": 2019,
-            "count": 0
-          },
-          {
-            "year": 2020,
-            "count": 0
-          },
-          {
-            "year": 2021,
-            "count": 0
-          },
-          {
-            "year": 2022,
-            "count": 0
-          },
-          {
-            "year": 2023,
-            "count": 0
-          },
-          {
-            "year": 2024,
-            "count": 0
-          },
-          {
-            "year": 2025,
-            "count": 0
-          },
-          {
-            "year": 2026,
-            "count": 0
-          }
-        ]
       }
     ],
     "players": [
@@ -3313,57 +3160,6 @@ export const patentFamilies: PatentFamily[] = [
           {
             "year": 2026,
             "count": 2
-          }
-        ]
-      },
-      {
-        "name": "Safety & protection",
-        "total": 0,
-        "status": "emerging",
-        "perYear": [
-          {
-            "year": 2016,
-            "count": 0
-          },
-          {
-            "year": 2017,
-            "count": 0
-          },
-          {
-            "year": 2018,
-            "count": 0
-          },
-          {
-            "year": 2019,
-            "count": 0
-          },
-          {
-            "year": 2020,
-            "count": 0
-          },
-          {
-            "year": 2021,
-            "count": 0
-          },
-          {
-            "year": 2022,
-            "count": 0
-          },
-          {
-            "year": 2023,
-            "count": 0
-          },
-          {
-            "year": 2024,
-            "count": 0
-          },
-          {
-            "year": 2025,
-            "count": 0
-          },
-          {
-            "year": 2026,
-            "count": 0
           }
         ]
       }
