@@ -24,6 +24,67 @@ export function StatusBadge({ status }: { status: PatentFamilyStatus }) {
   );
 }
 
+function SubTechPopup({ sub, color }: { sub: PatentSubTech; color: string }) {
+  const [open, setOpen] = useState(false);
+  const years = sub.perYear.map((p) => p.year);
+  const chartData = years.map((year, i) => ({
+    year,
+    count: sub.perYear[i]?.count ?? 0,
+  }));
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <div className="flex items-center gap-2 p-2 rounded-lg bg-muted/40 cursor-pointer hover:bg-muted/60 transition-colors">
+          <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: color }} />
+          <span className="text-xs font-medium text-foreground flex-1 truncate">{sub.name}</span>
+          <span className="text-xs tabular-nums text-muted-foreground">{sub.total}</span>
+          <StatusBadge status={sub.status} />
+        </div>
+      </DialogTrigger>
+      <DialogContent className="max-w-md p-0 overflow-hidden">
+        <div className="px-4 py-3 border-b bg-secondary/50 flex items-center gap-2">
+          <Cpu className="w-5 h-5 text-primary" />
+          <span className="font-semibold text-base text-foreground">{sub.name}</span>
+        </div>
+        <div className="p-4 space-y-4">
+          <p className="text-sm text-muted-foreground leading-relaxed">{sub.description}</p>
+          <div className="h-[140px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={chartData} margin={{ top: 5, right: 10, left: -18, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                <XAxis dataKey="year" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }} />
+                <YAxis tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }} allowDecimals={false} />
+                <Tooltip
+                  contentStyle={{
+                    background: 'hsl(var(--card))',
+                    border: '1px solid hsl(var(--border))',
+                    borderRadius: 8,
+                    fontSize: 12,
+                  }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="count"
+                  stroke={color}
+                  strokeWidth={2}
+                  dot={{ r: 2 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="flex items-center justify-between pt-3 border-t">
+            <span className="text-sm text-muted-foreground">
+              <span className="font-medium text-foreground">{sub.total.toLocaleString()}</span> matched patents
+            </span>
+            <StatusBadge status={sub.status} />
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 export function PatentFamilyDialog({ family, children }: { family: PatentFamily; children: ReactNode }) {
   const years = family.subs[0]?.perYear.map((p) => p.year) ?? [];
   const chartData = years.map((year, i) => {
