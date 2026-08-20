@@ -141,7 +141,7 @@ export function StandardsCatalog() {
               <p className="text-xs text-muted-foreground mb-3 flex-1">{s.description}</p>
               <div className="flex items-center justify-between gap-2">
                 <div className="flex flex-wrap items-center gap-2">
-                  <Chip tone="primary">{s.status}</Chip>
+                  <Chip tone={s.status === 'Under revision' ? 'warning' : 'primary'}>{s.status}</Chip>
                   <Chip>{s.year}</Chip>
                   <Chip>{s.region}</Chip>
                 </div>
