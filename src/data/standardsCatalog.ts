@@ -1,15 +1,27 @@
-export type StandardBody = 'ISO/IEC' | 'IEC' | 'SAE' | 'IEEE' | 'UL' | 'OCA' | 'CHAdeMO';
+export type StandardBody =
+  | 'ISO/IEC'
+  | 'IEC'
+  | 'SAE'
+  | 'IEEE'
+  | 'UL'
+  | 'OCA'
+  | 'CHAdeMO'
+  | 'CENELEC'
+  | 'VDE/FNN'
+  | 'Standards Australia'
+  | 'SAC (China)';
 
 export interface StandardEntry {
   id: string;
   body: StandardBody;
   title: string;
   description: string;
-  status: 'Published' | 'Under revision' | 'Draft';
+  status: 'Published' | 'Under revision' | 'Draft' | 'Under development';
   year: string;
   region: string;
   url: string;
 }
+
 
 export const standardsCatalog: StandardEntry[] = [
   // ISO / IEC joint
