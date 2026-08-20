@@ -5,6 +5,9 @@ import {
   ResponsiveContainer,
   AreaChart,
   Area,
+  LineChart,
+  Line,
+  Legend,
   XAxis,
   YAxis,
   Tooltip,
@@ -13,6 +16,8 @@ import {
   CartesianGrid,
 } from 'recharts';
 import { GrowingTopicPopup } from './GrowingTopicPopup';
+import { PatentFamilies } from './PatentFamilies';
+
 
 const StatCard = ({ icon: Icon, value, label }: { icon: any; value: string | number; label: string }) => (
   <div className="p-4 rounded-xl bg-card border flex flex-col gap-2">
