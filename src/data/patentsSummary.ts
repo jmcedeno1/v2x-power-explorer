@@ -21,6 +21,10 @@ const rawTopics = [
   { topic: 'Battery Degradation & Ageing', y2020: 17, y2025: 38 },
   { topic: 'Renewables Integration (PV/Wind)', y2020: 10, y2025: 30 },
   { topic: 'Standards (ISO 15118, CCS, CHAdeMO)', y2020: 0, y2025: 12 },
+  { topic: 'VPP Aggregation Platforms', y2020: 2, y2025: 21 },
+  { topic: 'Grid-isolated / Islanding Control', y2020: 12, y2025: 28 },
+  { topic: 'Cybersecurity of Charging', y2020: 6, y2025: 6 },
+  { topic: 'Wide-bandgap Semiconductors (SiC/GaN)', y2020: 1, y2025: 5 },
 ];
 
 export const patentsSummary = {

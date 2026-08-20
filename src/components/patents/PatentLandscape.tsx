@@ -106,7 +106,7 @@ export function PatentLandscape() {
       <section className="mb-10">
         <div className="flex items-center gap-2 mb-4">
           <Sparkles className="w-5 h-5 text-primary" />
-          <h3 className="text-lg font-semibold">Top 10 growing patent topics (2020 to 2025)</h3>
+          <h3 className="text-lg font-semibold">Growing patent topics (2020 to 2025)</h3>
         </div>
         <Card>
           <CardContent className="p-0">

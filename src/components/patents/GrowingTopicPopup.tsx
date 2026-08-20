@@ -259,6 +259,27 @@ export const TOPIC_INFO: Record<string, GrowingTopicInfo> = {
     drivers: ['Fleet-scale V2G economics', 'Utility VPP programs', 'Behind-the-meter optimization'],
     opportunities: ['Depot-as-a-VPP business models', 'Multi-site aggregation', 'Microgrid + EV fleet islanding'],
   },
+  'VPP Aggregation Platforms': {
+    description:
+      'Software and control IP that pools distributed EV batteries into a Virtual Power Plant able to bid flexibility into markets and respond to utility signals.',
+    scope: ['Fleet aggregation platforms', 'VPP orchestration', 'Real-time market bidding', 'Predictive dispatch'],
+    drivers: ['Utility VPP and demand-response programs', 'Flexibility market liberalisation', 'Growth of aggregator business models'],
+    opportunities: ['Cross-border and multi-site aggregation', 'Dynamic pricing optimisation', 'Coupling with renewable forecasting'],
+  },
+  'Grid-isolated / Islanding Control': {
+    description:
+      'Control IP for operating bidirectional charging without grid support: islanding detection, autonomous load management and microgrid formation during outages.',
+    scope: ['Islanding and anti-islanding', 'Microgrid controllers', 'Home backup inverters', 'Autonomous load management'],
+    drivers: ['Outage resilience demand', 'Microgrid deployments at depots and campuses', 'Backup-power features in new EV models'],
+    opportunities: ['V2X-native islanding algorithms', 'Multi-vehicle coordination without the grid', 'Blackstart support from fleets'],
+  },
+  'Wide-bandgap Semiconductors (SiC/GaN)': {
+    description:
+      'Device-level IP on silicon-carbide and gallium-nitride power semiconductors that raise efficiency and power density of bidirectional chargers and inverters.',
+    scope: ['Wide-bandgap (SiC/GaN) devices', 'Isolated and non-isolated topologies', 'High-efficiency OBC topologies', 'Thermal management'],
+    drivers: ['800 V vehicle architectures', 'Efficiency targets above 11 kW', 'Falling SiC wafer costs'],
+    opportunities: ['Integrated gate drivers for SiC/GaN', 'GaN-on-Si cost reduction', 'Compact high-frequency bidirectional stages'],
+  },
 };
 
 interface GrowingTopicPopupProps {
