@@ -1,4 +1,4 @@
-import { FileText, TrendingUp, Calendar, Building2, Sparkles, Award, ScrollText } from 'lucide-react';
+import { FileText, TrendingUp, Calendar, Building2, Sparkles, Award, ScrollText, Lightbulb } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { patentsSummary } from '@/data/patentsSummary';
 import {
@@ -49,6 +49,34 @@ export function PatentLandscape() {
           <StatCard icon={Calendar} value={data?.peakYear || '-'} label="Peak filing year" />
           <StatCard icon={Building2} value={data?.assignees ?? 0} label="Unique assignees" />
         </div>
+
+        <section className="mb-6">
+          <div className="flex items-center gap-2 mb-4">
+            <Lightbulb className="w-5 h-5 text-primary" />
+            <h3 className="text-lg font-semibold text-foreground">Patent Evidence</h3>
+          </div>
+          <div className="p-6 rounded-xl bg-gradient-to-br from-primary/5 to-accent/5 border border-primary/20">
+            <ul className="space-y-3">
+              {[
+                '<strong>Filings are outpacing grants.</strong> The gap between annual applications and granted patents has widened, indicating a larger prosecution backlog and a field still in rapid expansion rather than mature grant conversion.',
+                '<strong>Growth is broad, not a single spike.</strong> Nearly every major technology family shows rising activity from 2020 to 2025, suggesting sustained R&D investment across the stack rather than a one-time technology wave.',
+                '<strong>The agenda is shifting from hardware to system integration.</strong> The fastest growth is in control/dispatch, charging infrastructure and battery management, while core converter work remains large but less dynamic.',
+                '<strong>Real-world deployment concerns are now central.</strong> Battery degradation, fleet and microgrid integration, VPP aggregation and standards have moved from fringe to growing topics, reflecting a shift from lab concepts to operational products.',
+                '<strong>Cybersecurity and wide-bandgap semiconductors remain white space.</strong> Both topics are flat or nascent relative to power and control IP, pointing to under-protected areas as products scale.',
+                '<strong>OEMs still dominate, but the ecosystem is diversifying.</strong> Global automakers hold the largest assignee positions, yet grid operators, charging suppliers and Chinese energy players are increasingly present in charging and converter families.',
+                '<strong>Geography follows market readiness.</strong> The US and China lead filings, with Europe as a consistent but smaller hub, mirroring regional regulatory push and pilot activity.',
+                '<strong>Standards are becoming patentable.</strong> Standards-related patents only appear in the recent window, signalling that ISO 15118, CCS and CHAdeMO implementations are now being encoded into products.',
+                '<strong>V2G dispatch is growing but still hardware-heavy.</strong> Explicit grid-dispatch and aggregation patents are rising, yet they remain a smaller share than converter, charger and battery IP, showing the stack is still dominated by physical components.',
+                '<strong>Degradation modelling is the battery-side priority.</strong> Ageing and state-of-health patents are the fastest-growing BMS sub-theme, revealing warranty and cycle-life risk as the main barrier to commercial cycling.',
+              ].map((item, i) => (
+                <li key={i} className="flex items-start gap-3">
+                  <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2 shrink-0" />
+                  <p className="text-sm text-foreground" dangerouslySetInnerHTML={{ __html: item }} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
 
         <Card className="mb-6">
           <CardHeader className="pb-2"><CardTitle className="text-sm">Patent filings and grants per year</CardTitle></CardHeader>
