@@ -24,6 +24,21 @@ export default function StandardsPage() {
           <EmptyModuleState moduleName="Standards" />
         ) : (
           <>
+            {/* Standards & Regulation Evidence */}
+            <section className="mb-8">
+              <h3 className="text-lg font-semibold text-foreground mb-4">Standards &amp; Regulation Evidence</h3>
+              <div className="p-6 rounded-xl bg-gradient-to-br from-primary/5 to-accent/5 border border-primary/20">
+                <ul className="space-y-3">
+                  {STANDARDS_EVIDENCE.map((item, i) => (
+                    <li key={i} className="flex items-start gap-3">
+                      <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2 shrink-0" />
+                      <p className="text-sm text-foreground" dangerouslySetInnerHTML={{ __html: item }} />
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </section>
+
             {/* Standards catalogue */}
             <section className="mb-10">
               <StandardsCatalog />
