@@ -17,7 +17,7 @@ export type RevenueStreamDetail = {
   timescale: string;
   metrics: { label: string; value: string; note?: string }[];
   applications: string[];
-  players: { name: string; role: string }[];
+  players: { name: string; role: string; url?: string; region?: string }[];
   evidence: string[];
   references: { title: string; url: string; source: string }[];
 };
@@ -60,11 +60,13 @@ export const revenueStreamDetails: RevenueStreamDetail[] = [
       'Commercial building fleets stacking regulation on top of demand-charge savings',
     ],
     players: [
-      { name: 'Nuvve', role: 'Aggregator bidding school-bus and fleet capacity into ancillary markets' },
-      { name: 'The Mobility House', role: 'Fleet aggregation and market bidding in EU and US programs' },
-      { name: 'Hitachi', role: 'Bidirectional chargers and control platform (JUMPSmartMaui)' },
-      { name: 'CAISO / PJM / NYISO', role: 'Market operators defining Reg Up/Down products and telemetry rules' },
-      { name: 'Olivine', role: 'Scheduling-coordinator and market-access services for V2G fleets' },
+      { name: 'Nuvve', role: 'Aggregator bidding school-bus and fleet capacity into ancillary markets', url: 'https://nuvve.com' },
+      { name: 'The Mobility House', role: 'Fleet aggregation and market bidding in EU and US programs', url: 'https://www.mobilityhouse.com' },
+      { name: 'Hitachi', role: 'Bidirectional chargers and control platform (JUMPSmartMaui)', url: 'https://www.hitachi.com' },
+      { name: 'CAISO / PJM / NYISO', role: 'Market operators defining Reg Up/Down products and telemetry rules', url: 'https://www.caiso.com' },
+      { name: 'Olivine', role: 'Scheduling-coordinator and market-access services for V2G fleets', url: 'https://olivineinc.com' },
+      { name: 'Fingrid', role: 'Finnish TSO; FCR-N, FCR-D and aFRR reserve markets that a V2G aggregator bids into', url: 'https://www.fingrid.fi/en/electricity-market/reserves_and_balancing/', region: 'Finland' },
+      { name: 'Fortum Spring', role: 'Finnish aggregator pooling distributed flexibility into Fingrid reserve markets', url: 'https://www.fortum.com/services/fortum-spring', region: 'Finland' },
     ],
     evidence: [
       'Early fleet modelling (Tomic and Kempton) estimated net profits of $70-700/vehicle/year for a 100-vehicle regulation-down fleet, and $95-1,030/vehicle/year for a 252-vehicle regulation up-and-down fleet. (Gridworks review)',
@@ -98,10 +100,13 @@ export const revenueStreamDetails: RevenueStreamDetail[] = [
       'Schools and municipal facilities offsetting summer cooling peaks',
     ],
     players: [
-      { name: 'Fermata Energy', role: 'V2B platform explicitly monetising demand-charge reduction' },
-      { name: 'MAHLE chargeBIG', role: 'Centralised multi-point employer charging with EMS-driven peak control' },
-      { name: 'Nuvve', role: 'Depot orchestration combining peak shaving and market bids' },
-      { name: 'Utility C&I tariffs (SCE, PG&E, SDG&E)', role: 'Define the demand charges being avoided' },
+      { name: 'Fermata Energy', role: 'V2B platform explicitly monetising demand-charge reduction', url: 'https://www.fermataenergy.com' },
+      { name: 'MAHLE chargeBIG', role: 'Centralised multi-point employer charging with EMS-driven peak control', url: 'https://www.chargebig.com/en/' },
+      { name: 'Nuvve', role: 'Depot orchestration combining peak shaving and market bids', url: 'https://nuvve.com' },
+      { name: 'Utility C&I tariffs (SCE, PG&E, SDG&E)', role: 'US demand charges ($/kW of monthly peak) being avoided', url: 'https://www.sce.com/business/rates' },
+      { name: 'Caruna', role: 'Largest Finnish DSO; distribution tariffs with peak-power (kW) components for C&I sites', url: 'https://www.caruna.fi/en', region: 'Finland' },
+      { name: 'Helen Sahkoverkko', role: 'Helsinki DSO; power-based network tariffs that V2B peak shaving reduces', url: 'https://www.helensahkoverkko.fi/en', region: 'Finland' },
+      { name: 'Energiavirasto', role: 'Finnish Energy Authority; approves DSO tariff structures and flexibility rules', url: 'https://energiavirasto.fi/en/frontpage', region: 'Finland' },
     ],
     evidence: [
       'Behind-the-meter bill savings are the most immediately accessible VGI value because they require no ISO registration or scheduling coordinator. (Gridworks review, site-level studies)',
@@ -134,10 +139,14 @@ export const revenueStreamDetails: RevenueStreamDetail[] = [
       'Retail supplier-managed smart tariffs bundled with a bidirectional charger',
     ],
     players: [
-      { name: 'Octopus Energy', role: 'Powerloop residential V2G tariff and aggregation' },
-      { name: 'SDG&E', role: 'Power Your Drive hourly day-ahead price pilot' },
-      { name: 'Renault / Nissan', role: 'OEMs bundling V2G tariffs with AC bidirectional vehicles' },
-      { name: 'The Mobility House', role: 'Price-optimised charge/discharge scheduling' },
+      { name: 'Octopus Energy', role: 'Powerloop residential V2G tariff and aggregation', url: 'https://octopus.energy/vehicle-to-grid/' },
+      { name: 'SDG&E', role: 'Power Your Drive hourly day-ahead price pilot', url: 'https://www.sdge.com/residential/electric-vehicles' },
+      { name: 'Renault / Nissan', role: 'OEMs bundling V2G tariffs with AC bidirectional vehicles', url: 'https://www.renaultgroup.com' },
+      { name: 'The Mobility House', role: 'Price-optimised charge/discharge scheduling', url: 'https://www.mobilityhouse.com' },
+      { name: 'Nord Pool', role: 'Day-ahead spot market setting the Finnish hourly price spread', url: 'https://www.nordpoolgroup.com', region: 'Finland' },
+      { name: 'Helen', role: 'Finnish retailer with spot-linked and smart EV charging tariffs', url: 'https://www.helen.fi/en', region: 'Finland' },
+      { name: 'Vattenfall Finland', role: 'Spot-price electricity contracts used for EV charge/discharge arbitrage', url: 'https://www.vattenfall.fi/en/', region: 'Finland' },
+      { name: 'Fortum', role: 'Finnish retailer offering hourly spot tariffs and smart charging services', url: 'https://www.fortum.fi/en', region: 'Finland' },
     ],
     evidence: [
       'SDG&E rate experiments showed EV drivers learn and respond strongly to on-peak/off-peak price signals, shifting load within and across days. (Gridworks review)',
@@ -171,10 +180,12 @@ export const revenueStreamDetails: RevenueStreamDetail[] = [
       'Distribution-level non-wires alternatives deferring feeder upgrades',
     ],
     players: [
-      { name: 'Southern California Edison', role: 'Demand-response programs enrolling EV fleets and drivers' },
-      { name: 'Honda', role: 'SmartCharge residential DR and renewable-acceptance study' },
-      { name: 'Highland Electric Fleets', role: 'School-bus subscription model offering summer V2G capacity' },
-      { name: 'National Grid / utility programs', role: 'Program design and capacity payments' },
+      { name: 'Southern California Edison', role: 'Demand-response programs enrolling EV fleets and drivers', url: 'https://www.sce.com/business/demand-response' },
+      { name: 'Honda', role: 'SmartCharge residential DR and renewable-acceptance study', url: 'https://global.honda' },
+      { name: 'Highland Electric Fleets', role: 'School-bus subscription model offering summer V2G capacity', url: 'https://highlandfleets.com' },
+      { name: 'National Grid / utility programs', role: 'Program design and capacity payments', url: 'https://www.nationalgrid.com' },
+      { name: 'Fingrid', role: 'Finnish counterpart: peak-load reserve and mFRR energy/capacity products for demand-side resources', url: 'https://www.fingrid.fi/en/electricity-market/reserves_and_balancing/', region: 'Finland' },
+      { name: 'Fingrid Datahub', role: 'National metering data platform enabling independent aggregators to enrol Finnish sites', url: 'https://www.fingrid.fi/en/electricity-market/datahub/', region: 'Finland' },
     ],
     evidence: [
       'Vehicle availability is the binding constraint: JUMPSmartMaui found only 14-31% of total pack capacity was dischargeable in the 5-8pm peak, and 6-16% in the early afternoon. (Gridworks review)',
@@ -207,9 +218,11 @@ export const revenueStreamDetails: RevenueStreamDetail[] = [
       'Co-located PV plus bidirectional charging at commercial sites',
     ],
     players: [
-      { name: 'Hitachi / NEDO', role: 'JUMPSmartMaui V2H and V2G duck-curve mitigation, Maui virtual power plant' },
-      { name: 'California ISO', role: 'Net-load ramping and over-generation context driving the value case' },
-      { name: 'Utilities with high solar penetration', role: 'Program hosts for midday absorption tariffs' },
+      { name: 'Hitachi / NEDO', role: 'JUMPSmartMaui V2H and V2G duck-curve mitigation, Maui virtual power plant', url: 'https://www.nedo.go.jp/english/' },
+      { name: 'California ISO', role: 'Net-load ramping and over-generation context driving the value case', url: 'https://www.caiso.com' },
+      { name: 'Utilities with high solar penetration', role: 'Program hosts for midday absorption tariffs', url: 'https://www.eia.gov/electricity/' },
+      { name: 'Fingrid', role: 'Finnish system operator managing wind-driven ramps and negative-price hours', url: 'https://www.fingrid.fi/en/', region: 'Finland' },
+      { name: 'Finnish Wind Power Association', role: 'Wind build-out driving Finland flexibility need (wind, not solar, sets the ramp)', url: 'https://tuulivoimayhdistys.fi/en/', region: 'Finland' },
     ],
     evidence: [
       'Modelling for California found V1G-only vehicles can meet the majority of the state storage mandate at far lower cost, and V2G-capable fleets can outpace stationary storage entirely. (Gridworks review)',
@@ -243,10 +256,12 @@ export const revenueStreamDetails: RevenueStreamDetail[] = [
       'Commercial buildings maintaining critical loads during outages',
     ],
     players: [
-      { name: 'Nissan / CHAdeMO ecosystem', role: 'Longest-running V2H deployments' },
-      { name: 'Hitachi', role: 'Residential bidirectional chargers with IEEE 2030.5 control' },
-      { name: 'Fermata Energy', role: 'Certified bidirectional hardware for buildings and critical loads' },
-      { name: 'Ford / Sunrun', role: 'Home integration packaging of vehicle backup power' },
+      { name: 'Nissan / CHAdeMO ecosystem', role: 'Longest-running V2H deployments', url: 'https://www.chademo.com/' },
+      { name: 'Hitachi', role: 'Residential bidirectional chargers with IEEE 2030.5 control', url: 'https://www.hitachi.com' },
+      { name: 'Fermata Energy', role: 'Certified bidirectional hardware for buildings and critical loads', url: 'https://www.fermataenergy.com' },
+      { name: 'Ford / Sunrun', role: 'Home integration packaging of vehicle backup power', url: 'https://www.sunrun.com/ford-charge-station-pro' },
+      { name: 'Tukes', role: 'Finnish safety authority; electrical installation rules for islanded V2H connections', url: 'https://tukes.fi/en/frontpage', region: 'Finland' },
+      { name: 'Parkkisahko / Finnish installers', role: 'Local bidirectional wallbox supply and certified installation for V2H', url: 'https://www.parkkisahko.fi/en/', region: 'Finland' },
     ],
     evidence: [
       'Resilience value is real but not traded: it appears in customer willingness-to-pay and utility incentive design, not in ISO revenue stacks. (IEA, Vehicle-to-Grid Technology)',
