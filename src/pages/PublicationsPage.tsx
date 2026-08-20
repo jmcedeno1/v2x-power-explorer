@@ -25,6 +25,20 @@ const StatCard = ({ icon: Icon, value, label }: { icon: any; value: string | num
   </div>
 );
 
+const PUBLICATIONS_EVIDENCE = [
+  '<strong>The field is young but scaling fast.</strong> Nearly all of the 8,294 papers in the corpus were published after 2010, and annual output has roughly doubled since 2019, peaking in 2025.',
+  '<strong>Research has moved from feasibility to operation.</strong> Early work asked whether bidirectional charging was possible; recent growth is concentrated in scheduling, bidding and energy management, which assume it works and ask how to run it.',
+  '<strong>Energy management systems are the fastest-growing theme.</strong> EMS/HEMS work triples between 2020 and 2025, signalling that the home and building layer, not just the grid layer, now drives the agenda.',
+  '<strong>Policy and regulation research is catching up with engineering.</strong> Papers on V2G policy grow more than threefold, reflecting that market access and tariff design have become the binding constraints rather than power electronics.',
+  '<strong>Field trials are the steepest riser in relative terms.</strong> Pilot and demonstration papers grow the fastest of all themes, so the evidence base is shifting from simulation to measured fleet data.',
+  '<strong>Renewables are the dominant framing.</strong> Solar coupling and renewable integration appear across several of the top themes, positioning bidirectional EVs primarily as flexibility for variable generation.',
+  '<strong>Sustainability claims are being tested.</strong> Environmental and life-cycle assessment work grows sharply, mostly around battery degradation and net carbon benefit, which are still the most contested assumptions.',
+  '<strong>Output is concentrated in a few systems.</strong> China, the US and India produce the bulk of papers, while Delft, DTU and Aalborg anchor the European contribution, keeping the European evidence base tightly clustered.',
+  '<strong>Utilities publish alongside universities.</strong> State Grid Corporation ranks among the top institutions, an unusual sign of operator-led rather than purely academic research.',
+  '<strong>The gap to watch.</strong> Business models and economics grow more slowly than technical scheduling work, so profitability remains under-studied relative to control and optimisation.',
+];
+
+
 export default function PublicationsPage() {
   const data = publicationsSummary;
   const isLoading = false;
@@ -59,7 +73,22 @@ export default function PublicationsPage() {
             <StatCard icon={BookOpen} value={data?.themes ?? 0} label="Growing themes" />
           </div>
 
+          <section className="mb-6">
+            <h3 className="text-lg font-semibold text-foreground mb-4">Publications Evidence</h3>
+            <div className="p-6 rounded-xl bg-gradient-to-br from-primary/5 to-accent/5 border border-primary/20">
+              <ul className="space-y-3">
+                {PUBLICATIONS_EVIDENCE.map((item, i) => (
+                  <li key={i} className="flex items-start gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2 shrink-0" />
+                    <p className="text-sm text-foreground" dangerouslySetInnerHTML={{ __html: item }} />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </section>
+
           <Card className="mb-6">
+
             <CardHeader className="pb-2">
               <CardTitle className="text-sm">Publications per year</CardTitle>
             </CardHeader>
