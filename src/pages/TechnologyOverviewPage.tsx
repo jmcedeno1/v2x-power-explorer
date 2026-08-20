@@ -1,12 +1,13 @@
 import { useState } from 'react';
-import { Lightbulb, Zap, Home, Plug, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Lightbulb, Zap, Home, Plug, CheckCircle, XCircle, AlertTriangle, ExternalLink, Info } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { ModuleHeader } from '@/components/ui/module-header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { howItWorks, technologyDeepDive } from '@/data/technologyOverview';
+import { howItWorks, technologyDeepDive, corpusGrounding, type SourceRef } from '@/data/technologyOverview';
 
 type ApplicationType = 'all' | 'v2g' | 'v2h' | 'v2l';
 
@@ -22,6 +23,39 @@ const filterOptions: { value: ApplicationType; label: string }[] = [
   { value: 'v2h', label: 'V2H' },
   { value: 'v2l', label: 'V2L' },
 ];
+
+function SourceLinks({ sources, className = '' }: { sources: SourceRef[]; className?: string }) {
+  return (
+    <div className={`flex flex-col gap-1 pt-1 ${className}`}>
+      <p className="text-xs font-medium text-muted-foreground">Source</p>
+      {sources.map((s) => (
+        <a
+          key={s.url}
+          href={s.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-start gap-1 text-xs text-primary hover:underline"
+        >
+          <ExternalLink className="h-3 w-3 mt-0.5 shrink-0" />
+          <span>{s.label}</span>
+        </a>
+      ))}
+    </div>
+  );
+}
+
+function UnsupportedNote({ note }: { note?: string }) {
+  if (!note) return null;
+  return (
+    <div className="flex items-start gap-2 rounded-lg bg-muted/50 p-3">
+      <Info className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
+      <p className="text-xs text-muted-foreground">
+        <span className="font-medium text-foreground">Unsupported claim flagged: </span>
+        {note}
+      </p>
+    </div>
+  );
+}
 
 export default function TechnologyOverviewPage() {
   const [applicationFilter, setApplicationFilter] = useState<ApplicationType>('all');
@@ -40,6 +74,21 @@ export default function TechnologyOverviewPage() {
           badge="Fundamentals"
         />
 
+        {/* Corpus grounding */}
+        <section className="mb-10">
+          <div className="p-6 rounded-xl bg-gradient-to-br from-primary/5 to-accent/5 border border-primary/20">
+            <h3 className="text-base font-semibold text-foreground mb-2">{corpusGrounding.title}</h3>
+            <p className="text-sm text-muted-foreground">{corpusGrounding.note}</p>
+            <div className="flex flex-wrap gap-3 mt-3">
+              {corpusGrounding.links.map((l) => (
+                <Link key={l.to} to={l.to} className="text-xs text-primary hover:underline">
+                  {l.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* How it works */}
         <section className="mb-10">
           <h3 className="text-lg font-semibold text-foreground mb-4">{howItWorks.basicPrinciples.title}</h3>
@@ -49,6 +98,7 @@ export default function TechnologyOverviewPage() {
                 {paragraph}
               </p>
             ))}
+            <SourceLinks sources={howItWorks.basicPrinciples.sources} />
           </div>
         </section>
 
@@ -88,6 +138,7 @@ export default function TechnologyOverviewPage() {
                         ))}
                       </ul>
                     </div>
+                    <SourceLinks sources={item.sources} />
                   </div>
                 </CardContent>
               </Card>
@@ -121,8 +172,8 @@ export default function TechnologyOverviewPage() {
                       {app.title}
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground mb-4">{app.description}</p>
+                  <CardContent className="space-y-4">
+                    <p className="text-sm text-muted-foreground">{app.description}</p>
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
                         <p className="text-sm font-medium text-foreground mb-2">Use cases</p>
@@ -135,12 +186,14 @@ export default function TechnologyOverviewPage() {
                         </ul>
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-foreground mb-2">Revenue / value potential</p>
+                        <p className="text-sm font-medium text-foreground mb-2">Value potential</p>
                         <Badge variant="secondary" className="text-sm whitespace-normal text-left">
-                          {app.revenue}
+                          {app.value}
                         </Badge>
                       </div>
                     </div>
+                    <UnsupportedNote note={'unsupported' in app ? app.unsupported : undefined} />
+                    <SourceLinks sources={app.sources} />
                   </CardContent>
                 </Card>
               );
@@ -170,7 +223,7 @@ export default function TechnologyOverviewPage() {
                     </CardHeader>
                     <CardContent className="space-y-4">
                       <p className="text-sm text-muted-foreground">{arch.description}</p>
-                      <div className="grid grid-cols-2 gap-3 text-sm">
+                      <div className="grid gap-3 text-sm">
                         <div>
                           <p className="font-medium text-foreground">Efficiency</p>
                           <p className="text-muted-foreground">{arch.efficiency}</p>
@@ -188,20 +241,8 @@ export default function TechnologyOverviewPage() {
                           <p className="text-muted-foreground">{arch.complexity}</p>
                         </div>
                       </div>
-                      <div>
-                        <p className="font-medium text-foreground text-sm mb-2">Standards</p>
-                        <div className="flex flex-wrap gap-1">
-                          {arch.standards.map((std) => (
-                            <Badge key={std} variant="outline" className="text-xs">
-                              {std}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-                      <div>
-                        <p className="font-medium text-foreground text-sm mb-2">Examples</p>
-                        <p className="text-sm text-muted-foreground">{arch.examples.join(', ')}</p>
-                      </div>
+                      <UnsupportedNote note={arch.unsupported} />
+                      <SourceLinks sources={arch.sources} />
                     </CardContent>
                   </Card>
                 ))}
@@ -220,7 +261,10 @@ export default function TechnologyOverviewPage() {
                     </CardHeader>
                     <CardContent className="space-y-3">
                       <p className="text-sm text-muted-foreground">{topology.description}</p>
-                      <Badge variant="secondary">Efficiency: {topology.efficiency}</Badge>
+                      <div>
+                        <p className="font-medium text-foreground text-sm mb-1">Reported efficiency</p>
+                        <p className="text-sm text-muted-foreground">{topology.efficiency}</p>
+                      </div>
                       <div>
                         <p className="font-medium text-foreground text-sm mb-2">Advantages</p>
                         <ul className="text-sm text-muted-foreground space-y-1">
@@ -235,6 +279,7 @@ export default function TechnologyOverviewPage() {
                         <p className="font-medium text-foreground text-sm mb-2">Applications</p>
                         <p className="text-sm text-muted-foreground">{topology.applications.join(', ')}</p>
                       </div>
+                      <SourceLinks sources={topology.sources} />
                     </CardContent>
                   </Card>
                 ))}
@@ -252,8 +297,8 @@ export default function TechnologyOverviewPage() {
                         {item.challenge}
                       </CardTitle>
                     </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-muted-foreground mb-4">{item.description}</p>
+                    <CardContent className="space-y-4">
+                      <p className="text-sm text-muted-foreground">{item.description}</p>
                       <div className="flex items-start gap-2 bg-muted/50 p-3 rounded-lg">
                         <Lightbulb className="h-4 w-4 text-primary mt-0.5 shrink-0" />
                         <div>
@@ -261,6 +306,8 @@ export default function TechnologyOverviewPage() {
                           <p className="text-sm text-muted-foreground">{item.mitigation}</p>
                         </div>
                       </div>
+                      <UnsupportedNote note={'unsupported' in item ? item.unsupported : undefined} />
+                      <SourceLinks sources={item.sources} />
                     </CardContent>
                   </Card>
                 ))}
