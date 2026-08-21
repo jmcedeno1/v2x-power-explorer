@@ -82,7 +82,7 @@ export function MaturityDiffusionChart() {
 
       <div className="h-[240px]">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={diffusionCurves} margin={{ top: 5, right: 10, left: -10, bottom: 5 }}>
+          <LineChart data={curves} margin={{ top: 5, right: 10, left: -10, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
             <XAxis
               dataKey="year"
@@ -105,7 +105,7 @@ export function MaturityDiffusionChart() {
               formatter={(value: number, name: string) => [`${value}% of potential`, name]}
             />
 
-            {diffusionFits
+            {fits
               .filter((f) => f.takeoff)
               .map((f) => (
                 <ReferenceLine
@@ -117,7 +117,7 @@ export function MaturityDiffusionChart() {
                 />
               ))}
 
-            {diffusionFits.map((f) => (
+            {fits.map((f) => (
               <Line
                 key={`${f.key}-fit`}
                 type="monotone"
@@ -130,7 +130,7 @@ export function MaturityDiffusionChart() {
               />
             ))}
 
-            {diffusionFits.map((f) => (
+            {fits.map((f) => (
               <Line
                 key={f.key}
                 type="monotone"
@@ -166,7 +166,7 @@ export function MaturityDiffusionChart() {
             </tr>
           </thead>
           <tbody>
-            {diffusionFits.map((f) => (
+            {fits.map((f) => (
               <tr key={f.key} className="border-t border-border">
                 <td className="py-2 text-foreground">
                   <span className="inline-flex items-center gap-1.5">
@@ -200,14 +200,14 @@ export function MaturityDiffusionChart() {
             </p>
           </div>
           <p className="text-3xl font-bold text-primary">
-            {newsMediaScore.score}
+            {newsScore}
             <span className="text-sm text-muted-foreground font-normal">/100</span>
           </p>
         </div>
 
         <div className="h-[110px]">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={newsMediaScore.perYear} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
+            <BarChart data={newsPerYear} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
               <XAxis
                 dataKey="year"
                 tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }}
