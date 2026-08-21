@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Newspaper, Globe, Radio, TrendingUp, ExternalLink, RefreshCw, Calendar } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { ModuleHeader } from '@/components/ui/module-header';
@@ -176,6 +176,7 @@ function extractDomain(d: NewsDoc): string {
 
 export default function NewsPage() {
   const [refreshing, setRefreshing] = useState(false);
+  const queryClient = useQueryClient();
   const { data: news = [], isLoading, refetch } = useQuery({ queryKey: ['news-gdelt'], queryFn: fetchNews });
 
   const refresh = async () => {
@@ -224,7 +225,9 @@ export default function NewsPage() {
     if (upserted > 0) toast.success(`Fetched ${fetched} articles, stored ${upserted} new${failed ? ` (${failed} queries failed)` : ''}`);
     else if (failed > 0) toast.warning(`Some queries failed. Existing news remains available.`);
     else toast.info(`No new articles found (all already stored).`);
-    await refetch();
+    // Refresh every derived view in the app (News page, Overview dashboard diffusion
+    // model and score, corpus counts) so all numbers reflect the new corpus.
+    await Promise.all([refetch(), queryClient.invalidateQueries()]);
   };
 
   const stats = useMemo(() => {
