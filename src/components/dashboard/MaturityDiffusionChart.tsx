@@ -18,8 +18,43 @@ import {
   newsMediaScore,
   searchTrendNote,
 } from '@/data/diffusionModel';
+import { useNewsDiffusion } from '@/hooks/useNewsDiffusion';
+import { useMemo } from 'react';
 
 export function MaturityDiffusionChart() {
+  const { data: liveNews } = useNewsDiffusion();
+
+  const curves = useMemo(() => {
+    if (!liveNews) return diffusionCurves;
+    return diffusionCurves.map((row) => ({
+      ...row,
+      newsFit: liveNews.fitted[row.year] ?? row.newsFit,
+      news: liveNews.observed[row.year] ?? (row.year <= liveNews.lastFittedYear ? row.news : undefined),
+    }));
+  }, [liveNews]);
+
+  const fits = useMemo(() => {
+    if (!liveNews) return diffusionFits;
+    return diffusionFits.map((f) =>
+      f.key === 'news'
+        ? {
+            ...f,
+            m: liveNews.fit.m,
+            p: liveNews.fit.p,
+            q: liveNews.fit.q,
+            r2: liveNews.fit.r2,
+            takeoff: liveNews.fit.takeoff,
+            takeoffLabel: liveNews.fit.takeoff ? String(Math.round(liveNews.fit.takeoff)) : 'after 2030',
+            source: `News & Media corpus, ${liveNews.total.toLocaleString()} articles`,
+          }
+        : f,
+    );
+  }, [liveNews]);
+
+  const newsScore = liveNews?.score ?? newsMediaScore.score;
+  const newsPerYear = liveNews?.perYear ?? newsMediaScore.perYear;
+  const newsTotal = liveNews?.total ?? 273;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -31,12 +66,12 @@ export function MaturityDiffusionChart() {
         Bass diffusion model (Takahashi et al., 2024) fitted only to this app's own databases:
         the Lens.org patents corpus (10,130 records), the OpenAlex publications corpus (8,294
         records), the Pilots and Demonstrators module (43 pilots) and the News and Media corpus
-        (195 articles). Values are cumulative adoption as a share of each curve's estimated
-        potential (m).
+        ({newsTotal.toLocaleString()} articles). Values are cumulative adoption as a share of each
+        curve's estimated potential (m).
       </p>
 
       <div className="flex flex-wrap gap-x-4 gap-y-1 mb-4 text-xs text-muted-foreground">
-        {diffusionFits.map((f) => (
+        {fits.map((f) => (
           <div key={f.key} className="flex items-center gap-1.5">
             <span className="w-3 h-0.5 rounded" style={{ backgroundColor: f.color }} />
             {f.label}
@@ -44,9 +79,10 @@ export function MaturityDiffusionChart() {
         ))}
       </div>
 
+
       <div className="h-[240px]">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={diffusionCurves} margin={{ top: 5, right: 10, left: -10, bottom: 5 }}>
+          <LineChart data={curves} margin={{ top: 5, right: 10, left: -10, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
             <XAxis
               dataKey="year"
@@ -69,7 +105,7 @@ export function MaturityDiffusionChart() {
               formatter={(value: number, name: string) => [`${value}% of potential`, name]}
             />
 
-            {diffusionFits
+            {fits
               .filter((f) => f.takeoff)
               .map((f) => (
                 <ReferenceLine
@@ -81,7 +117,7 @@ export function MaturityDiffusionChart() {
                 />
               ))}
 
-            {diffusionFits.map((f) => (
+            {fits.map((f) => (
               <Line
                 key={`${f.key}-fit`}
                 type="monotone"
@@ -94,7 +130,7 @@ export function MaturityDiffusionChart() {
               />
             ))}
 
-            {diffusionFits.map((f) => (
+            {fits.map((f) => (
               <Line
                 key={f.key}
                 type="monotone"
@@ -130,7 +166,7 @@ export function MaturityDiffusionChart() {
             </tr>
           </thead>
           <tbody>
-            {diffusionFits.map((f) => (
+            {fits.map((f) => (
               <tr key={f.key} className="border-t border-border">
                 <td className="py-2 text-foreground">
                   <span className="inline-flex items-center gap-1.5">
@@ -164,14 +200,14 @@ export function MaturityDiffusionChart() {
             </p>
           </div>
           <p className="text-3xl font-bold text-primary">
-            {newsMediaScore.score}
+            {newsScore}
             <span className="text-sm text-muted-foreground font-normal">/100</span>
           </p>
         </div>
 
         <div className="h-[110px]">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={newsMediaScore.perYear} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
+            <BarChart data={newsPerYear} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
               <XAxis
                 dataKey="year"
                 tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }}
