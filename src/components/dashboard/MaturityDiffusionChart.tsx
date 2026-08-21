@@ -1,17 +1,20 @@
 import { motion } from 'framer-motion';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-
-const data = [
-  { year: '2016', patents: 35, granted: 12, publications: 45, searchTrends: 20 },
-  { year: '2017', patents: 48, granted: 18, publications: 52, searchTrends: 25 },
-  { year: '2018', patents: 62, granted: 28, publications: 68, searchTrends: 32 },
-  { year: '2019', patents: 78, granted: 42, publications: 85, searchTrends: 38 },
-  { year: '2020', patents: 95, granted: 55, publications: 92, searchTrends: 48 },
-  { year: '2021', patents: 88, granted: 68, publications: 78, searchTrends: 62 },
-  { year: '2022', patents: 72, granted: 75, publications: 65, searchTrends: 75 },
-  { year: '2023', patents: 65, granted: 82, publications: 58, searchTrends: 88 },
-  { year: '2024', patents: 58, granted: 88, publications: 52, searchTrends: 95 },
-];
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ReferenceLine,
+  ResponsiveContainer,
+} from 'recharts';
+import {
+  diffusionCurves,
+  diffusionFits,
+  pilotAdoptionScore,
+  searchTrendNote,
+} from '@/data/diffusionModel';
 
 export function MaturityDiffusionChart() {
   return (
@@ -20,35 +23,33 @@ export function MaturityDiffusionChart() {
       animate={{ opacity: 1, y: 0 }}
       className="p-6 rounded-2xl bg-card border border-border"
     >
-      <h3 className="text-lg font-semibold text-foreground mb-2">Maturity and Diffusion</h3>
+      <h3 className="text-lg font-semibold text-foreground mb-1">Maturity and Diffusion</h3>
+      <p className="text-xs text-muted-foreground mb-4">
+        Bass diffusion model (Takahashi et al., 2024) fitted to the project corpora: cumulative
+        adoption as a share of each curve's estimated potential (m).
+      </p>
+
       <div className="flex flex-wrap gap-x-4 gap-y-1 mb-4 text-xs text-muted-foreground">
-        <div className="flex items-center gap-1.5">
-          <span className="w-3 h-0.5 bg-energy-amber rounded"></span>
-          Patent Applications
-        </div>
-        <div className="flex items-center gap-1.5">
-          <span className="w-3 h-0.5 bg-foreground rounded"></span>
-          Granted Patents
-        </div>
-        <div className="flex items-center gap-1.5">
-          <span className="w-3 h-0.5 bg-muted-foreground rounded"></span>
-          Academic Publications
-        </div>
-        <div className="flex items-center gap-1.5">
-          <span className="w-3 h-0.5 bg-energy-red rounded"></span>
-          Search Trends
-        </div>
+        {diffusionFits.map((f) => (
+          <div key={f.key} className="flex items-center gap-1.5">
+            <span className="w-3 h-0.5 rounded" style={{ backgroundColor: f.color }} />
+            {f.label}
+          </div>
+        ))}
       </div>
-      <div className="h-[220px]">
+
+      <div className="h-[240px]">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data} margin={{ top: 5, right: 10, left: -10, bottom: 5 }}>
+          <LineChart data={diffusionCurves} margin={{ top: 5, right: 10, left: -10, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-            <XAxis 
-              dataKey="year" 
+            <XAxis
+              dataKey="year"
               tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
               axisLine={{ stroke: 'hsl(var(--border))' }}
             />
-            <YAxis 
+            <YAxis
+              domain={[0, 100]}
+              unit="%"
               tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
               axisLine={{ stroke: 'hsl(var(--border))' }}
             />
@@ -59,45 +60,132 @@ export function MaturityDiffusionChart() {
                 borderRadius: '8px',
                 fontSize: '12px',
               }}
+              formatter={(value: number, name: string) => [`${value}% of potential`, name]}
             />
-            <Line
-              type="monotone"
-              dataKey="patents"
-              stroke="hsl(var(--energy-amber))"
-              strokeWidth={2}
-              dot={{ r: 3, fill: 'hsl(var(--energy-amber))' }}
-              name="Patent Applications"
-            />
-            <Line
-              type="monotone"
-              dataKey="granted"
-              stroke="hsl(var(--foreground))"
-              strokeWidth={2}
-              dot={{ r: 3, fill: 'hsl(var(--foreground))' }}
-              name="Granted Patents"
-            />
-            <Line
-              type="monotone"
-              dataKey="publications"
-              stroke="hsl(var(--muted-foreground))"
-              strokeWidth={2}
-              dot={{ r: 3, fill: 'hsl(var(--muted-foreground))' }}
-              name="Publications"
-            />
-            <Line
-              type="monotone"
-              dataKey="searchTrends"
-              stroke="hsl(var(--energy-red))"
-              strokeWidth={2}
-              dot={{ r: 3, fill: 'hsl(var(--energy-red))' }}
-              name="Search Trends"
-            />
+
+            {diffusionFits
+              .filter((f) => f.takeoff)
+              .map((f) => (
+                <ReferenceLine
+                  key={`tk-${f.key}`}
+                  x={Math.round(f.takeoff as number)}
+                  stroke={f.color}
+                  strokeDasharray="2 4"
+                  strokeOpacity={0.5}
+                />
+              ))}
+
+            {diffusionFits.map((f) => (
+              <Line
+                key={`${f.key}-fit`}
+                type="monotone"
+                dataKey={`${f.key}Fit`}
+                stroke={f.color}
+                strokeWidth={1}
+                strokeDasharray="4 4"
+                dot={false}
+                name={`${f.label} (Bass fit)`}
+              />
+            ))}
+
+            {diffusionFits.map((f) => (
+              <Line
+                key={f.key}
+                type="monotone"
+                dataKey={f.key}
+                stroke={f.color}
+                strokeWidth={2}
+                dot={false}
+                connectNulls
+                name={f.label}
+              />
+            ))}
           </LineChart>
         </ResponsiveContainer>
       </div>
-      <p className="text-xs text-muted-foreground text-center mt-2">
-        V2X Technology Diffusion Model (2016-2024)
+
+      <p className="text-[11px] text-muted-foreground text-center mt-2">
+        Solid lines: observed cumulative adoption (2004-2025). Dashed: fitted Bass curve to 2030.
+        Vertical marks: estimated takeoff (left inflection point).
       </p>
+
+      {/* Coefficients */}
+      <div className="mt-5 overflow-x-auto">
+        <table className="w-full text-xs">
+          <thead>
+            <tr className="text-muted-foreground text-left">
+              <th className="py-2 font-medium">Diffusion curve</th>
+              <th className="py-2 font-medium">Takeoff</th>
+              <th className="py-2 font-medium">p</th>
+              <th className="py-2 font-medium">q</th>
+              <th className="py-2 font-medium">m</th>
+              <th className="py-2 font-medium">R²</th>
+            </tr>
+          </thead>
+          <tbody>
+            {diffusionFits.map((f) => (
+              <tr key={f.key} className="border-t border-border">
+                <td className="py-2 text-foreground">
+                  <span className="inline-flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full" style={{ backgroundColor: f.color }} />
+                    {f.label}
+                  </span>
+                </td>
+                <td className="py-2 text-foreground font-medium">{f.takeoffLabel}</td>
+                <td className="py-2 text-muted-foreground">{f.p.toFixed(4)}</td>
+                <td className="py-2 text-muted-foreground">{f.q.toFixed(3)}</td>
+                <td className="py-2 text-muted-foreground">
+                  {f.m.toLocaleString()} {f.unit}
+                </td>
+                <td className="py-2 text-muted-foreground">{f.r2.toFixed(3)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <p className="text-[11px] text-muted-foreground mt-2">{searchTrendNote}</p>
+      </div>
+
+      {/* Pilot technology adoption score */}
+      <div className="mt-5 p-4 rounded-xl bg-gradient-to-br from-primary/5 to-accent/5 border border-primary/20">
+        <div className="flex items-center justify-between mb-3">
+          <div>
+            <p className="text-sm font-semibold text-foreground">
+              Pilot technology adoption score
+            </p>
+            <p className="text-[11px] text-muted-foreground">
+              Composite of four normalised pilot-corpus indicators
+            </p>
+          </div>
+          <p className="text-3xl font-bold text-primary">
+            {pilotAdoptionScore.score}
+            <span className="text-sm text-muted-foreground font-normal">/100</span>
+          </p>
+        </div>
+
+        <div className="space-y-2">
+          {pilotAdoptionScore.components.map((c) => (
+            <div key={c.label}>
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-foreground">{c.label}</span>
+                <span className="text-muted-foreground">{c.value}</span>
+              </div>
+              <div className="h-1.5 mt-1 rounded-full bg-muted overflow-hidden">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: `${c.value}%` }}
+                  transition={{ duration: 0.8 }}
+                  className="h-full rounded-full bg-gradient-to-r from-primary to-accent"
+                />
+              </div>
+              <p className="text-[11px] text-muted-foreground mt-1">{c.detail}</p>
+            </div>
+          ))}
+        </div>
+
+        <p className="text-xs text-foreground mt-3 leading-relaxed">
+          {pilotAdoptionScore.verdict}
+        </p>
+      </div>
     </motion.div>
   );
 }
