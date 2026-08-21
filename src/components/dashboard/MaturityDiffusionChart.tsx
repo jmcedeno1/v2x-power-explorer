@@ -7,12 +7,15 @@ import {
   CartesianGrid,
   Tooltip,
   ReferenceLine,
+  BarChart,
+  Bar,
   ResponsiveContainer,
 } from 'recharts';
 import {
   diffusionCurves,
   diffusionFits,
   pilotAdoptionScore,
+  newsMediaScore,
   searchTrendNote,
 } from '@/data/diffusionModel';
 
@@ -25,8 +28,11 @@ export function MaturityDiffusionChart() {
     >
       <h3 className="text-lg font-semibold text-foreground mb-1">Maturity and Diffusion</h3>
       <p className="text-xs text-muted-foreground mb-4">
-        Bass diffusion model (Takahashi et al., 2024) fitted to the project corpora: cumulative
-        adoption as a share of each curve's estimated potential (m).
+        Bass diffusion model (Takahashi et al., 2024) fitted only to this app's own databases:
+        the Lens.org patents corpus (10,130 records), the OpenAlex publications corpus (8,294
+        records), the Pilots and Demonstrators module (43 pilots) and the News and Media corpus
+        (195 articles). Values are cumulative adoption as a share of each curve's estimated
+        potential (m).
       </p>
 
       <div className="flex flex-wrap gap-x-4 gap-y-1 mb-4 text-xs text-muted-foreground">
@@ -120,6 +126,7 @@ export function MaturityDiffusionChart() {
               <th className="py-2 font-medium">q</th>
               <th className="py-2 font-medium">m</th>
               <th className="py-2 font-medium">R²</th>
+              <th className="py-2 font-medium">App data source</th>
             </tr>
           </thead>
           <tbody>
@@ -138,11 +145,54 @@ export function MaturityDiffusionChart() {
                   {f.m.toLocaleString()} {f.unit}
                 </td>
                 <td className="py-2 text-muted-foreground">{f.r2.toFixed(3)}</td>
+                <td className="py-2 text-muted-foreground">{f.source}</td>
               </tr>
             ))}
           </tbody>
         </table>
         <p className="text-[11px] text-muted-foreground mt-2">{searchTrendNote}</p>
+      </div>
+
+      {/* News and media score */}
+      <div className="mt-5 p-4 rounded-xl bg-muted/40 border border-border">
+        <div className="flex items-center justify-between mb-3">
+          <div>
+            <p className="text-sm font-semibold text-foreground">News and media score</p>
+            <p className="text-[11px] text-muted-foreground">
+              Cumulative articles reached as a share of fitted potential, from the News and Media
+              corpus
+            </p>
+          </div>
+          <p className="text-3xl font-bold text-primary">
+            {newsMediaScore.score}
+            <span className="text-sm text-muted-foreground font-normal">/100</span>
+          </p>
+        </div>
+
+        <div className="h-[110px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={newsMediaScore.perYear} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
+              <XAxis
+                dataKey="year"
+                tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }}
+                axisLine={{ stroke: 'hsl(var(--border))' }}
+              />
+              <YAxis tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }} axisLine={false} />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: 'hsl(var(--card))',
+                  border: '1px solid hsl(var(--border))',
+                  borderRadius: '8px',
+                  fontSize: '12px',
+                }}
+                formatter={(value: number) => [`${value} articles`, 'Articles']}
+              />
+              <Bar dataKey="count" fill="hsl(var(--primary))" radius={[3, 3, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        <p className="text-xs text-foreground mt-2 leading-relaxed">{newsMediaScore.note}</p>
       </div>
 
       {/* Pilot technology adoption score */}
