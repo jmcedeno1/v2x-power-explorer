@@ -18,8 +18,43 @@ import {
   newsMediaScore,
   searchTrendNote,
 } from '@/data/diffusionModel';
+import { useNewsDiffusion } from '@/hooks/useNewsDiffusion';
+import { useMemo } from 'react';
 
 export function MaturityDiffusionChart() {
+  const { data: liveNews } = useNewsDiffusion();
+
+  const curves = useMemo(() => {
+    if (!liveNews) return diffusionCurves;
+    return diffusionCurves.map((row) => ({
+      ...row,
+      newsFit: liveNews.fitted[row.year] ?? row.newsFit,
+      news: liveNews.observed[row.year] ?? (row.year <= liveNews.lastFittedYear ? row.news : undefined),
+    }));
+  }, [liveNews]);
+
+  const fits = useMemo(() => {
+    if (!liveNews) return diffusionFits;
+    return diffusionFits.map((f) =>
+      f.key === 'news'
+        ? {
+            ...f,
+            m: liveNews.fit.m,
+            p: liveNews.fit.p,
+            q: liveNews.fit.q,
+            r2: liveNews.fit.r2,
+            takeoff: liveNews.fit.takeoff,
+            takeoffLabel: liveNews.fit.takeoff ? String(Math.round(liveNews.fit.takeoff)) : 'after 2030',
+            source: `News & Media corpus, ${liveNews.total.toLocaleString()} articles`,
+          }
+        : f,
+    );
+  }, [liveNews]);
+
+  const newsScore = liveNews?.score ?? newsMediaScore.score;
+  const newsPerYear = liveNews?.perYear ?? newsMediaScore.perYear;
+  const newsTotal = liveNews?.total ?? 273;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -31,18 +66,19 @@ export function MaturityDiffusionChart() {
         Bass diffusion model (Takahashi et al., 2024) fitted only to this app's own databases:
         the Lens.org patents corpus (10,130 records), the OpenAlex publications corpus (8,294
         records), the Pilots and Demonstrators module (43 pilots) and the News and Media corpus
-        (195 articles). Values are cumulative adoption as a share of each curve's estimated
-        potential (m).
+        ({newsTotal.toLocaleString()} articles). Values are cumulative adoption as a share of each
+        curve's estimated potential (m).
       </p>
 
       <div className="flex flex-wrap gap-x-4 gap-y-1 mb-4 text-xs text-muted-foreground">
-        {diffusionFits.map((f) => (
+        {fits.map((f) => (
           <div key={f.key} className="flex items-center gap-1.5">
             <span className="w-3 h-0.5 rounded" style={{ backgroundColor: f.color }} />
             {f.label}
           </div>
         ))}
       </div>
+
 
       <div className="h-[240px]">
         <ResponsiveContainer width="100%" height="100%">
